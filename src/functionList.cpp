@@ -3,6 +3,7 @@
 #include "Line.h"
 #include "Point.h"
 #include "Circle.h"
+#include "global.h"
 
 #define CAT2(a,b) a##b // actually concatenate
 #define CAT(a,b) CAT2(a,b) // force expand
@@ -15,19 +16,24 @@ FUNC {
     {Point::type, Point::type},
     DO {
         // XXX it's not working
-        auto* a = dynamic_cast<Point*>(objs[0]);
-        auto* b = dynamic_cast<Point*>(objs[1]);
-        return {new Line()};
-    }
-};
+        auto* p1 = dynamic_cast<Point*>(objs[0]);
+        auto* p2 = dynamic_cast<Point*>(objs[1]);
 
-FUNC {
-    "lineByTwoPoints2",
-    {Point::type, Point::type},
-    DO {
-        // XXX it's not working
-        auto* a = dynamic_cast<Point*>(objs[0]);
-        auto* b = dynamic_cast<Point*>(objs[1]);
-        return QList<Object*>{new Line()};
+        if (*p1 == *p2)
+            return {};
+
+        auto* l = new Line;
+
+        if (eq(p1->x, p2->x)) {
+            l->a = 1;
+            l->b = 0;
+            l->c = -p1->x;
+            return {l};
+        }
+
+        l->a = p2->y - p1->y;
+        l->b = p1->x - p2->x;
+        l->c = -(l->a * p1->x + l->b * p1->y);
+        return {l};
     }
 };

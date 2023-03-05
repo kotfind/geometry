@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GeometryObject.h"
+#include <QDebug>
 
 class Point : public GeometryObject {
     public:
@@ -14,3 +15,5 @@ class Point : public GeometryObject {
 
         double x, y;
 };
+
+bool operator==(const Point& p1, const Point& p2);

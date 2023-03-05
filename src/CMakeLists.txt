@@ -16,11 +16,14 @@ qt_standard_project_setup()
 
 add_executable(geometry
     main.cpp
+    global.cpp
 
     Function.cpp
     functionList.cpp
 
     Generator.cpp
+
+    Point.cpp
 )
 
 target_link_libraries(geometry

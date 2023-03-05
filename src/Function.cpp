@@ -28,3 +28,7 @@ QList<Object*> Function::operator()(const QList<Object*>& objs) {
 
     return func(objs);
 }
+
+Function* Function::get(const QString& name) {
+    return funcs[name];
+}
