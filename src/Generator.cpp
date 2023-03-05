@@ -23,5 +23,6 @@ void Generator::recalc() {
         objs << gen->object;
     }
 
-    object = (*func)(objs)[funcResNum];
+    const auto& res = (*func)(objs);
+    object = funcResNum < res.size() ? res[funcResNum] : nullptr;
 }
