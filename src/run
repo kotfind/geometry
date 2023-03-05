@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+mkdir -p ../build
+cd ../build
+cmake \
+    -DCMAKE_CXX_COMPILER_LAUNCHER="ccache;distcc" \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=true \
+    -DCMAKE_BUILD_TYPE=Debug \
+    ../src
+cmake --build . -- -j
+./geometry
