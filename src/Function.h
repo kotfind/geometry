@@ -18,6 +18,7 @@ class Function {
         QList<Object*> operator()(const QList<Object*>& objs);
 
         static Function* get(const QString& name);
+        static const QHash<QString, Function*>& getAll() { return funcs; }
 
     private:
         static QHash<QString, Function*> funcs;

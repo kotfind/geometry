@@ -24,6 +24,8 @@ add_executable(geometry
     Generator.cpp
 
     Point.cpp
+
+    MainWindow.cpp
 )
 
 target_link_libraries(geometry
