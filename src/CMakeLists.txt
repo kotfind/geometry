@@ -24,6 +24,8 @@ add_executable(geometry
     Generator.cpp
 
     Point.cpp
+    Line.cpp
+    Circle.cpp
 
     MainWindow.cpp
 )

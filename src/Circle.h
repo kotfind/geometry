@@ -8,10 +8,8 @@ class Circle : public GeometryObject {
         int getType() const { return type; }
         static const int type = 4;
 
-        Circle() : Circle(Point(), 1) {}
-        Circle(const Point& o, double r) : GeometryObject(), o(o), r(r) {}
-
-        void paint() const { qDebug("Paint circle"); }
+        Circle();
+        Circle(const Point& o, double r);
         
         Point o;
         double r;

@@ -8,10 +8,8 @@ class Point : public GeometryObject {
         int getType() const { return type; }
         static const int type = 2;
 
-        Point() : Point(0, 0) {}
-        Point(double x, double y) : GeometryObject(), x(x), y(y) {}
-
-        void paint() const { qDebug("Paint point"); }
+        Point();
+        Point(double x, double y);
 
         double x, y;
 };

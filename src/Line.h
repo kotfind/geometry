@@ -8,10 +8,8 @@ class Line : public GeometryObject {
         int getType() const { return type; }
         static const int type = 3;
 
-        Line() : Line(0, 1, 0) {}
-        Line(double a, double b, double c) : GeometryObject(), a(a), b(b), c(c) {}
-
-        void paint() const { qDebug("Paint line"); }
+        Line();
+        Line(double a, double b, double c);
 
         double a, b, c;
 };
