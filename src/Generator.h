@@ -4,6 +4,7 @@
 
 class Function;
 class Object;
+class GeometryItem;
 
 class Generator {
     public:
@@ -17,4 +18,5 @@ class Generator {
         Function* func;
         QList<Generator*> args;
         int funcResNum;
+        GeometryItem* item;
 };

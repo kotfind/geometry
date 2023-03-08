@@ -11,6 +11,9 @@ class Point : public GeometryObject {
         Point();
         Point(double x, double y);
 
+        void paint(QPainter* painter) const override;
+        QRectF boundingRect() const override;
+
         double x, y;
 };
 

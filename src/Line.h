@@ -11,5 +11,8 @@ class Line : public GeometryObject {
         Line();
         Line(double a, double b, double c);
 
+        void paint(QPainter* painter) const override;
+        QRectF boundingRect() const override;
+
         double a, b, c;
 };

@@ -2,11 +2,14 @@
 
 #include "Function.h"
 #include "Object.h"
+#include "GeometryObject.h"
+#include "GeometryItem.h"
 
 Generator::Generator(Function* func, const QList<Generator*>& args, int funcResNum)
   : func(func),
     args(args),
-    funcResNum(funcResNum)
+    funcResNum(funcResNum),
+    item()
 {
     recalc();
 }
@@ -25,4 +28,6 @@ void Generator::recalc() {
 
     const auto& res = (*func)(objs);
     object = funcResNum < res.size() ? res[funcResNum] : nullptr;
+
+    item->setObject(dynamic_cast<GeometryObject*>(object));
 }

@@ -28,6 +28,8 @@ add_executable(geometry
     Circle.cpp
 
     MainWindow.cpp
+
+    GeometryItem.cpp
 )
 
 target_link_libraries(geometry
