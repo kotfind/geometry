@@ -4,9 +4,8 @@
 
 #include <QMainWindow>
 
-class Function;
-class QGraphicsScene;
 class QGraphicsView;
+class Scene;
 
 class MainWindow : public QMainWindow {
     public:
@@ -17,10 +16,7 @@ class MainWindow : public QMainWindow {
 
         void createActionsMenu();
 
-        EditMode mode = EditMode::MOVE;
-        Function* currentFunction = nullptr;
-
-        QGraphicsScene* scene;
+        Scene* scene;
         QGraphicsView* view;
 
     private slots:

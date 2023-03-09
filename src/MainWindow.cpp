@@ -1,17 +1,18 @@
 #include "MainWindow.h"
 
 #include "Function.h"
+#include "Scene.h"
+#include "EditMode.h"
 
 #include <QAction>
 #include <QMenuBar>
 #include <QGraphicsView>
-#include <QGraphicsScene>
 
 MainWindow::MainWindow() : QMainWindow() {
     createUi();
     createActionsMenu();
 
-    scene = new QGraphicsScene(this);
+    scene = new Scene(this);
     view->setScene(scene);
 }
 
@@ -29,7 +30,7 @@ void MainWindow::createActionsMenu() {
         moveModeAction,
         &QAction::triggered,
         [this]() {
-            mode = EditMode::MOVE;
+            scene->setMode(EditMode::MOVE);
         }
     );
     menu->addAction(moveModeAction);
@@ -40,7 +41,7 @@ void MainWindow::createActionsMenu() {
         createPointModeAction,
         &QAction::triggered,
         [this]() {
-            mode = EditMode::CREATE_POINT;
+            scene->setMode(EditMode::CREATE_POINT);
         }
     );
     menu->addAction(createPointModeAction);
@@ -61,6 +62,8 @@ void MainWindow::createActionsMenu() {
 
 void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
-    currentFunction = action->data().value<Function*>();
-    mode = EditMode::FUNCTION;
+    auto* func = action->data().value<Function*>();
+
+    scene->setMode(EditMode::FUNCTION);
+    scene->setFunction(func);
 }
