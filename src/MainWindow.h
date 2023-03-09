@@ -3,6 +3,8 @@
 #include <QMainWindow>
 
 class Function;
+class QGraphicsScene;
+class QGraphicsView;
 
 class MainWindow : public QMainWindow {
     public:
@@ -14,6 +16,9 @@ class MainWindow : public QMainWindow {
         void createFunctionActions();
 
         Function* currentFunction;
+
+        QGraphicsScene* scene;
+        QGraphicsView* view;
 
     private slots:
         void functionActionTriggered();

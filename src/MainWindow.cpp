@@ -4,14 +4,20 @@
 
 #include <QAction>
 #include <QMenuBar>
+#include <QGraphicsView>
+#include <QGraphicsScene>
 
 MainWindow::MainWindow() : QMainWindow() {
     createUi();
     createFunctionActions();
+
+    scene = new QGraphicsScene(this);
+    view->setScene(scene);
 }
 
 void MainWindow::createUi() {
-
+    view = new QGraphicsView(this);
+    setCentralWidget(view);
 }
 
 void MainWindow::createFunctionActions() {
