@@ -1,5 +1,7 @@
 #pragma once
 
+#include "EditMode.h"
+
 #include <QMainWindow>
 
 class Function;
@@ -13,13 +15,14 @@ class MainWindow : public QMainWindow {
     private:
         void createUi();
 
-        void createFunctionActions();
+        void createActionsMenu();
 
-        Function* currentFunction;
+        EditMode mode = EditMode::MOVE;
+        Function* currentFunction = nullptr;
 
         QGraphicsScene* scene;
         QGraphicsView* view;
 
     private slots:
-        void functionActionTriggered();
+        void onFunctionActionTriggered();
 };
