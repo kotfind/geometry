@@ -16,8 +16,8 @@ Function::Function(
     funcs[name] = this;
 }
 
-QList<Object*> Function::operator()(const QList<Object*>& objs) {
-    if (objs.size() != typeHints.size())
+QList<Object*> Function::operator()(const QList<Object*>& objs) const {
+    if (objs.size() != countArgs())
         throw std::invalid_argument("Invalid number of objects");
 
     for (int i = 0; i < objs.size(); ++i) {

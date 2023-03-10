@@ -15,7 +15,9 @@ class Function {
             const std::function<QList<Object*>(const QList<Object*>&)>& func
         );
 
-        QList<Object*> operator()(const QList<Object*>& objs);
+        QList<Object*> operator()(const QList<Object*>& objs) const;
+        int countArgs() const { return typeHints.size(); }
+        const QList<int>& getTypeHints() const { return typeHints; }
 
         static Function* get(const QString& name);
         static const QHash<QString, Function*>& getAll() { return funcs; }
