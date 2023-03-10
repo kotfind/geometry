@@ -22,6 +22,8 @@ class Generator {
         // i.e. object does not depend on others
         bool isFree() const;
 
+        GeometryItem* getGeometryItem() const { return item; }
+
     private:
         Object* object = nullptr;
         Function* func = nullptr;

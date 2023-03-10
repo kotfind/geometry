@@ -9,14 +9,16 @@ Generator::Generator(Function* func, const QList<Generator*>& args, int funcResN
   : func(func),
     args(args),
     funcResNum(funcResNum),
-    item()
+    item(new GeometryItem)
 {
     recalc();
 }
 
 Generator::Generator(Object* obj)
-    : object(obj)
+  : object(obj),
+    item(new GeometryItem)
 {
+    recalc();
 }
 
 Generator::~Generator() {
@@ -24,17 +26,17 @@ Generator::~Generator() {
 }
 
 void Generator::recalc() {
-    if (isFree()) return;
+    if (!isFree()) {
+        QList<Object*> objs;
+        objs.reserve(args.size());
 
-    QList<Object*> objs;
-    objs.reserve(args.size());
+        for (auto* gen : args) {
+            objs << gen->object;
+        }
 
-    for (auto* gen : args) {
-        objs << gen->object;
+        const auto& res = (*func)(objs);
+        object = funcResNum < res.size() ? res[funcResNum] : nullptr;
     }
-
-    const auto& res = (*func)(objs);
-    object = funcResNum < res.size() ? res[funcResNum] : nullptr;
 
     item->setObject(dynamic_cast<GeometryObject*>(object));
 }

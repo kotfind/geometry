@@ -15,6 +15,8 @@ class Point : public GeometryObject {
         QRectF boundingRect() const override;
 
         double x, y;
+
+        static constexpr double paintRadius = 3;
 };
 
 bool operator==(const Point& p1, const Point& p2);
