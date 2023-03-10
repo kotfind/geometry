@@ -30,7 +30,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             item->setFlags(
                 item->flags() |
                 QGraphicsItem::ItemIsMovable |
-                QGraphicsItem::ItemIsFocusable
+                QGraphicsItem::ItemIsFocusable |
+                QGraphicsItem::ItemIsSelectable
             );
             addItem(item);
         }

@@ -21,7 +21,7 @@ void GeometryItem::setObject(GeometryObject* o) {
 
 void GeometryItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
     if (object) {
-        object->paint(painter);
+        object->paint(painter, isSelected());
     }
 }
 

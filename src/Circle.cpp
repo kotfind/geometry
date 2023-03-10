@@ -7,7 +7,7 @@
 Circle::Circle() : Circle(Point(), 1) {}
 Circle::Circle(const Point& o, double r) : GeometryObject(), o(o), r(r) {}
 
-void Circle::paint(QPainter* painter) const {
+void Circle::paint(QPainter* painter, bool selected) const {
     throw NotImplementedError();
 }
 
