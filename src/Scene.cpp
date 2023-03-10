@@ -26,7 +26,17 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::CREATE_POINT: {
             auto* point = new Point(x, y);
             auto* gen = new Generator(point);
-            addItem(gen->getGeometryItem());
-        } break;
+            auto* item = gen->getGeometryItem();
+            item->setFlags(
+                item->flags() |
+                QGraphicsItem::ItemIsMovable |
+                QGraphicsItem::ItemIsFocusable
+            );
+            addItem(item);
+        }
+        break;
+
+        default:
+            QGraphicsScene::mousePressEvent(e);
     }
 }
