@@ -3,9 +3,6 @@
 #include "GeometryObject.h"
 #include "Generator.h"
 
-#include <QRectF>
-#include <QPainter>
-
 GeometryItem::GeometryItem(Generator* gen)
 : QGraphicsItem(),
   gen(gen)
@@ -26,14 +23,18 @@ void GeometryItem::updateBoundingRect() {
     }
 }
 
-void GeometryItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
+void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
     if (getObject()) {
-        getObject()->paint(painter);
+        getObject()->paint(qp);
     }
 }
 
 QRectF GeometryItem::boundingRect() const {
     return getObject() ? getObject()->boundingRect() : QRectF();
+}
+
+QPainterPath GeometryItem::shape() const {
+    return getObject() ? getObject()->shape() : QPainterPath();
 }
 
 GeometryObject* GeometryItem::getObject() const {

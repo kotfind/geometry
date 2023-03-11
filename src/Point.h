@@ -13,6 +13,7 @@ class Point : public GeometryObject {
 
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
+        QPainterPath shape() const override;
 
         double x, y;
 

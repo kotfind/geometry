@@ -16,12 +16,15 @@ class Line : public GeometryObject {
 
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
+        QPainterPath shape() const override;
 
         double a, b, c;
 
-        const double drawWidth = 2;
+        const double paintWidth = 2;
 
     private:
         // XXX the size of line is quite random
         QPair<QPointF, QPointF> getTwoPoints() const;
+
+        QPointF getNorm() const;
 };

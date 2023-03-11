@@ -6,6 +6,7 @@
 #include <QRectF>
 #include <QPainter>
 #include <QDebug>
+#include <QPainterPath>
 
 Point::Point() : Point(0, 0) {}
 Point::Point(double x, double y) : GeometryObject(), x(x), y(y) {}
@@ -30,6 +31,12 @@ QRectF Point::boundingRect() const {
         paintRadius * 2,
         paintRadius * 2
     );
+}
+
+QPainterPath Point::shape() const {
+    QPainterPath path;
+    path.addEllipse(boundingRect());
+    return path;
 }
 
 bool operator==(const Point& p1, const Point& p2) {
