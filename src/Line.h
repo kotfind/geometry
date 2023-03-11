@@ -2,6 +2,9 @@
 
 #include "GeometryObject.h"
 
+#include <QPair> // TODO delete me
+#include <QPointF> // TODO delete me
+
 // Line with equation a*x + b*y + c = 0
 class Line : public GeometryObject {
     public:
@@ -15,4 +18,10 @@ class Line : public GeometryObject {
         QRectF boundingRect() const override;
 
         double a, b, c;
+
+        const double drawWidth = 2;
+
+    private:
+        // XXX the size of line is quite random
+        QPair<QPointF, QPointF> getTwoPoints() const;
 };

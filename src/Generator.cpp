@@ -8,17 +8,25 @@
 Generator::Generator(Function* func, const QList<Generator*>& args, int funcResNum)
   : func(func),
     args(args),
-    funcResNum(funcResNum),
-    item(new GeometryItem)
+    funcResNum(funcResNum)
 {
+    initItem();
     recalc();
 }
 
 Generator::Generator(Object* obj)
-  : object(obj),
-    item(new GeometryItem)
+  : object(obj)
 {
-    recalc();
+    initItem();
+}
+
+void Generator::initItem() {
+    item = new GeometryItem(this);
+    item->setFlags(
+        item->flags() |
+        QGraphicsItem::ItemIsMovable |
+        QGraphicsItem::ItemIsFocusable
+    );
 }
 
 Generator::~Generator() {
@@ -34,11 +42,13 @@ void Generator::recalc() {
             objs << gen->object;
         }
 
+        item->beginResetObject();
+
         const auto& res = (*func)(objs);
         object = funcResNum < res.size() ? res[funcResNum] : nullptr;
-    }
 
-    item->setObject(dynamic_cast<GeometryObject*>(object));
+        item->beginResetObject();
+    }
 }
 
 bool Generator::isFree() const {

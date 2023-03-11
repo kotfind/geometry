@@ -1,11 +1,13 @@
 #pragma once
 
-#include <QGraphicsScene>
-#include <QGraphicsSceneMouseEvent>
-
 #include "EditMode.h"
 
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+#include <QList>
+
 class Function;
+class Generator;
 
 class Scene : public QGraphicsScene {
     public:
@@ -13,7 +15,8 @@ class Scene : public QGraphicsScene {
 
     private:
         EditMode mode = EditMode::MOVE;
-        Function* function = nullptr;
+        Function* func = nullptr;
+        QList<Generator*> selectedFuncArgs;
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent*) override;

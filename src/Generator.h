@@ -25,9 +25,13 @@ class Generator {
         GeometryItem* getGeometryItem() const { return item; }
 
     private:
+        void initItem();
+
         Object* object = nullptr;
         Function* func = nullptr;
         QList<Generator*> args;
         int funcResNum = 0;
         GeometryItem* item;
+
+    friend GeometryItem;
 };

@@ -6,17 +6,27 @@ class GeometryObject;
 class QRectF;
 class QPainter;
 class QStyleOptionGraphicsItem;
+class Generator;
 
 // Is a proxy between GeometryObject and QGraphicsItem
 class GeometryItem : public QGraphicsItem {
     public:
-        GeometryItem();
+        Generator* getGenerator() const { return gen; }
 
-        void setObject(GeometryObject* object);
+        void beginResetObject();
+        void endResetObject();
 
         void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
         QRectF boundingRect() const override;
 
     private:
-        GeometryObject* object = nullptr;
+        GeometryItem(Generator* gen);
+
+        void updateBoundingRect();
+
+        GeometryObject* getObject() const;
+
+        Generator* gen = nullptr;
+
+    friend Generator;
 };

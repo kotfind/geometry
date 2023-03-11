@@ -1,30 +1,41 @@
 #include "GeometryItem.h"
 
 #include "GeometryObject.h"
+#include "Generator.h"
 
 #include <QRectF>
 #include <QPainter>
 
-GeometryItem::GeometryItem() : QGraphicsItem() {
+GeometryItem::GeometryItem(Generator* gen)
+: QGraphicsItem(),
+  gen(gen)
+{
 }
 
-void GeometryItem::setObject(GeometryObject* o) {
-    if (o == object) return;
-    if (object) {
-        update(object->boundingRect());
-    }
-    object = o;
-    if (object) {
-        update(object->boundingRect());
+void GeometryItem::beginResetObject() {
+    updateBoundingRect();
+}
+
+void GeometryItem::endResetObject() {
+    updateBoundingRect();
+}
+
+void GeometryItem::updateBoundingRect() {
+    if (getObject()) {
+        update(getObject()->boundingRect());
     }
 }
 
 void GeometryItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
-    if (object) {
-        object->paint(painter);
+    if (getObject()) {
+        getObject()->paint(painter);
     }
 }
 
 QRectF GeometryItem::boundingRect() const {
-    return object ? object->boundingRect() : QRectF();
+    return getObject() ? getObject()->boundingRect() : QRectF();
+}
+
+GeometryObject* GeometryItem::getObject() const {
+    return dynamic_cast<GeometryObject*>(gen->object);
 }

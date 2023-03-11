@@ -16,6 +16,7 @@ class Function {
         );
 
         QList<Object*> operator()(const QList<Object*>& objs) const;
+
         int countArgs() const { return typeHints.size(); }
         const QList<int>& getTypeHints() const { return typeHints; }
 
