@@ -14,6 +14,8 @@ class Scene : public QGraphicsScene {
         Scene(QObject* parent = nullptr);
 
     private:
+        Generator* getFreeGeneratorAt(const QPointF& pos) const;
+
         EditMode mode = EditMode::MOVE;
         Function* func = nullptr;
         QList<Generator*> selectedFuncArgs;

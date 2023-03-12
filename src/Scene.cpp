@@ -29,10 +29,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
     switch (mode) {
         case EditMode::MOVE:
         {
-            auto* item = static_cast<GeometryItem*>(itemAt(pos, QTransform()));
-            currentFreeGenerator = item && item->getGenerator()->isFree()
-                ? item->getGenerator()
-                : nullptr;
+            currentFreeGenerator = getFreeGeneratorAt(pos);
         }
         break;
 
@@ -94,4 +91,16 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
     }
+}
+
+Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
+    auto itemList = items(pos);
+    for (auto* item_ : itemList) {
+        auto* item = static_cast<GeometryItem*>(item_);
+        auto* gen = item->getGenerator();
+        if (gen->isFree()) {
+            return gen;
+        }
+    }
+    return nullptr;
 }
