@@ -19,6 +19,7 @@ class Scene : public QGraphicsScene {
 
     private:
         Generator* getFreeGeneratorAt(const QPointF& pos) const;
+        Generator* getTypedGeneratorAt(const QPointF& pos, int type) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 

@@ -51,13 +51,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::FUNCTION:
         {
-            // TODO check type hints
             assert(func);
 
-            auto* item = static_cast<GeometryItem*>(itemAt(pos, QTransform()));
-            if (!item) break;
+            auto* gen = getTypedGeneratorAt(
+                pos,
+                func->getTypeHints()[selectedFuncArgs.size()]
+            );
+            if (!gen) break;
 
-            auto* gen = item->getGenerator();
             selectedFuncArgs << gen;
             if (selectedFuncArgs.size() == func->countArgs()) {
                 auto* gen = new Generator(func, selectedFuncArgs, 0 /* XXX */);
@@ -115,6 +116,18 @@ Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     return nullptr;
 }
 
+Generator* Scene::getTypedGeneratorAt(const QPointF& pos, int type) const {
+    auto itemList = items(pos);
+    for (auto* item_ : itemList) {
+        auto* item = static_cast<GeometryItem*>(item_);
+        auto* gen = item->getGenerator();
+        if (gen->getObjectType() == type) {
+            return gen;
+        }
+    }
+    return nullptr;
+}
+
 void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
@@ -137,7 +150,11 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             return;
 
         case EditMode::FUNCTION:
-            if (itemAt(pos, QTransform())) {
+
+            if (getTypedGeneratorAt(
+                pos,
+                func->getTypeHints()[selectedFuncArgs.size()]
+            )) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;
             }

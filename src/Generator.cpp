@@ -75,3 +75,7 @@ void Generator::setPos(double x, double y) {
 
     recalc();
 }
+
+int Generator::getObjectType() const {
+    return object ? object->getType() : -1;
+}

@@ -26,6 +26,8 @@ class Generator {
 
         void setPos(double x, double y);
 
+        int getObjectType() const;
+
     private:
         void initItem();
 
