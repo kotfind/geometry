@@ -22,11 +22,13 @@ Generator::Generator(Object* obj)
 
 void Generator::initItem() {
     item = new GeometryItem(this);
-    item->setFlags(
-        item->flags() |
-        QGraphicsItem::ItemIsMovable |
-        QGraphicsItem::ItemIsFocusable
-    );
+
+    auto flags = item->flags();
+    flags |= QGraphicsItem::ItemIsFocusable;
+    if (isFree()) {
+        flags |= QGraphicsItem::ItemIsMovable;
+    }
+    item->setFlags(flags);
 }
 
 Generator::~Generator() {
