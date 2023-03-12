@@ -15,6 +15,8 @@ class Scene : public QGraphicsScene {
     public:
         Scene(QObject* parent = nullptr);
 
+        ~Scene();
+
     private:
         Generator* getFreeGeneratorAt(const QPointF& pos) const;
 
@@ -25,6 +27,8 @@ class Scene : public QGraphicsScene {
         QList<Generator*> selectedFuncArgs;
 
         Generator* currentFreeGenerator = nullptr;
+
+        QList<Generator*> generators; // put all generators here so that they could be properly deleted when Scene is deleted
 
     signals:
         void cursorChanged(const QCursor& cursor);

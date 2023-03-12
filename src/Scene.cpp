@@ -15,6 +15,12 @@
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
 }
 
+Scene::~Scene() {
+    for (auto* gen : generators) {
+        delete gen;
+    }
+}
+
 void Scene::setMode(EditMode m) {
     mode = m;
 }
@@ -37,6 +43,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             auto* point = new Point(pos.x(), pos.y());
             auto* gen = new Generator(point);
+            generators << gen;
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -54,6 +61,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             selectedFuncArgs << gen;
             if (selectedFuncArgs.size() == func->countArgs()) {
                 auto* gen = new Generator(func, selectedFuncArgs, 0 /* XXX */);
+                generators << gen;
                 auto* item = gen->getGeometryItem();
                 addItem(item);
 

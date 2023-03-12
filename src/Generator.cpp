@@ -47,6 +47,7 @@ void Generator::recalc() {
 
     item->beginResetObject();
 
+    delete object;
     const auto& res = (*func)(objs);
     object = funcResNum < res.size() ? res[funcResNum] : nullptr;
 
