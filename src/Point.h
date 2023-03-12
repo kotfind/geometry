@@ -23,3 +23,5 @@ class Point : public GeometryObject {
 };
 
 bool operator==(const Point& p1, const Point& p2);
+
+double dist(const Point& p1, const Point& p2);

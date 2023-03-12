@@ -15,7 +15,6 @@ FUNC {
     "lineByTwoPoints",
     {Point::type, Point::type},
     DO {
-        // XXX it's not working
         auto* p1 = dynamic_cast<Point*>(objs[0]);
         auto* p2 = dynamic_cast<Point*>(objs[1]);
 
@@ -35,5 +34,21 @@ FUNC {
         l->b = p1->x - p2->x;
         l->c = -(l->a * p1->x + l->b * p1->y);
         return {l};
+    }
+};
+
+FUNC {
+    "circleByCenterAndPoint",
+    {Point::type, Point::type},
+    DO {
+        auto* o = dynamic_cast<Point*>(objs[0]);
+        auto* p = dynamic_cast<Point*>(objs[1]);
+
+        if (*o == *p)
+            return {};
+
+        auto r = dist(*o, *p);
+
+        return {new Circle(*o, r)};
     }
 };
