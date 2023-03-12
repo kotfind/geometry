@@ -27,11 +27,16 @@ class Generator {
     private:
         void initItem();
 
+        void recalcDependant() const;
+
         Object* object = nullptr;
         Function* func = nullptr;
         QList<Generator*> args;
         int funcResNum = 0;
         GeometryItem* item;
+
+        // List of generators that depends on current
+        QList<Generator*> dependant;
 
     friend GeometryItem;
 };

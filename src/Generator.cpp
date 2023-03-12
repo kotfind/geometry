@@ -12,6 +12,10 @@ Generator::Generator(Function* func, const QList<Generator*>& args, int funcResN
 {
     initItem();
     recalc();
+
+    for (auto* gen : args) {
+        gen->dependant << this;
+    }
 }
 
 Generator::Generator(Object* obj)
@@ -36,23 +40,31 @@ Generator::~Generator() {
 }
 
 void Generator::recalc() {
-    if (!isFree()) {
-        QList<Object*> objs;
-        objs.reserve(args.size());
+    recalcDependant();
 
-        for (auto* gen : args) {
-            objs << gen->object;
-        }
+    if (isFree()) return;
 
-        item->beginResetObject();
+    QList<Object*> objs;
+    objs.reserve(args.size());
 
-        const auto& res = (*func)(objs);
-        object = funcResNum < res.size() ? res[funcResNum] : nullptr;
-
-        item->beginResetObject();
+    for (auto* gen : args) {
+        objs << gen->object;
     }
+
+    item->beginResetObject();
+
+    const auto& res = (*func)(objs);
+    object = funcResNum < res.size() ? res[funcResNum] : nullptr;
+
+    item->beginResetObject();
 }
 
 bool Generator::isFree() const {
     return !func;
+}
+
+void Generator::recalcDependant() const {
+    for (auto* dep : dependant) {
+        dep->recalc();
+    }
 }
