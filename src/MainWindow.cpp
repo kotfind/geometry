@@ -14,10 +14,18 @@ MainWindow::MainWindow() : QMainWindow() {
 
     scene = new Scene(this);
     view->setScene(scene);
+
+    connect(
+        scene,
+        &Scene::cursorChanged,
+        view,
+        &QGraphicsView::setCursor
+    );
 }
 
 void MainWindow::createUi() {
     view = new QGraphicsView(this);
+    view->setMouseTracking(true);
     setCentralWidget(view);
 }
 

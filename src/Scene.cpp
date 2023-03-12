@@ -9,6 +9,8 @@
 #include <cassert>
 #include <QTransform>
 #include <QPointF>
+#include <QCursor>
+#include <QApplication>
 
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
 }
@@ -22,9 +24,7 @@ void Scene::setFunction(Function* f) {
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
-    QPointF pos = e->scenePos();
-    double x = pos.x();
-    double y = pos.y();
+    auto pos = e->scenePos();
 
     switch (mode) {
         case EditMode::MOVE:
@@ -35,7 +35,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
-            auto* point = new Point(x, y);
+            auto* point = new Point(pos.x(), pos.y());
             auto* gen = new Generator(point);
             auto* item = gen->getGeometryItem();
             addItem(item);
@@ -62,27 +62,27 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
     }
+
+    updateCursor(e);
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
-    QPointF pos = e->scenePos();
-    double x = pos.x();
-    double y = pos.y();
+    auto pos = e->scenePos();
 
     switch (mode) {
         case EditMode::MOVE:
         {
             if (!currentFreeGenerator) break;
-            currentFreeGenerator->setPos(x, y);
+            currentFreeGenerator->setPos(pos.x(), pos.y());
         }
         break;
     }
+
+    updateCursor(e);
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
-    QPointF pos = e->scenePos();
-    double x = pos.x();
-    double y = pos.y();
+    auto pos = e->scenePos();
 
     switch (mode) {
         case EditMode::MOVE:
@@ -91,6 +91,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
     }
+
+    updateCursor(e);
 }
 
 Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
@@ -103,4 +105,36 @@ Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
         }
     }
     return nullptr;
+}
+
+void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
+    auto pos = e->scenePos();
+
+    switch (mode) {
+        case EditMode::MOVE:
+            if (currentFreeGenerator && (e->buttons() & Qt::LeftButton)) {
+                // Moving item
+                emit cursorChanged(Qt::ClosedHandCursor);
+                return;
+            }
+            if (getFreeGeneratorAt(pos)) {
+                // Can move item
+                emit cursorChanged(Qt::OpenHandCursor);
+                return;
+            }
+            break;
+
+        case EditMode::CREATE_POINT:
+            emit cursorChanged(Qt::CrossCursor);
+            return;
+
+        case EditMode::FUNCTION:
+            if (itemAt(pos, QTransform())) {
+                emit cursorChanged(Qt::PointingHandCursor);
+                return;
+            }
+            break;
+    }
+
+    emit cursorChanged({});
 }
