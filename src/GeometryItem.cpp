@@ -19,7 +19,8 @@ void GeometryItem::endResetObject() {
 
 void GeometryItem::updateBoundingRect() {
     if (getObject()) {
-        update(getObject()->boundingRect());
+        prepareGeometryChange();
+        // update(getObject()->boundingRect());
     }
 }
 

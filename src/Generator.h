@@ -24,6 +24,8 @@ class Generator {
 
         GeometryItem* getGeometryItem() const { return item; }
 
+        void setPos(double x, double y);
+
     private:
         void initItem();
 

@@ -15,6 +15,8 @@ class Point : public GeometryObject {
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
+        void setPos(double x, double y);
+
         double x, y;
 
         static constexpr double paintRadius = 3;

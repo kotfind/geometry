@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "GeometryObject.h"
 #include "GeometryItem.h"
+#include "Point.h"
 
 Generator::Generator(Function* func, const QList<Generator*>& args, int funcResNum)
   : func(func),
@@ -26,13 +27,6 @@ Generator::Generator(Object* obj)
 
 void Generator::initItem() {
     item = new GeometryItem(this);
-
-    auto flags = item->flags();
-    flags |= QGraphicsItem::ItemIsFocusable;
-    if (isFree()) {
-        flags |= QGraphicsItem::ItemIsMovable;
-    }
-    item->setFlags(flags);
 }
 
 Generator::~Generator() {
@@ -67,4 +61,16 @@ void Generator::recalcDependant() const {
     for (auto* dep : dependant) {
         dep->recalc();
     }
+}
+
+void Generator::setPos(double x, double y) {
+    assert(isFree());
+    auto* pt = dynamic_cast<Point*>(object);
+    assert(pt);
+
+    item->beginResetObject();
+    pt->setPos(x, y);
+    item->endResetObject();
+
+    recalc();
 }

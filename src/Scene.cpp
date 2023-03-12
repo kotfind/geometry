@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <cassert>
 #include <QTransform>
+#include <QPointF>
 
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
 }
@@ -21,10 +22,20 @@ void Scene::setFunction(Function* f) {
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
-    double x = e->scenePos().x();
-    double y = e->scenePos().y();
+    QPointF pos = e->scenePos();
+    double x = pos.x();
+    double y = pos.y();
 
     switch (mode) {
+        case EditMode::MOVE:
+        {
+            auto* item = static_cast<GeometryItem*>(itemAt(pos, QTransform()));
+            currentFreeGenerator = item && item->getGenerator()->isFree()
+                ? item->getGenerator()
+                : nullptr;
+        }
+        break;
+
         case EditMode::CREATE_POINT:
         {
             auto* point = new Point(x, y);
@@ -39,7 +50,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             // TODO check type hints
             assert(func);
 
-            auto* item = static_cast<GeometryItem*>(itemAt(x, y, QTransform()));
+            auto* item = static_cast<GeometryItem*>(itemAt(pos, QTransform()));
             if (!item) break;
 
             auto* gen = item->getGenerator();
@@ -53,8 +64,34 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             }
         }
         break;
+    }
+}
 
-        default:
-            QGraphicsScene::mousePressEvent(e);
+void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
+    QPointF pos = e->scenePos();
+    double x = pos.x();
+    double y = pos.y();
+
+    switch (mode) {
+        case EditMode::MOVE:
+        {
+            if (!currentFreeGenerator) break;
+            currentFreeGenerator->setPos(x, y);
+        }
+        break;
+    }
+}
+
+void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
+    QPointF pos = e->scenePos();
+    double x = pos.x();
+    double y = pos.y();
+
+    switch (mode) {
+        case EditMode::MOVE:
+        {
+            currentFreeGenerator = nullptr;
+        }
+        break;
     }
 }

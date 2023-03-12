@@ -18,8 +18,12 @@ class Scene : public QGraphicsScene {
         Function* func = nullptr;
         QList<Generator*> selectedFuncArgs;
 
+        Generator* currentFreeGenerator = nullptr;
+
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent*) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent*) override;
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent*) override;
 
     public slots:
         void setMode(EditMode);
