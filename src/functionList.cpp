@@ -15,25 +15,25 @@ FUNC {
     "lineByTwoPoints",
     {Point::type, Point::type},
     DO {
-        auto* p1 = dynamic_cast<Point*>(objs[0]);
-        auto* p2 = dynamic_cast<Point*>(objs[1]);
+        const auto& p1 = *dynamic_cast<Point*>(objs[0]);
+        const auto& p2 = *dynamic_cast<Point*>(objs[1]);
 
-        if (*p1 == *p2)
+        if (p1 == p2)
             return {};
 
-        auto* l = new Line;
+        Line l;
 
-        if (eq(p1->x, p2->x)) {
-            l->a = 1;
-            l->b = 0;
-            l->c = -p1->x;
-            return {l};
+        if (eq(p1.x, p2.x)) {
+            l.a = 1;
+            l.b = 0;
+            l.c = -p1.x;
+            return {new Line(l)};
         }
 
-        l->a = p2->y - p1->y;
-        l->b = p1->x - p2->x;
-        l->c = -(l->a * p1->x + l->b * p1->y);
-        return {l};
+        l.a = p2.y - p1.y;
+        l.b = p1.x - p2.x;
+        l.c = -(l.a * p1.x + l.b * p1.y);
+        return {new Line(l)};
     }
 };
 
@@ -41,14 +41,14 @@ FUNC {
     "circleByCenterAndPoint",
     {Point::type, Point::type},
     DO {
-        auto* o = dynamic_cast<Point*>(objs[0]);
-        auto* p = dynamic_cast<Point*>(objs[1]);
+        const auto& o = *dynamic_cast<Point*>(objs[0]);
+        const auto& p = *dynamic_cast<Point*>(objs[1]);
 
-        if (*o == *p)
+        if (o == p)
             return {};
 
-        auto r = dist(*o, *p);
+        auto r = dist(o, p);
 
-        return {new Circle(*o, r)};
+        return {new Circle(o, r)};
     }
 };
