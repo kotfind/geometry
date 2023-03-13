@@ -14,6 +14,7 @@
 FUNC {
     "lineByTwoPoints",
     {Point::type, Point::type},
+    1,
     DO {
         const auto& p1 = *dynamic_cast<Point*>(objs[0]);
         const auto& p2 = *dynamic_cast<Point*>(objs[1]);
@@ -40,6 +41,7 @@ FUNC {
 FUNC {
     "circleByCenterAndPoint",
     {Point::type, Point::type},
+    1,
     DO {
         const auto& o = *dynamic_cast<Point*>(objs[0]);
         const auto& p = *dynamic_cast<Point*>(objs[1]);

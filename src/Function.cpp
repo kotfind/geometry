@@ -9,8 +9,10 @@ QHash<QString, Function*> Function::funcs;
 Function::Function(
     const QString& name,
     const QList<int>& typeHints,
+    int maxReturnSize,
     const std::function<QList<Object*>(const QList<Object*>&)>& func
 ) : typeHints(typeHints),
+    maxReturnSize(maxReturnSize),
     func(func)
 {
     funcs[name] = this;

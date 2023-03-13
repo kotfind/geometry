@@ -61,10 +61,12 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
             selectedFuncArgs << gen;
             if (selectedFuncArgs.size() == func->countArgs()) {
-                auto* gen = new Generator(func, selectedFuncArgs, 0 /* XXX */);
-                generators << gen;
-                auto* item = gen->getGeometryItem();
-                addItem(item);
+                for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
+                    auto* gen = new Generator(func, selectedFuncArgs, funcResNum);
+                    generators << gen;
+                    auto* item = gen->getGeometryItem();
+                    addItem(item);
+                }
 
                 selectedFuncArgs.clear();
             }
