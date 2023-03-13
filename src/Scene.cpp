@@ -13,6 +13,7 @@
 #include <QApplication>
 
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
+    setSceneRect(0, 0, 1, 1);
 }
 
 Scene::~Scene() {
