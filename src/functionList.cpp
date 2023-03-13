@@ -54,3 +54,23 @@ FUNC {
         return {new Circle(o, r)};
     }
 };
+
+FUNC {
+    "intersectTwoLines",
+    {Line::type, Line::type},
+    1,
+    DO {
+        const auto& l1 = *dynamic_cast<Line*>(objs[0]);
+        const auto& l2 = *dynamic_cast<Line*>(objs[1]);
+
+        double d  = l1.a * l2.b - l2.a * l1.b;
+        double dx = l2.c * l1.b - l1.c * l2.b;
+        double dy = l2.a * l1.c - l1.a * l2.c;
+
+        if (eq(d, 0)) {
+            return {};
+        }
+
+        return {new Point(dx / d, dy / d)};
+    }
+};
