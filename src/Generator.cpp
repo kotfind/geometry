@@ -34,24 +34,24 @@ Generator::~Generator() {
 }
 
 void Generator::recalc() {
-    recalcDependant();
+    if (!isFree()) {
+        QList<Object*> objs;
+        objs.reserve(args.size());
 
-    if (isFree()) return;
+        for (auto* gen : args) {
+            objs << gen->object;
+        }
 
-    QList<Object*> objs;
-    objs.reserve(args.size());
+        item->beginResetObject();
 
-    for (auto* gen : args) {
-        objs << gen->object;
+        delete object;
+        const auto& res = (*func)(objs);
+        object = funcResNum < res.size() ? res[funcResNum] : nullptr;
+
+        item->beginResetObject();
     }
 
-    item->beginResetObject();
-
-    delete object;
-    const auto& res = (*func)(objs);
-    object = funcResNum < res.size() ? res[funcResNum] : nullptr;
-
-    item->beginResetObject();
+    recalcDependant();
 }
 
 bool Generator::isFree() const {
