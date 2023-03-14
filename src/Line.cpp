@@ -14,7 +14,7 @@ Line::Line(double a, double b, double c) : GeometryObject(), a(a), b(b), c(c) {}
 
 void Line::paint(QPainter* qp) const {
     auto pen = qp->pen();
-    pen.setWidth(paintWidth);
+    pen.setWidthF(paintWidth);
     qp->setPen(pen);
 
     auto [p1, p2] = getTwoPoints();

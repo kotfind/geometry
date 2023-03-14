@@ -3,10 +3,10 @@
 #include "Function.h"
 #include "Scene.h"
 #include "EditMode.h"
+#include "View.h"
 
 #include <QAction>
 #include <QMenuBar>
-#include <QGraphicsView>
 
 MainWindow::MainWindow() : QMainWindow() {
     createUi();
@@ -19,12 +19,12 @@ MainWindow::MainWindow() : QMainWindow() {
         scene,
         &Scene::cursorChanged,
         view,
-        &QGraphicsView::setCursor
+        &View::setCursor
     );
 }
 
 void MainWindow::createUi() {
-    view = new QGraphicsView(this);
+    view = new View(this);
     view->setMouseTracking(true);
     setCentralWidget(view);
 }

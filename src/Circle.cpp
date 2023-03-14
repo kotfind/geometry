@@ -13,7 +13,7 @@ Circle::Circle(const Point& o, double r) : GeometryObject(), o(o), r(r) {}
 
 void Circle::paint(QPainter* qp) const {
     auto pen = qp->pen();
-    pen.setWidth(paintWidth);
+    pen.setWidthF(paintWidth);
     pen.setStyle(Qt::SolidLine);
     pen.setColor(Qt::black);
     qp->setPen(pen);

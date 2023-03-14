@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Generator.h"
 #include "GeometryItem.h"
+#include "Geometry.h"
 
 #include <QDebug>
 #include <cassert>
@@ -13,13 +14,13 @@
 #include <QApplication>
 
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
-    setSceneRect(0, 0, 1, 1);
+    geometry = new Geometry;
+
+    setSceneRect(geometry->getSceneRect());
 }
 
 Scene::~Scene() {
-    for (auto* gen : generators) {
-        delete gen;
-    }
+    delete geometry;
 }
 
 void Scene::setMode(EditMode m) {
@@ -44,7 +45,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             auto* point = new Point(pos.x(), pos.y());
             auto* gen = new Generator(point);
-            generators << gen;
+            geometry->addGenerator(gen);
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -64,7 +65,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
                     auto* gen = new Generator(func, selectedFuncArgs, funcResNum);
-                    generators << gen;
+                    geometry->addGenerator(gen);
                     auto* item = gen->getGeometryItem();
                     addItem(item);
                 }

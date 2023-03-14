@@ -15,7 +15,7 @@ class Circle : public GeometryObject {
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
-        const double paintWidth = 2;
+        static constexpr double paintWidth = 3e-3;
         
         Point o;
         double r;

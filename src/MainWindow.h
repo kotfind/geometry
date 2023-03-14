@@ -6,6 +6,7 @@
 
 class QGraphicsView;
 class Scene;
+class View;
 
 class MainWindow : public QMainWindow {
     public:
@@ -17,7 +18,7 @@ class MainWindow : public QMainWindow {
         void createActionsMenu();
 
         Scene* scene;
-        QGraphicsView* view;
+        View* view;
 
     private slots:
         void onFunctionActionTriggered();

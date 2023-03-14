@@ -32,6 +32,9 @@ add_executable(geometry
     GeometryItem.cpp
 
     Scene.cpp
+    View.cpp
+
+    Geometry.cpp
 )
 
 target_link_libraries(geometry

@@ -8,6 +8,7 @@
 
 class Function;
 class Generator;
+class Geometry;
 
 class Scene : public QGraphicsScene {
     Q_OBJECT
@@ -29,7 +30,7 @@ class Scene : public QGraphicsScene {
 
         Generator* currentFreeGenerator = nullptr;
 
-        QList<Generator*> generators; // put all generators here so that they could be properly deleted when Scene is deleted
+        Geometry* geometry;
 
     signals:
         void cursorChanged(const QCursor& cursor);

@@ -19,7 +19,7 @@ class Point : public GeometryObject {
 
         double x, y;
 
-        static constexpr double paintRadius = 3;
+        static constexpr double paintRadius = 5e-3;
 };
 
 bool operator==(const Point& p1, const Point& p2);

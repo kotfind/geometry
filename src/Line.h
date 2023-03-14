@@ -20,7 +20,7 @@ class Line : public GeometryObject {
 
         double a, b, c;
 
-        const double paintWidth = 2;
+        static constexpr double paintWidth = 3e-3;
 
     private:
         // XXX the size of line is quite random
