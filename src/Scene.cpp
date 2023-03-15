@@ -96,7 +96,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::MOVE:
         {
             if (!currentFreeGenerator) break;
-            currentFreeGenerator->move(delta.x(), delta.y());
+            currentFreeGenerator->move(delta);
         }
         break;
     }

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "GeometryObject.h"
-#include <QDebug>
+
+class QPointF;
 
 class Point : public GeometryObject {
     public:
@@ -9,14 +10,17 @@ class Point : public GeometryObject {
         static const int type = 2;
 
         Point();
+        Point(const QPointF& pos);
         Point(double x, double y);
 
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
-        void setPos(double x, double y);
-        void move(double x, double y);
+        void setPos(const QPointF& pos);
+        void move(const QPointF& delta);
+
+        QPointF getPos() const;
 
         double x, y;
 

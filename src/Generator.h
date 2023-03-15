@@ -6,6 +6,7 @@ class Function;
 class Object;
 class GeometryItem;
 class Geometry;
+class QPointF;
 
 class Generator {
     public:
@@ -25,7 +26,7 @@ class Generator {
 
         GeometryItem* getGeometryItem() const { return item; }
 
-        void move(double x, double y);
+        void move(const QPointF& delta);
 
         int getObjectType() const;
 

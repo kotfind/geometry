@@ -7,6 +7,8 @@
 #include "Point.h"
 #include "Geometry.h"
 
+#include <QPointF>
+
 Generator::Generator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum)
   : geom(geom),
     func(func),
@@ -43,8 +45,7 @@ void Generator::recalc() {
     if (isFree()) {
         auto* origPt = dynamic_cast<Point*>(origObject); // XXX
         auto* pt = dynamic_cast<Point*>(object); // XXX
-        auto [x, y] = geom->transform(QPointF(origPt->x, origPt->y)); // XXX
-        pt->setPos(x, y);
+        pt->setPos(geom->transform(origPt->getPos()));
     } else {
         QList<Object*> objs;
         objs.reserve(args.size());
@@ -75,13 +76,13 @@ void Generator::recalcDependant() const {
     }
 }
 
-void Generator::move(double x, double y) {
+void Generator::move(const QPointF& delta) {
     assert(isFree());
     auto* pt = dynamic_cast<Point*>(origObject); // XXX
     assert(pt);
 
     item->beginResetObject();
-    pt->move(x, y);
+    pt->move(delta);
     item->endResetObject();
 
     recalc();
