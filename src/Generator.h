@@ -25,7 +25,7 @@ class Generator {
 
         GeometryItem* getGeometryItem() const { return item; }
 
-        void setPos(double x, double y);
+        void move(double x, double y);
 
         int getObjectType() const;
 

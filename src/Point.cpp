@@ -11,13 +11,6 @@
 
 Point::Point() : Point(0, 0) {}
 Point::Point(double x, double y) : GeometryObject(), x(x), y(y) {}
-Point::Point(const Point& pt) : Point(pt.x, pt.y) {}
-
-Point& Point::operator=(const Point& pt) {
-    x = pt.x;
-    y = pt.y;
-    return *this;
-}
 
 void Point::paint(QPainter* qp) const {
     auto pen = qp->pen();
@@ -50,6 +43,11 @@ QPainterPath Point::shape() const {
 void Point::setPos(double x_, double y_) {
     x = x_;
     y = y_;
+}
+
+void Point::move(double x_, double y_) {
+    x += x_;
+    y += y_;
 }
 
 bool operator==(const Point& p1, const Point& p2) {

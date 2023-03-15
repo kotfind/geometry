@@ -81,11 +81,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
+    auto delta = e->scenePos() - e->lastScenePos();
 
     updateCursor(e);
 
     if (e->buttons() & Qt::MiddleButton) {
-        auto delta = e->scenePos() - e->lastScenePos();
         geom->move(delta);
         update();
     }
@@ -96,7 +96,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::MOVE:
         {
             if (!currentFreeGenerator) break;
-            currentFreeGenerator->setPos(pos.x(), pos.y());
+            currentFreeGenerator->move(delta.x(), delta.y());
         }
         break;
     }

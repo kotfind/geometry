@@ -75,13 +75,13 @@ void Generator::recalcDependant() const {
     }
 }
 
-void Generator::setPos(double x, double y) {
+void Generator::move(double x, double y) {
     assert(isFree());
-    auto* pt = dynamic_cast<Point*>(object);
+    auto* pt = dynamic_cast<Point*>(origObject); // XXX
     assert(pt);
 
     item->beginResetObject();
-    pt->setPos(x, y);
+    pt->move(x, y);
     item->endResetObject();
 
     recalc();
