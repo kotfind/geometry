@@ -11,6 +11,13 @@
 
 Point::Point() : Point(0, 0) {}
 Point::Point(double x, double y) : GeometryObject(), x(x), y(y) {}
+Point::Point(const Point& pt) : Point(pt.x, pt.y) {}
+
+Point& Point::operator=(const Point& pt) {
+    x = pt.x;
+    y = pt.y;
+    return *this;
+}
 
 void Point::paint(QPainter* qp) const {
     auto pen = qp->pen();

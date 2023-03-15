@@ -5,13 +5,15 @@
 #include "GeometryObject.h"
 #include "GeometryItem.h"
 #include "Point.h"
+#include "Geometry.h"
 
-Generator::Generator(Function* func, const QList<Generator*>& args, int funcResNum)
-  : func(func),
+Generator::Generator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum)
+  : geom(geom),
+    func(func),
     args(args),
     funcResNum(funcResNum)
 {
-    initItem();
+    init();
     recalc();
 
     for (auto* gen : args) {
@@ -19,22 +21,31 @@ Generator::Generator(Function* func, const QList<Generator*>& args, int funcResN
     }
 }
 
-Generator::Generator(Object* obj)
-  : object(obj)
+Generator::Generator(Geometry* geom, Object* obj)
+  : geom(geom),
+    origObject(obj),
+    object(new Point(*dynamic_cast<Point*>(obj))) // XXX
 {
-    initItem();
+    init();
 }
 
-void Generator::initItem() {
+void Generator::init() {
+    geom->addGenerator(this);
     item = new GeometryItem(this);
 }
 
 Generator::~Generator() {
     delete object;
+    delete origObject;
 }
 
 void Generator::recalc() {
-    if (!isFree()) {
+    if (isFree()) {
+        auto* origPt = dynamic_cast<Point*>(origObject); // XXX
+        auto* pt = dynamic_cast<Point*>(object); // XXX
+        auto [x, y] = geom->transform(QPointF(origPt->x, origPt->y)); // XXX
+        pt->setPos(x, y);
+    } else {
         QList<Object*> objs;
         objs.reserve(args.size());
 

@@ -14,13 +14,13 @@
 #include <QApplication>
 
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
-    geometry = new Geometry;
+    geom = new Geometry;
 
-    setSceneRect(geometry->getSceneRect());
+    setSceneRect(geom->getSceneRect());
 }
 
 Scene::~Scene() {
-    delete geometry;
+    delete geom;
 }
 
 void Scene::setMode(EditMode m) {
@@ -34,6 +34,10 @@ void Scene::setFunction(Function* f) {
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
+    updateCursor(e);
+
+    if (!(e->buttons() & Qt::LeftButton)) return;
+
     switch (mode) {
         case EditMode::MOVE:
         {
@@ -44,8 +48,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::CREATE_POINT:
         {
             auto* point = new Point(pos.x(), pos.y());
-            auto* gen = new Generator(point);
-            geometry->addGenerator(gen);
+            auto* gen = new Generator(geom, point);
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -64,8 +67,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             selectedFuncArgs << gen;
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-                    auto* gen = new Generator(func, selectedFuncArgs, funcResNum);
-                    geometry->addGenerator(gen);
+                    auto* gen = new Generator(geom, func, selectedFuncArgs, funcResNum);
                     auto* item = gen->getGeometryItem();
                     addItem(item);
                 }
@@ -75,12 +77,20 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
     }
-
-    updateCursor(e);
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
+
+    updateCursor(e);
+
+    if (e->buttons() & Qt::MiddleButton) {
+        auto delta = e->scenePos() - e->lastScenePos();
+        geom->move(delta);
+        update();
+    }
+
+    if (!(e->buttons() & Qt::LeftButton)) return;
 
     switch (mode) {
         case EditMode::MOVE:
@@ -90,12 +100,12 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
     }
-
-    updateCursor(e);
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
+
+    if (!(e->buttons() & Qt::LeftButton)) return;
 
     switch (mode) {
         case EditMode::MOVE:
@@ -104,8 +114,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
     }
-
-    updateCursor(e);
 }
 
 Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {

@@ -10,6 +10,8 @@ class Point : public GeometryObject {
 
         Point();
         Point(double x, double y);
+        Point(const Point& pt);
+        Point& operator=(const Point& pt);
 
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;

@@ -5,14 +5,15 @@
 class Function;
 class Object;
 class GeometryItem;
+class Geometry;
 
 class Generator {
     public:
         // Creates non-free generator
-        Generator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
+        Generator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum = 0);
 
         // Creates free generator
-        Generator(Object* obj);
+        Generator(Geometry* geom, Object* obj);
 
         ~Generator();
 
@@ -28,10 +29,16 @@ class Generator {
 
         int getObjectType() const;
 
+        const QList<Generator*>& getArgs() const { return args; }
+
     private:
-        void initItem();
+        void init();
 
         void recalcDependant() const;
+
+        // untrasformed object
+        // for free generators only
+        Object* origObject = nullptr;
 
         Object* object = nullptr;
         Function* func = nullptr;
@@ -41,6 +48,8 @@ class Generator {
 
         // List of generators that depends on current
         QList<Generator*> dependant;
+
+        Geometry* geom;
 
     friend GeometryItem;
 };

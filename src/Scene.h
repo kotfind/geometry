@@ -30,7 +30,7 @@ class Scene : public QGraphicsScene {
 
         Generator* currentFreeGenerator = nullptr;
 
-        Geometry* geometry;
+        Geometry* geom;
 
     signals:
         void cursorChanged(const QCursor& cursor);
