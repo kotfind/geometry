@@ -4,6 +4,8 @@
 #include "GeometryItem.h"
 #include "Geometry.h"
 
+#include <QJsonObject>
+
 Generator::Generator(Geometry* geom) : geom(geom) {
     geom->addGenerator(this);
     item = new GeometryItem(this);
@@ -49,4 +51,10 @@ void Generator::remove() {
     geom->removeGenerator(this);
     item->remove();
     delete this;
+}
+
+QJsonObject Generator::toJson() const {
+    QJsonObject json;
+    json["isFree"] = isFree();
+    return json;
 }

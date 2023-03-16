@@ -20,6 +20,8 @@ class Scene : public QGraphicsScene {
 
         ~Scene();
 
+        Geometry* getGeometry() { return geom; }
+
     private:
         FreeGenerator* getFreeGeneratorAt(const QPointF& pos) const;
         Generator* getGeneratorAt(const QPointF& pos, int type = 0) const;

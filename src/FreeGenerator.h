@@ -4,6 +4,7 @@
 
 class Point;
 class QPointF;
+class QJsonObject;
 
 class FreeGenerator : public Generator {
     public:
@@ -16,7 +17,10 @@ class FreeGenerator : public Generator {
 
         void move(const QPointF& delta);
 
+        QJsonObject toJson() const override;
+
     private:
+        const Point* point() const;
         Point* point();
 
         // untrasformed object

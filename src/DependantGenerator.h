@@ -5,6 +5,7 @@
 #include <QList>
 
 class Function;
+class QJsonObject;
 
 class DependantGenerator : public Generator {
     public:
@@ -18,8 +19,10 @@ class DependantGenerator : public Generator {
 
         void remove() override;
 
+        QJsonObject toJson() const override;
+
     private:
-        Function* func = nullptr;
+        Function* func;
         QList<Generator*> args;
         int funcResNum = 0;
 };

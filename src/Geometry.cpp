@@ -6,14 +6,23 @@
 #include <QHash>
 #include <cassert>
 #include <QDebug>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QString>
+#include <QFile>
+#include <QIODevice>
+#include <stdexcept>
+#include <QJsonDocument>
 
 Geometry::Geometry() {
 }
 
 Geometry::~Geometry() {
-    for (auto* gen : gens) {
-         delete gen;
-    }
+    clear();
+}
+
+bool Geometry::hasGenerators() const {
+    return !gens.isEmpty();
 }
 
 void Geometry::addGenerator(Generator* gen) {
@@ -57,4 +66,38 @@ void Geometry::move(const QPointF& delta) {
 
 QPointF Geometry::transform(const QPointF& pt) {
     return pt + shift;
+}
+
+QJsonObject Geometry::toJson() const {
+    QJsonObject json;
+
+    QJsonObject shiftJson;
+    shiftJson["x"] = shift.x();
+    shiftJson["y"] = shift.y();
+    json["shift"] = shiftJson;
+
+    QJsonArray gensJson;
+    for (auto* gen : gens) {
+        gensJson << gen->toJson();
+    }
+    json["gens"] = gensJson;
+
+    return json;
+}
+
+void Geometry::save(const QString& fileName) const {
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::WriteOnly))
+        throw std::runtime_error("Couldn't open file");
+
+    file.write(QJsonDocument(toJson()).toJson());
+}
+
+void Geometry::clear() {
+    shift = QPointF(0, 0);
+    while (!gens.isEmpty()) {
+        auto* gen = gens.first();
+        gen->remove();
+    }
 }

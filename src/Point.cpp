@@ -9,6 +9,7 @@
 #include <QPainterPath>
 #include <math.h>
 #include <QPointF>
+#include <QJsonObject>
 
 Point::Point() : Point(0, 0) {}
 Point::Point(const QPointF& pos) : Point(pos.x(), pos.y()) {}
@@ -62,4 +63,11 @@ double dist(const Point& p1, const Point& p2) {
 
 QPointF Point::getPos() const {
     return QPointF(x, y);
+}
+
+QJsonObject Point::toJson() const {
+    QJsonObject json;
+    json["x"] = x;
+    json["y"] = y;
+    return json;
 }

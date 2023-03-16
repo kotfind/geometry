@@ -3,6 +3,9 @@
 #include "Function.h"
 #include "Object.h"
 
+#include <QJsonObject>
+#include <QJsonArray>
+
 DependantGenerator::DependantGenerator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum)
   : Generator(geom),
     func(func),
@@ -34,4 +37,16 @@ void DependantGenerator::remove() {
         arg->removeDependant(this);
     }
     Generator::remove();
+}
+
+QJsonObject DependantGenerator::toJson() const {
+    auto json = Generator::toJson();
+    json["funcName"] = func->getName();
+    json["funcResNum"] = funcResNum;
+    QJsonArray jsonArgs;
+    for (auto arg : args) {
+        jsonArgs << QString::number((qulonglong)arg);
+    }
+    json["args"] = jsonArgs;
+    return json;
 }

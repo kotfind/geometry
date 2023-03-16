@@ -3,6 +3,7 @@
 #include "GeometryObject.h"
 
 class QPointF;
+class QJsonObject;
 
 class Point : public GeometryObject {
     public:
@@ -21,6 +22,8 @@ class Point : public GeometryObject {
         void move(const QPointF& delta);
 
         QPointF getPos() const;
+
+        QJsonObject toJson() const;
 
         double x, y;
 

@@ -5,12 +5,15 @@
 #include <QPointF>
 
 class Generator;
+class QJsonObject;
+class QString;
 
 class Geometry {
     public:
         Geometry();
         ~Geometry();
 
+        bool hasGenerators() const;
         void addGenerator(Generator*);
         void removeGenerator(Generator*);
 
@@ -19,6 +22,12 @@ class Geometry {
         void move(const QPointF& delta);
 
         QPointF transform(const QPointF& pt);
+
+        QJsonObject toJson() const;
+
+        void save(const QString& fileName) const;
+
+        void clear();
 
     private:
         void recalcAll();

@@ -5,6 +5,7 @@
 class Object;
 class GeometryItem;
 class Geometry;
+class QJsonObject;
 
 class Generator {
     public:
@@ -26,6 +27,8 @@ class Generator {
         const Object* getObject() const { return object; }
 
         virtual void remove();
+
+        virtual QJsonObject toJson() const;
 
     protected:
         Generator(Geometry* geom);

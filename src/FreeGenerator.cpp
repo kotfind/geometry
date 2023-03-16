@@ -5,6 +5,7 @@
 #include "Geometry.h"
 
 #include <QPointF>
+#include <QJsonObject>
 
 FreeGenerator::FreeGenerator(Geometry* geom, Point* pt)
   : Generator(geom),
@@ -29,6 +30,16 @@ void FreeGenerator::recalcSelf() {
     point()->setPos(geom->transform(origPoint->getPos()));
 }
 
+const Point* FreeGenerator::point() const {
+    return static_cast<Point*>(object);
+}
+
 Point* FreeGenerator::point() {
     return static_cast<Point*>(object);
+}
+
+QJsonObject FreeGenerator::toJson() const {
+    auto json = Generator::toJson();
+    json["object"] = point()->toJson();
+    return json;
 }

@@ -4,12 +4,17 @@
 #include "Scene.h"
 #include "EditMode.h"
 #include "View.h"
+#include "Geometry.h"
 
 #include <QAction>
 #include <QMenuBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QDebug>
 
 MainWindow::MainWindow() : QMainWindow() {
     createUi();
+    createFileMenu();
     createActionsMenu();
 
     scene = new Scene(this);
@@ -21,12 +26,46 @@ MainWindow::MainWindow() : QMainWindow() {
         view,
         &View::setCursor
     );
+
+    connect(
+        newAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onNewActionTriggered
+    );
+
+    connect(
+        saveAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onSaveActionTriggered
+    );
+
+    connect(
+        saveAsAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onSaveAsActionTriggered
+    );
 }
 
 void MainWindow::createUi() {
     view = new View(this);
     view->setMouseTracking(true);
     setCentralWidget(view);
+}
+
+void MainWindow::createFileMenu() {
+    auto* menu = menuBar()->addMenu(tr("File"));
+
+    newAction = new QAction(tr("New"));
+    menu->addAction(newAction);
+
+    saveAction = new QAction(tr("Save"));
+    menu->addAction(saveAction);
+
+    saveAsAction = new QAction(tr("Save As"));
+    menu->addAction(saveAsAction);
 }
 
 void MainWindow::createActionsMenu() {
@@ -78,4 +117,42 @@ void MainWindow::onFunctionActionTriggered() {
 
     scene->setMode(EditMode::FUNCTION);
     scene->setFunction(func);
+}
+
+void MainWindow::onNewActionTriggered() {
+    auto* geom = scene->getGeometry();
+
+    if (geom->hasGenerators()) {
+        auto reply = QMessageBox::question(
+            this,
+            tr("Save file?"),
+            tr("Would you like to save oppened file?")
+        );
+        if (reply == QMessageBox::Yes) {
+            onSaveActionTriggered();
+        }
+
+        geom->clear();
+    }
+}
+
+void MainWindow::onSaveActionTriggered() {
+    if (openedFileName.isEmpty()) {
+        onSaveAsActionTriggered();
+        return;
+    }
+
+    scene->getGeometry()->save(openedFileName);
+}
+
+void MainWindow::onSaveAsActionTriggered() {
+    auto fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Save file")
+    );
+
+    if (fileName.isEmpty()) return;
+
+    openedFileName = fileName;
+    scene->getGeometry()->save(openedFileName);
 }

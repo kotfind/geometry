@@ -11,7 +11,8 @@ Function::Function(
     const QList<int>& typeHints,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
-) : typeHints(typeHints),
+) : name(name),
+    typeHints(typeHints),
     maxReturnSize(maxReturnSize),
     func(func)
 {
