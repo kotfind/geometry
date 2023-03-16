@@ -61,13 +61,13 @@ void MainWindow::createUi() {
 void MainWindow::createFileMenu() {
     auto* menu = menuBar()->addMenu(tr("File"));
 
-    newAction = new QAction(tr("New"));
+    newAction = new QAction(tr("New"), this);
     menu->addAction(newAction);
 
-    saveAction = new QAction(tr("Save"));
+    saveAction = new QAction(tr("Save"), this);
     menu->addAction(saveAction);
 
-    saveAsAction = new QAction(tr("Save As"));
+    saveAsAction = new QAction(tr("Save As"), this);
     menu->addAction(saveAsAction);
 }
 
