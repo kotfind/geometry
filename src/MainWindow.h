@@ -23,6 +23,8 @@ class MainWindow : public QMainWindow {
 
         QAction* createModeAction(const QString& name, EditMode mode);
 
+        void updateTitle();
+
         QAction* newAction;
         QAction* saveAction;
         QAction* saveAsAction;

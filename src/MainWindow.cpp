@@ -11,8 +11,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
+#include <QFileInfo>
 
 MainWindow::MainWindow() : QMainWindow() {
+    updateTitle();
+
     createUi();
     createFileMenu();
     createActionsMenu();
@@ -134,6 +137,8 @@ void MainWindow::onNewActionTriggered() {
 
         geom->clear();
     }
+
+    updateTitle();
 }
 
 void MainWindow::onSaveActionTriggered() {
@@ -143,6 +148,8 @@ void MainWindow::onSaveActionTriggered() {
     }
 
     scene->getGeometry()->save(openedFileName);
+
+    updateTitle();
 }
 
 void MainWindow::onSaveAsActionTriggered() {
@@ -155,4 +162,13 @@ void MainWindow::onSaveAsActionTriggered() {
 
     openedFileName = fileName;
     scene->getGeometry()->save(openedFileName);
+
+    updateTitle();
+}
+
+void MainWindow::updateTitle() {
+    setWindowTitle(openedFileName.isEmpty()
+        ? tr("[Untitled]")
+        : QFileInfo(openedFileName).fileName()
+    );
 }
