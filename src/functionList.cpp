@@ -9,15 +9,15 @@
 #define CAT(a,b) CAT2(a,b) // force expand
 #define FUNC Function CAT(function,__COUNTER__)
 
-#define DO [](const QList<Object*>& objs) -> QList<Object*>
+#define DO [](const QList<const Object*>& objs) -> QList<Object*>
 
 FUNC {
     "lineByTwoPoints",
     {Point::type, Point::type},
     1,
     DO {
-        const auto& p1 = *dynamic_cast<Point*>(objs[0]);
-        const auto& p2 = *dynamic_cast<Point*>(objs[1]);
+        const auto& p1 = *dynamic_cast<const Point*>(objs[0]);
+        const auto& p2 = *dynamic_cast<const Point*>(objs[1]);
 
         if (p1 == p2)
             return {};
@@ -43,8 +43,8 @@ FUNC {
     {Point::type, Point::type},
     1,
     DO {
-        const auto& o = *dynamic_cast<Point*>(objs[0]);
-        const auto& p = *dynamic_cast<Point*>(objs[1]);
+        const auto& o = *dynamic_cast<const Point*>(objs[0]);
+        const auto& p = *dynamic_cast<const Point*>(objs[1]);
 
         if (o == p)
             return {};
@@ -60,8 +60,8 @@ FUNC {
     {Line::type, Line::type},
     1,
     DO {
-        const auto& l1 = *dynamic_cast<Line*>(objs[0]);
-        const auto& l2 = *dynamic_cast<Line*>(objs[1]);
+        const auto& l1 = *dynamic_cast<const Line*>(objs[0]);
+        const auto& l2 = *dynamic_cast<const Line*>(objs[1]);
 
         double d  = l1.a * l2.b - l2.a * l1.b;
         double dx = l2.c * l1.b - l1.c * l2.b;

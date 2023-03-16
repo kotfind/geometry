@@ -22,7 +22,7 @@ class Generator {
 
         void addDependant(Generator*);
 
-        Object* getObject() const { return object; }
+        const Object* getObject() const { return object; }
 
     protected:
         Generator(Geometry* geom);
@@ -37,6 +37,4 @@ class Generator {
 
         // List of generators that depends on current
         QList<Generator*> dependant;
-
-    friend GeometryItem;
 };

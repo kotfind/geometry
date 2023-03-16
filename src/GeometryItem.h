@@ -11,6 +11,8 @@ class Generator;
 // Is a proxy between GeometryObject and QGraphicsItem
 class GeometryItem : public QGraphicsItem {
     public:
+        GeometryItem(Generator* gen);
+
         Generator* getGenerator() const { return gen; }
 
         void beginResetObject();
@@ -21,13 +23,9 @@ class GeometryItem : public QGraphicsItem {
         QPainterPath shape() const override;
 
     private:
-        GeometryItem(Generator* gen);
-
         void updateBoundingRect();
 
-        GeometryObject* getObject() const;
+        const GeometryObject* object() const;
 
         Generator* gen = nullptr;
-
-    friend Generator;
 };

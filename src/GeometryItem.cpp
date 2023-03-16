@@ -18,26 +18,25 @@ void GeometryItem::endResetObject() {
 }
 
 void GeometryItem::updateBoundingRect() {
-    if (getObject()) {
+    if (object()) {
         prepareGeometryChange();
-        // update(getObject()->boundingRect());
     }
 }
 
 void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
-    if (getObject()) {
-        getObject()->paint(qp);
+    if (object()) {
+        object()->paint(qp);
     }
 }
 
 QRectF GeometryItem::boundingRect() const {
-    return getObject() ? getObject()->boundingRect() : QRectF();
+    return object() ? object()->boundingRect() : QRectF();
 }
 
 QPainterPath GeometryItem::shape() const {
-    return getObject() ? getObject()->shape() : QPainterPath();
+    return object() ? object()->shape() : QPainterPath();
 }
 
-GeometryObject* GeometryItem::getObject() const {
-    return dynamic_cast<GeometryObject*>(gen->object);
+const GeometryObject* GeometryItem::object() const {
+    return dynamic_cast<const GeometryObject*>(gen->getObject());
 }

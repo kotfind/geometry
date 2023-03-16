@@ -17,7 +17,7 @@ DependantGenerator::DependantGenerator(Geometry* geom, Function* func, const QLi
 }
 
 void DependantGenerator::recalcSelf() {
-    QList<Object*> objs;
+    QList<const Object*> objs;
     objs.reserve(args.size());
 
     for (auto* gen : args) {

@@ -10,7 +10,7 @@ Function::Function(
     const QString& name,
     const QList<int>& typeHints,
     int maxReturnSize,
-    const std::function<QList<Object*>(const QList<Object*>&)>& func
+    const std::function<QList<Object*>(const QList<const Object*>&)>& func
 ) : typeHints(typeHints),
     maxReturnSize(maxReturnSize),
     func(func)
@@ -18,7 +18,7 @@ Function::Function(
     funcs[name] = this;
 }
 
-QList<Object*> Function::operator()(const QList<Object*>& objs) const {
+QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
     if (objs.size() != countArgs())
         throw std::invalid_argument("Invalid number of objects");
 

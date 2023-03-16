@@ -13,10 +13,10 @@ class Function {
             const QString& name,
             const QList<int>& typeHints,
             int maxReturnSize,
-            const std::function<QList<Object*>(const QList<Object*>&)>& func
+            const std::function<QList<Object*>(const QList<const Object*>&)>& func
         );
 
-        QList<Object*> operator()(const QList<Object*>& objs) const;
+        QList<Object*> operator()(const QList<const Object*>& objs) const;
 
         int countArgs() const { return typeHints.size(); }
         const QList<int>& getTypeHints() const { return typeHints; }
@@ -30,5 +30,5 @@ class Function {
 
         QList<int> typeHints;
         int maxReturnSize;
-        std::function<QList<Object*>(const QList<Object*>&)> func;
+        std::function<QList<Object*>(const QList<const Object*>&)> func;
 };
