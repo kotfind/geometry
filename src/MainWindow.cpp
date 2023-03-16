@@ -32,29 +32,21 @@ void MainWindow::createUi() {
 void MainWindow::createActionsMenu() {
     auto* menu = menuBar()->addMenu(tr("Actions"));
 
-    // Move Mode
-    auto* moveModeAction = new QAction(tr("Move"), this);
-    connect(
-        moveModeAction,
-        &QAction::triggered,
-        [this]() {
-            scene->setMode(EditMode::MOVE);
-        }
-    );
-    menu->addAction(moveModeAction);
+    menu->addAction(createModeAction(
+        tr("Move"),
+        EditMode::MOVE
+    ));
 
-    // Create Point mode
-    auto* createPointModeAction = new QAction(tr("Create Point"), this);
-    connect(
-        createPointModeAction,
-        &QAction::triggered,
-        [this]() {
-            scene->setMode(EditMode::CREATE_POINT);
-        }
-    );
-    menu->addAction(createPointModeAction);
+    menu->addAction(createModeAction(
+        tr("Create Point"),
+        EditMode::CREATE_POINT
+    ));
 
-    // Functions
+    menu->addAction(createModeAction(
+        tr("Remove"),
+        EditMode::REMOVE
+    ));
+
     for (const auto& [name, func] : Function::getAll().asKeyValueRange()) {
         auto* action = new QAction(name, this);
         action->setData(QVariant::fromValue(func));
@@ -66,6 +58,18 @@ void MainWindow::createActionsMenu() {
         );
         menu->addAction(action);
     }
+}
+
+QAction* MainWindow::createModeAction(const QString& name, EditMode mode) {
+    auto* action = new QAction(name, this);
+    connect(
+        action,
+        &QAction::triggered,
+        [this, mode]() {
+            scene->setMode(mode);
+        }
+    );
+    return action;
 }
 
 void MainWindow::onFunctionActionTriggered() {

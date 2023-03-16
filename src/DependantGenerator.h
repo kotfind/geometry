@@ -16,6 +16,8 @@ class DependantGenerator : public Generator {
 
         const QList<Generator*>& getArgs() const { return args; }
 
+        void remove() override;
+
     private:
         Function* func = nullptr;
         QList<Generator*> args;

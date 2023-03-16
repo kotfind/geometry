@@ -3,6 +3,8 @@
 #include "GeometryObject.h"
 #include "Generator.h"
 
+#include <QGraphicsScene>
+
 GeometryItem::GeometryItem(Generator* gen)
 : QGraphicsItem(),
   gen(gen)
@@ -39,4 +41,11 @@ QPainterPath GeometryItem::shape() const {
 
 const GeometryObject* GeometryItem::object() const {
     return dynamic_cast<const GeometryObject*>(gen->getObject());
+}
+
+void GeometryItem::remove() {
+    if (scene()) {
+        scene()->removeItem(this);
+    }
+    delete this;
 }

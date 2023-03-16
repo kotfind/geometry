@@ -28,3 +28,10 @@ void DependantGenerator::recalcSelf() {
     const auto& res = (*func)(objs);
     object = funcResNum < res.size() ? res[funcResNum] : nullptr;
 }
+
+void DependantGenerator::remove() {
+    for (auto* arg : args) {
+        arg->removeDependant(this);
+    }
+    Generator::remove();
+}

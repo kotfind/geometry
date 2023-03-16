@@ -33,3 +33,20 @@ int Generator::getObjectType() const {
 void Generator::addDependant(Generator* g) {
     dependant << g;
 }
+
+void Generator::removeDependant(Generator* g) {
+    auto i = dependant.indexOf(g);
+    assert(i != -1);
+
+    std::swap(dependant[i], dependant.back());
+    dependant.pop_back();
+}
+
+void Generator::remove() {
+    for (auto* dep : dependant) {
+        dep->remove();
+    }
+    geom->removeGenerator(this);
+    item->remove();
+    delete this;
+}

@@ -12,6 +12,7 @@ class Geometry {
         ~Geometry();
 
         void addGenerator(Generator*);
+        void removeGenerator(Generator*);
 
         const QRectF& getSceneRect() const { return sceneRect; }
 
@@ -24,7 +25,7 @@ class Geometry {
 
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 
-        QList<Generator*> generators;
+        QList<Generator*> gens;
 
         QPointF shift = QPointF(0, 0);
 };

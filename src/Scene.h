@@ -22,7 +22,7 @@ class Scene : public QGraphicsScene {
 
     private:
         FreeGenerator* getFreeGeneratorAt(const QPointF& pos) const;
-        Generator* getTypedGeneratorAt(const QPointF& pos, int type) const;
+        Generator* getGeneratorAt(const QPointF& pos, int type = 0) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 

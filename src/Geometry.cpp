@@ -4,18 +4,28 @@
 #include "DependantGenerator.h"
 
 #include <QHash>
+#include <cassert>
+#include <QDebug>
 
 Geometry::Geometry() {
 }
 
 Geometry::~Geometry() {
-    for (auto* gen : generators) {
+    for (auto* gen : gens) {
          delete gen;
     }
 }
 
 void Geometry::addGenerator(Generator* gen) {
-    generators << gen;
+    gens << gen;
+}
+
+void Geometry::removeGenerator(Generator* gen) {
+    auto i = gens.indexOf(gen);
+    assert(i != -1);
+
+    std::swap(gens[i], gens.back());
+    gens.pop_back();
 }
 
 static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) {
@@ -33,7 +43,7 @@ static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) 
 
 void Geometry::recalcAll() {
     QHash<Generator*, int> recalced;
-    for (auto* u : generators) {
+    for (auto* u : gens) {
         if (!recalced[u]) {
             recalcGen(recalced, u);
         }

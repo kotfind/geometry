@@ -59,7 +59,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             assert(func);
 
-            auto* gen = getTypedGeneratorAt(
+            auto* gen = getGeneratorAt(
                 pos,
                 func->getTypeHints()[selectedFuncArgs.size()]
             );
@@ -74,6 +74,15 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
                 }
 
                 selectedFuncArgs.clear();
+            }
+        }
+        break;
+
+        case EditMode::REMOVE:
+        {
+            auto* gen = getGeneratorAt(pos);
+            if (gen) {
+                gen->remove();
             }
         }
         break;
@@ -129,12 +138,12 @@ FreeGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     return nullptr;
 }
 
-Generator* Scene::getTypedGeneratorAt(const QPointF& pos, int type) const {
+Generator* Scene::getGeneratorAt(const QPointF& pos, int type) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
         auto* gen = item->getGenerator();
-        if (gen->getObjectType() == type) {
+        if (type == 0 || gen->getObjectType() == type) {
             return gen;
         }
     }
@@ -164,7 +173,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::FUNCTION:
 
-            if (getTypedGeneratorAt(
+            if (getGeneratorAt(
                 pos,
                 func->getTypeHints()[selectedFuncArgs.size()]
             )) {
@@ -176,3 +185,5 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
 
     emit cursorChanged({});
 }
+
+

@@ -21,8 +21,11 @@ class Generator {
         int getObjectType() const;
 
         void addDependant(Generator*);
+        void removeDependant(Generator*);
 
         const Object* getObject() const { return object; }
+
+        virtual void remove();
 
     protected:
         Generator(Geometry* geom);

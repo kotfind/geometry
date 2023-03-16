@@ -7,6 +7,7 @@
 class QGraphicsView;
 class Scene;
 class View;
+class QString;
 
 class MainWindow : public QMainWindow {
     public:
@@ -16,6 +17,8 @@ class MainWindow : public QMainWindow {
         void createUi();
 
         void createActionsMenu();
+
+        QAction* createModeAction(const QString& name, EditMode mode);
 
         Scene* scene;
         View* view;

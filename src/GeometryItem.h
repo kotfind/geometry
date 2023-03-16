@@ -22,6 +22,8 @@ class GeometryItem : public QGraphicsItem {
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
+        void remove();
+
     private:
         void updateBoundingRect();
 
