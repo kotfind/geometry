@@ -172,7 +172,6 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             return;
 
         case EditMode::FUNCTION:
-
             if (getGeneratorAt(
                 pos,
                 func->getTypeHints()[selectedFuncArgs.size()]
@@ -181,9 +180,15 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
                 return;
             }
             break;
+
+        case EditMode::REMOVE:
+            if (getGeneratorAt(pos)) {
+                emit cursorChanged(Qt::ForbiddenCursor);
+                return;
+            }
+            break;
     }
 
     emit cursorChanged({});
 }
-
 
