@@ -26,6 +26,7 @@ Scene::~Scene() {
 
 void Scene::setMode(EditMode m) {
     mode = m;
+    selectedFuncArgs.clear();
 }
 
 void Scene::setFunction(Function* f) {
