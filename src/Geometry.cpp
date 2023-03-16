@@ -1,6 +1,7 @@
 #include "Geometry.h"
 
 #include "Generator.h"
+#include "DependantGenerator.h"
 
 #include <QHash>
 
@@ -18,12 +19,15 @@ void Geometry::addGenerator(Generator* gen) {
 }
 
 static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) {
-    for (auto& v : u->getArgs()) {
-        if (!recalced[v]) {
-            recalcGen(recalced, v);
+    if (u->isDependant()) {
+        auto* U = static_cast<DependantGenerator*>(u);
+        for (auto& v : U->getArgs()) {
+            if (!recalced[v]) {
+                recalcGen(recalced, v);
+            }
         }
     }
-    u->recalc();
+    u->recalcSelf();
     recalced[u] = true;
 }
 

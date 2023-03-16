@@ -7,8 +7,10 @@
 #include <QList>
 
 class Function;
-class Generator;
 class Geometry;
+class Generator;
+class FreeGenerator;
+class DependantGenerator;
 
 class Scene : public QGraphicsScene {
     Q_OBJECT
@@ -19,7 +21,7 @@ class Scene : public QGraphicsScene {
         ~Scene();
 
     private:
-        Generator* getFreeGeneratorAt(const QPointF& pos) const;
+        FreeGenerator* getFreeGeneratorAt(const QPointF& pos) const;
         Generator* getTypedGeneratorAt(const QPointF& pos, int type) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
@@ -28,7 +30,7 @@ class Scene : public QGraphicsScene {
         Function* func = nullptr;
         QList<Generator*> selectedFuncArgs;
 
-        Generator* currentFreeGenerator = nullptr;
+        FreeGenerator* currentFreeGenerator = nullptr;
 
         Geometry* geom;
 

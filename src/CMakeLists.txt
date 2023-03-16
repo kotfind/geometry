@@ -22,6 +22,8 @@ add_executable(geometry
     functionList.cpp
 
     Generator.cpp
+    FreeGenerator.cpp
+    DependantGenerator.cpp
 
     Point.cpp
     Line.cpp

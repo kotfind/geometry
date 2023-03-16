@@ -2,55 +2,41 @@
 
 #include <QList>
 
-class Function;
 class Object;
 class GeometryItem;
 class Geometry;
-class QPointF;
 
 class Generator {
     public:
-        // Creates non-free generator
-        Generator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum = 0);
+        virtual ~Generator();
 
-        // Creates free generator
-        Generator(Geometry* geom, Object* obj);
-
-        ~Generator();
+        virtual bool isFree() const = 0;
+        bool isDependant() const { return !isFree(); }
 
         void recalc();
-
-        // Returns true if func is nullptr
-        // i.e. object does not depend on others
-        bool isFree() const;
+        virtual void recalcSelf() = 0;
 
         GeometryItem* getGeometryItem() const { return item; }
 
-        void move(const QPointF& delta);
-
         int getObjectType() const;
 
-        const QList<Generator*>& getArgs() const { return args; }
+        void addDependant(Generator*);
 
-    private:
-        void init();
+        Object* getObject() const { return object; }
 
-        void recalcDependant() const;
-
-        // untrasformed object
-        // for free generators only
-        Object* origObject = nullptr;
+    protected:
+        Generator(Geometry* geom);
 
         Object* object = nullptr;
-        Function* func = nullptr;
-        QList<Generator*> args;
-        int funcResNum = 0;
         GeometryItem* item;
+
+        Geometry* geom;
+
+    private:
+        void recalcDependant() const;
 
         // List of generators that depends on current
         QList<Generator*> dependant;
-
-        Geometry* geom;
 
     friend GeometryItem;
 };

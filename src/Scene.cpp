@@ -2,16 +2,17 @@
 
 #include "Function.h"
 #include "Point.h"
-#include "Generator.h"
 #include "GeometryItem.h"
 #include "Geometry.h"
+#include "Generator.h"
+#include "FreeGenerator.h"
+#include "DependantGenerator.h"
 
 #include <QDebug>
 #include <cassert>
 #include <QTransform>
 #include <QPointF>
 #include <QCursor>
-#include <QApplication>
 
 Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
     geom = new Geometry;
@@ -47,8 +48,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
-            auto* point = new Point(pos.x(), pos.y());
-            auto* gen = new Generator(geom, point);
+            auto* point = new Point(pos);
+            auto* gen = new FreeGenerator(geom, point);
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -67,7 +68,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             selectedFuncArgs << gen;
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-                    auto* gen = new Generator(geom, func, selectedFuncArgs, funcResNum);
+                    auto* gen = new DependantGenerator(geom, func, selectedFuncArgs, funcResNum);
                     auto* item = gen->getGeometryItem();
                     addItem(item);
                 }
@@ -116,13 +117,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
     }
 }
 
-Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
+FreeGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
         auto* gen = item->getGenerator();
         if (gen->isFree()) {
-            return gen;
+            return static_cast<FreeGenerator*>(gen);
         }
     }
     return nullptr;
