@@ -3,6 +3,7 @@
 #include "Generator.h"
 
 #include <QList>
+#include <QHash>
 
 class Function;
 class QJsonObject;
@@ -19,7 +20,7 @@ class DependantGenerator : public Generator {
 
         void remove() override;
 
-        QJsonObject toJson() const override;
+        QJsonObject toJson(const QHash<Generator*, int>& ids) const override;
 
     private:
         Function* func;

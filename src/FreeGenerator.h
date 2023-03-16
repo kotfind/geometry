@@ -17,7 +17,7 @@ class FreeGenerator : public Generator {
 
         void move(const QPointF& delta);
 
-        QJsonObject toJson() const override;
+        QJsonObject toJson(const QHash<Generator*, int>& ids) const override;
 
     private:
         const Point* point() const;

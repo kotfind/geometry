@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <QHash>
 
 class Object;
 class GeometryItem;
@@ -28,7 +29,7 @@ class Generator {
 
         virtual void remove();
 
-        virtual QJsonObject toJson() const;
+        virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
 
     protected:
         Generator(Geometry* geom);

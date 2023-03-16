@@ -38,8 +38,8 @@ Point* FreeGenerator::point() {
     return static_cast<Point*>(object);
 }
 
-QJsonObject FreeGenerator::toJson() const {
-    auto json = Generator::toJson();
+QJsonObject FreeGenerator::toJson(const QHash<Generator*, int>& ids) const {
+    auto json = Generator::toJson(ids);
     json["object"] = point()->toJson();
     return json;
 }

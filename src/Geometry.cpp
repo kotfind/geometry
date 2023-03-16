@@ -76,9 +76,14 @@ QJsonObject Geometry::toJson() const {
     shiftJson["y"] = shift.y();
     json["shift"] = shiftJson;
 
+    QHash<Generator*, int> ids;
+    for (int i = 0; i < gens.size(); ++i) {
+        ids[gens[i]] = i;
+    }
+
     QJsonArray gensJson;
     for (auto* gen : gens) {
-        gensJson << gen->toJson();
+        gensJson << gen->toJson(ids);
     }
     json["gens"] = gensJson;
 

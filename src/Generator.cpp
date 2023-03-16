@@ -53,7 +53,7 @@ void Generator::remove() {
     delete this;
 }
 
-QJsonObject Generator::toJson() const {
+QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     QJsonObject json;
     json["isFree"] = isFree();
     return json;
