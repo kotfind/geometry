@@ -50,3 +50,24 @@ QJsonObject DependantGenerator::toJson(const QHash<Generator*, int>& ids) const 
     json["args"] = jsonArgs;
     return json;
 }
+
+void DependantGenerator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
+    const auto& json = jsonGens[i];
+
+    const auto& funcName = json["funcName"].toString();
+    auto* func = Function::get(funcName);
+
+    QList<Generator*> args;
+    const auto& jsonArgs = json["args"].toArray();
+    for (const auto& arg : jsonArgs) {
+        int id = arg.toInt();
+        if (!gens[id]) {
+            Generator::load(geom, jsonGens, gens, id);
+        }
+        args << gens[id];
+    }
+
+    auto funcResNum = json["funcResNum"].toInt();
+
+    gens[i] = new DependantGenerator(geom, func, args, funcResNum);
+}

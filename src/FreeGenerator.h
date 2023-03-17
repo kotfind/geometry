@@ -19,6 +19,8 @@ class FreeGenerator : public Generator {
 
         QJsonObject toJson(const QHash<Generator*, int>& ids) const override;
 
+        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
+
     private:
         const Point* point() const;
         Point* point();

@@ -27,6 +27,10 @@ class Geometry {
 
         void save(const QString& fileName) const;
 
+        void fromJson(const QJsonObject&);
+
+        void load(const QString& file);
+
         void clear();
 
     private:

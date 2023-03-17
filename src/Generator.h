@@ -7,6 +7,7 @@ class Object;
 class GeometryItem;
 class Geometry;
 class QJsonObject;
+class QJsonArray;
 
 class Generator {
     public:
@@ -30,6 +31,8 @@ class Generator {
         virtual void remove();
 
         virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
+
+        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
 
     protected:
         Generator(Geometry* geom);

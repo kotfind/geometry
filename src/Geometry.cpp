@@ -99,6 +99,22 @@ void Geometry::save(const QString& fileName) const {
     file.write(QJsonDocument(toJson()).toJson());
 }
 
+void Geometry::fromJson(const QJsonObject& json) {
+    const auto& shiftJson = json["shift"].toObject();
+
+}
+
+void Geometry::load(const QString& fileName) {
+    clear();
+
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::ReadOnly))
+        throw std::runtime_error("Couldn't open file");
+
+    fromJson(QJsonDocument::fromJson(file.readAll()).object());
+}
+
 void Geometry::clear() {
     shift = QPointF(0, 0);
     while (!gens.isEmpty()) {

@@ -24,6 +24,7 @@ class Point : public GeometryObject {
         QPointF getPos() const;
 
         QJsonObject toJson() const;
+        static Point* fromJson(const QJsonObject& json);
 
         double x, y;
 

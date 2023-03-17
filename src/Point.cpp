@@ -71,3 +71,10 @@ QJsonObject Point::toJson() const {
     json["y"] = y;
     return json;
 }
+
+Point* Point::fromJson(const QJsonObject& json) {
+    auto* pt = new Point;
+    pt->x = json["x"].toDouble();
+    pt->y = json["y"].toDouble();
+    return pt;
+}

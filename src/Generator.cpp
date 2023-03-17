@@ -3,8 +3,11 @@
 #include "Object.h"
 #include "GeometryItem.h"
 #include "Geometry.h"
+#include "FreeGenerator.h"
+#include "DependantGenerator.h"
 
 #include <QJsonObject>
+#include <QJsonArray>
 
 Generator::Generator(Geometry* geom) : geom(geom) {
     geom->addGenerator(this);
@@ -57,4 +60,13 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     QJsonObject json;
     json["isFree"] = isFree();
     return json;
+}
+
+void Generator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
+    auto isFree = jsonGens[i]["isFree"].toBool();
+    if (isFree) {
+        FreeGenerator::load(geom, jsonGens, gens, i);
+    } else {
+        DependantGenerator::load(geom, jsonGens, gens, i);
+    }
 }
