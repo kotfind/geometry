@@ -7,6 +7,7 @@
 class Generator;
 class QJsonObject;
 class QString;
+class QGraphicsScene;
 
 class Geometry {
     public:
@@ -32,6 +33,8 @@ class Geometry {
         void load(const QString& file);
 
         void clear();
+
+        void populateScene(QGraphicsScene*);
 
     private:
         void recalcAll();

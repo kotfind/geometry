@@ -2,6 +2,7 @@
 
 #include "Generator.h"
 #include "DependantGenerator.h"
+#include "GeometryItem.h"
 
 #include <QHash>
 #include <cassert>
@@ -13,6 +14,7 @@
 #include <QIODevice>
 #include <stdexcept>
 #include <QJsonDocument>
+#include <QGraphicsScene>
 
 Geometry::Geometry() {
 }
@@ -101,7 +103,17 @@ void Geometry::save(const QString& fileName) const {
 
 void Geometry::fromJson(const QJsonObject& json) {
     const auto& shiftJson = json["shift"].toObject();
+    shift.setX(json["x"].toInt());
+    shift.setY(json["y"].toInt());
 
+    const auto& jsonGens = json["gens"].toArray();
+    gens.fill(nullptr, jsonGens.size());
+
+    for (int i = 0; i < gens.size(); ++i) {
+        if (!gens[i]) {
+            Generator::load(this, jsonGens, gens, i);
+        }
+    }
 }
 
 void Geometry::load(const QString& fileName) {
@@ -120,5 +132,11 @@ void Geometry::clear() {
     while (!gens.isEmpty()) {
         auto* gen = gens.first();
         gen->remove();
+    }
+}
+
+void Geometry::populateScene(QGraphicsScene* scene) {
+    for (auto* gen : gens) {
+        scene->addItem(gen->getGeometryItem());
     }
 }
