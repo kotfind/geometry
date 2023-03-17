@@ -50,6 +50,13 @@ MainWindow::MainWindow() : QMainWindow() {
         this,
         &MainWindow::onSaveAsActionTriggered
     );
+
+    connect(
+        openAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onOpenActionTriggered
+    );
 }
 
 void MainWindow::createUi() {
@@ -69,6 +76,9 @@ void MainWindow::createFileMenu() {
 
     saveAsAction = new QAction(tr("Save As"), this);
     menu->addAction(saveAsAction);
+
+    openAction = new QAction(tr("Open"), this);
+    menu->addAction(openAction);
 }
 
 void MainWindow::createActionsMenu() {
@@ -162,6 +172,25 @@ void MainWindow::onSaveAsActionTriggered() {
 
     openedFileName = fileName;
     scene->getGeometry()->save(openedFileName);
+
+    updateTitle();
+}
+
+void MainWindow::onOpenActionTriggered() {
+    auto* geom = scene->getGeometry();
+
+    onNewActionTriggered();
+
+    auto fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Open file")
+    );
+
+    if (fileName.isEmpty()) return;
+
+    openedFileName = fileName;
+    geom->load(fileName);
+    geom->populateScene(scene);
 
     updateTitle();
 }

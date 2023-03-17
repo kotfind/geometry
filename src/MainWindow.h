@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow {
         QAction* newAction;
         QAction* saveAction;
         QAction* saveAsAction;
+        QAction* openAction;
 
         Scene* scene;
         View* view;
@@ -40,4 +41,5 @@ class MainWindow : public QMainWindow {
         void onNewActionTriggered();
         void onSaveActionTriggered();
         void onSaveAsActionTriggered();
+        void onOpenActionTriggered();
 };
