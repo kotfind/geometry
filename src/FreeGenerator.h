@@ -8,7 +8,7 @@ class QJsonObject;
 
 class FreeGenerator : public Generator {
     public:
-        FreeGenerator(Geometry* geom, Point* obj);
+        FreeGenerator(Point* obj);
         ~FreeGenerator();
 
         bool isFree() const override { return true; }

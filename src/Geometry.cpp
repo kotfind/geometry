@@ -29,6 +29,7 @@ bool Geometry::hasGenerators() const {
 
 void Geometry::addGenerator(Generator* gen) {
     gens << gen;
+    gen->setGeometry(this);
 }
 
 void Geometry::removeGenerator(Generator* gen) {

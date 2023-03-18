@@ -50,7 +50,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::CREATE_POINT:
         {
             auto* point = new Point(pos);
-            auto* gen = new FreeGenerator(geom, point);
+            auto* gen = new FreeGenerator(point);
+            geom->addGenerator(gen);
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -69,7 +70,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             selectedFuncArgs << gen;
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-                    auto* gen = new DependantGenerator(geom, func, selectedFuncArgs, funcResNum);
+                    auto* gen = new DependantGenerator(func, selectedFuncArgs, funcResNum);
+                    geom->addGenerator(gen);
                     auto* item = gen->getGeometryItem();
                     addItem(item);
                 }

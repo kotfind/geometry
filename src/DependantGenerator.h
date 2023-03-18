@@ -10,7 +10,7 @@ class QJsonObject;
 
 class DependantGenerator : public Generator {
     public:
-        DependantGenerator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum = 0);
+        DependantGenerator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
 
         bool isFree() const override { return false; }
 

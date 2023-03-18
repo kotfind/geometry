@@ -13,6 +13,8 @@ class Generator {
     public:
         virtual ~Generator();
 
+        void setGeometry(Geometry*);
+
         virtual bool isFree() const = 0;
         bool isDependant() const { return !isFree(); }
 
@@ -35,7 +37,7 @@ class Generator {
         static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
 
     protected:
-        Generator(Geometry* geom);
+        Generator();
 
         Object* object = nullptr;
         GeometryItem* item;

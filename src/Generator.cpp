@@ -9,13 +9,16 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-Generator::Generator(Geometry* geom) : geom(geom) {
-    geom->addGenerator(this);
+Generator::Generator() {
     item = new GeometryItem(this);
 }
 
 Generator::~Generator() {
     delete object;
+}
+
+void Generator::setGeometry(Geometry* g) {
+    geom = g;
 }
 
 void Generator::recalc() {

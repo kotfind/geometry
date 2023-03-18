@@ -6,8 +6,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-DependantGenerator::DependantGenerator(Geometry* geom, Function* func, const QList<Generator*>& args, int funcResNum)
-  : Generator(geom),
+DependantGenerator::DependantGenerator(Function* func, const QList<Generator*>& args, int funcResNum)
+  : Generator(),
     func(func),
     args(args),
     funcResNum(funcResNum)
@@ -69,5 +69,6 @@ void DependantGenerator::load(Geometry* geom, const QJsonArray& jsonGens, QList<
 
     auto funcResNum = json["funcResNum"].toInt();
 
-    gens[i] = new DependantGenerator(geom, func, args, funcResNum);
+    gens[i] = new DependantGenerator(func, args, funcResNum);
+    gens[i]->setGeometry(geom);
 }

@@ -8,8 +8,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-FreeGenerator::FreeGenerator(Geometry* geom, Point* pt)
-  : Generator(geom),
+FreeGenerator::FreeGenerator(Point* pt)
+  : Generator(),
     origPoint(pt)
 {
     object = new Point(*pt);
@@ -48,5 +48,6 @@ QJsonObject FreeGenerator::toJson(const QHash<Generator*, int>& ids) const {
 void FreeGenerator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
     const auto& json = jsonGens[i];
     auto* pt = Point::fromJson(json["object"].toObject());
-    gens[i] = new FreeGenerator(geom, pt);
+    gens[i] = new FreeGenerator(pt);
+    gens[i]->setGeometry(geom);
 }
