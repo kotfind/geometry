@@ -51,8 +51,10 @@ void Generator::removeDependant(Generator* g) {
 }
 
 void Generator::remove() {
-    for (auto* dep : dependant) {
-        dep->remove();
+    while (!dependant.empty()) {
+        // Next line will remove dependant[0] from dependant array,
+        // so dependant will eventually became empty
+        dependant[0]->remove();
     }
     geom->removeGenerator(this);
     item->remove();
