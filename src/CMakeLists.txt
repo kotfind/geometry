@@ -37,6 +37,8 @@ add_executable(geometry
     View.cpp
 
     Geometry.cpp
+
+    getOrThrow.cpp
 )
 
 target_link_libraries(geometry

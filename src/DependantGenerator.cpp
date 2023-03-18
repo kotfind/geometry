@@ -2,6 +2,7 @@
 
 #include "Function.h"
 #include "Object.h"
+#include "getOrThrow.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -54,11 +55,11 @@ QJsonObject DependantGenerator::toJson(const QHash<Generator*, int>& ids) const 
 void DependantGenerator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
     const auto& json = jsonGens[i];
 
-    const auto& funcName = json["funcName"].toString();
+    const auto& funcName = getOrThrow(json["funcName"]).toString();
     auto* func = Function::get(funcName);
 
     QList<Generator*> args;
-    const auto& jsonArgs = json["args"].toArray();
+    const auto& jsonArgs = getOrThrow(json["args"]).toArray();
     for (const auto& arg : jsonArgs) {
         int id = arg.toInt();
         if (!gens[id]) {
@@ -67,7 +68,7 @@ void DependantGenerator::load(Geometry* geom, const QJsonArray& jsonGens, QList<
         args << gens[id];
     }
 
-    auto funcResNum = json["funcResNum"].toInt();
+    auto funcResNum = getOrThrow(json["funcResNum"]).toInt();
 
     gens[i] = new DependantGenerator(func, args, funcResNum);
     gens[i]->setGeometry(geom);

@@ -5,6 +5,7 @@
 #include "Geometry.h"
 #include "FreeGenerator.h"
 #include "DependantGenerator.h"
+#include "getOrThrow.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -68,7 +69,7 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
 }
 
 void Generator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
-    auto isFree = jsonGens[i]["isFree"].toBool();
+    auto isFree = getOrThrow(jsonGens[i]["isFree"]).toBool();
     if (isFree) {
         FreeGenerator::load(geom, jsonGens, gens, i);
     } else {

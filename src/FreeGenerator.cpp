@@ -3,6 +3,7 @@
 #include "Point.h"
 #include "GeometryItem.h"
 #include "Geometry.h"
+#include "getOrThrow.h"
 
 #include <QPointF>
 #include <QJsonObject>
@@ -47,7 +48,7 @@ QJsonObject FreeGenerator::toJson(const QHash<Generator*, int>& ids) const {
 
 void FreeGenerator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
     const auto& json = jsonGens[i];
-    auto* pt = Point::fromJson(json["object"].toObject());
+    auto* pt = Point::fromJson(getOrThrow(json["object"]).toObject());
     gens[i] = new FreeGenerator(pt);
     gens[i]->setGeometry(geom);
 }

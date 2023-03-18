@@ -3,6 +3,8 @@
 #include "Generator.h"
 #include "DependantGenerator.h"
 #include "GeometryItem.h"
+#include "getOrThrow.h"
+#include "IOError.h"
 
 #include <QHash>
 #include <cassert>
@@ -97,17 +99,17 @@ void Geometry::save(const QString& fileName) const {
     QFile file(fileName);
 
     if (!file.open(QIODevice::WriteOnly))
-        throw std::runtime_error("Couldn't open file");
+        throw IOError("Couldn't open file");
 
     file.write(QJsonDocument(toJson()).toJson());
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
-    const auto& shiftJson = json["shift"].toObject();
-    shift.setX(json["x"].toInt());
-    shift.setY(json["y"].toInt());
+    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
+    shift.setX(getOrThrow(shiftJson["x"]).toInt());
+    shift.setY(getOrThrow(shiftJson["y"]).toInt());
 
-    const auto& jsonGens = json["gens"].toArray();
+    const auto& jsonGens = getOrThrow(json["gens"]).toArray();
     gens.fill(nullptr, jsonGens.size());
 
     for (int i = 0; i < gens.size(); ++i) {
@@ -123,7 +125,7 @@ void Geometry::load(const QString& fileName) {
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly))
-        throw std::runtime_error("Couldn't open file");
+        throw IOError("Couldn't open file");
 
     fromJson(QJsonDocument::fromJson(file.readAll()).object());
 }

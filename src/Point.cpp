@@ -1,6 +1,7 @@
 #include "Point.h"
 
 #include "global.h"
+#include "getOrThrow.h"
 
 #include <QRectF>
 #include <QPainter>
@@ -73,7 +74,7 @@ QJsonObject Point::toJson() const {
 
 Point* Point::fromJson(const QJsonObject& json) {
     auto* pt = new Point;
-    pt->x = json["x"].toDouble();
-    pt->y = json["y"].toDouble();
+    pt->x = getOrThrow(json["x"]).toDouble();
+    pt->y = getOrThrow(json["y"]).toDouble();
     return pt;
 }

@@ -5,6 +5,7 @@
 #include "EditMode.h"
 #include "View.h"
 #include "Geometry.h"
+#include "IOError.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -157,9 +158,16 @@ void MainWindow::onSaveActionTriggered() {
         return;
     }
 
-    scene->getGeometry()->save(openedFileName);
-
-    updateTitle();
+    try {
+        scene->getGeometry()->save(openedFileName);
+        updateTitle();
+    } catch (const IOError& err) {
+        QMessageBox::critical(
+            this,
+            tr("Input/ Output error"),
+            err.what()
+        );
+    }
 }
 
 void MainWindow::onSaveAsActionTriggered() {
@@ -170,10 +178,17 @@ void MainWindow::onSaveAsActionTriggered() {
 
     if (fileName.isEmpty()) return;
 
-    openedFileName = fileName;
-    scene->getGeometry()->save(openedFileName);
-
-    updateTitle();
+    try {
+        scene->getGeometry()->save(openedFileName);
+        openedFileName = fileName;
+        updateTitle();
+    } catch (const IOError& err) {
+        QMessageBox::critical(
+            this,
+            tr("Input/ Output error"),
+            err.what()
+        );
+    }
 }
 
 void MainWindow::onOpenActionTriggered() {
@@ -188,11 +203,19 @@ void MainWindow::onOpenActionTriggered() {
 
     if (fileName.isEmpty()) return;
 
-    openedFileName = fileName;
-    geom->load(fileName);
-    geom->populateScene(scene);
+    try {
+        geom->load(fileName);
+        geom->populateScene(scene);
+        openedFileName = fileName;
 
-    updateTitle();
+        updateTitle();
+    } catch (const IOError& err) {
+        QMessageBox::critical(
+            this,
+            tr("Input/ Output error"),
+            err.what()
+        );
+    }
 }
 
 void MainWindow::updateTitle() {
