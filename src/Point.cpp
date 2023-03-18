@@ -1,7 +1,6 @@
 #include "Point.h"
 
 #include "global.h"
-#include "exception.h"
 
 #include <QRectF>
 #include <QPainter>

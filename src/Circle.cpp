@@ -1,7 +1,5 @@
 #include "Circle.h"
 
-#include "exception.h"
-
 #include <QRectF>
 #include <QPainterPath>
 #include <QPainter>

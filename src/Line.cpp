@@ -1,6 +1,5 @@
 #include "Line.h"
 
-#include "exception.h"
 #include "global.h"
 
 #include <QRectF>
