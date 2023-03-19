@@ -179,7 +179,7 @@ void MainWindow::onSaveAsActionTriggered() {
     if (fileName.isEmpty()) return;
 
     try {
-        scene->getGeometry()->save(openedFileName);
+        scene->getGeometry()->save(fileName);
         openedFileName = fileName;
         updateTitle();
     } catch (const IOError& err) {
