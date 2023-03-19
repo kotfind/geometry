@@ -25,7 +25,13 @@ void DependantGenerator::recalcSelf() {
     objs.reserve(args.size());
 
     for (auto* gen : args) {
-        objs << gen->getObject();
+        auto* obj = gen->getObject();
+        if (!obj) {
+            delete object;
+            object = nullptr;
+            return;
+        }
+        objs << obj;
     }
 
     delete object;
