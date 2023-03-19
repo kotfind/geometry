@@ -8,8 +8,7 @@
 // Line with equation a*x + b*y + c = 0
 class Line : public GeometryObject {
     public:
-        int getType() const { return type; }
-        static const int type = 3;
+        Type getType() const { return Type::Line; }
 
         Line();
         Line(double a, double b, double c);

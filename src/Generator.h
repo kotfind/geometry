@@ -23,8 +23,6 @@ class Generator {
 
         GeometryItem* getGeometryItem() const { return item; }
 
-        int getObjectType() const;
-
         void addDependant(Generator*);
         void removeDependant(Generator*);
 

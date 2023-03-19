@@ -4,8 +4,7 @@
 
 class Real : public Object {
     public:
-        int getType() const { return type; }
-        static const int type = 1;
+        Type getType() const { return Type::Real; }
 
         Real() : Real(0) {}
         Real(double value) : Object(), value(value) {}

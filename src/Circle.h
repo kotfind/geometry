@@ -5,8 +5,7 @@
 
 class Circle : public GeometryObject {
     public:
-        int getType() const { return type; }
-        static const int type = 4;
+        Type getType() const { return Type::Line; }
 
         Circle();
         Circle(const Point& o, double r);

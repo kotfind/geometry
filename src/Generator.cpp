@@ -35,10 +35,6 @@ void Generator::recalcDependant() const {
     }
 }
 
-int Generator::getObjectType() const {
-    return object ? object->getType() : -1;
-}
-
 void Generator::addDependant(Generator* g) {
     dependant << g;
 }

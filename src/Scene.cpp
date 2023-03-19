@@ -141,12 +141,12 @@ FreeGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     return nullptr;
 }
 
-Generator* Scene::getGeneratorAt(const QPointF& pos, int type) const {
+Generator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
         auto* gen = item->getGenerator();
-        if (type == 0 || gen->getObjectType() == type) {
+        if (gen->getObject()->is(type)) {
             return gen;
         }
     }

@@ -7,8 +7,7 @@ class QJsonObject;
 
 class Point : public GeometryObject {
     public:
-        int getType() const { return type; }
-        static const int type = 2;
+        Type getType() const { return Type::Point; }
 
         Point();
         Point(const QPointF& pos);
