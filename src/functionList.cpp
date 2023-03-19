@@ -84,35 +84,32 @@ FUNC {
             //  ---------
             //      d
 
-            double r1 = w1.r;
-            double r2 = w2.r;
-            double d = dist(w1.o, w2.o);
+            auto r1 = w1.r;
+            auto r2 = w2.r;
+            auto o1 = w1.o;
+            auto o2 = w2.o;
+            auto d = dist(o1, o2);
 
-            // XXX one intersection point
-
-            if (!(le(abs(r1 - r2), d) && le(d, r1 + r2)))
+            if (gr(abs(r1 - r2), d) || gr(d, r1 + r2))
                 return {};
 
-            double cos_a = (r1*r1 + d*d - r2*r2) /
-                        // ---------------------
-                               (2 * r1 * d);
+            if (eq(abs(r1 - r2), d) || eq(d, r1 + r2)) {
+                return { new Point(norm(o2 - o1) * r1 + o1) };
+            }
 
-            double sin_a = sqrt(1 - cos_a*cos_a);
+            auto cos_a = (sq(r1) + sq(d) - sq(r2)) /
+                      // ---------------------
+                             (2 * r1 * d);
 
-            double x = (w2.o.x - w1.o.x) / d * r1;
-            double y = (w2.o.y - w1.o.y) / d * r1;
+            auto sin_a = sqrt(1 - cos_a*cos_a);
 
-            auto* p1 = new Point(
-                x*cos_a - y*sin_a + w1.o.x,
-                y*cos_a + x*sin_a + w1.o.y
-            );
+            auto v = norm(w2.o - w1.o) * r1;
 
-            auto* p2 = new Point(
-                x*cos_a + y*sin_a + w1.o.x,
-                y*cos_a - x*sin_a + w1.o.y
-            );
+            return {
+                new Point(rot(v, +sin_a, cos_a) + w1.o),
+                new Point(rot(v, -sin_a, cos_a) + w1.o),
+            };
 
-            return {p1, p2};
         } else {
             const Line* lPtr;
             const Circle* wPtr;
