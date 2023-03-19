@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QFileInfo>
+#include <QCloseEvent>
 
 MainWindow::MainWindow() : QMainWindow() {
     updateTitle();
@@ -133,10 +134,8 @@ void MainWindow::onFunctionActionTriggered() {
     scene->setFunction(func);
 }
 
-void MainWindow::onNewActionTriggered() {
-    auto* geom = scene->getGeometry();
-
-    if (geom->isChanged()) {
+void MainWindow::askForSave() {
+    if (scene->getGeometry()->isChanged()) {
         auto reply = QMessageBox::question(
             this,
             tr("Save file?"),
@@ -146,6 +145,12 @@ void MainWindow::onNewActionTriggered() {
             onSaveActionTriggered();
         }
     }
+}
+
+void MainWindow::onNewActionTriggered() {
+    auto* geom = scene->getGeometry();
+
+    askForSave();
 
     geom->clear();
     geom->setChanged(false);
@@ -230,4 +235,9 @@ void MainWindow::updateTitle() {
         ? tr("[Untitled]")
         : QFileInfo(openedFileName).fileName()
     );
+}
+
+void MainWindow::closeEvent(QCloseEvent* e) {
+    askForSave();
+    e->accept();
 }

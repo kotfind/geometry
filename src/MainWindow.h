@@ -9,6 +9,7 @@ class QGraphicsView;
 class Scene;
 class View;
 class QString;
+class QCloseEvent;
 
 class MainWindow : public QMainWindow {
     public:
@@ -25,6 +26,8 @@ class MainWindow : public QMainWindow {
 
         void updateTitle();
 
+        void askForSave();
+
         QAction* newAction;
         QAction* saveAction;
         QAction* saveAsAction;
@@ -34,6 +37,9 @@ class MainWindow : public QMainWindow {
         View* view;
 
         QString openedFileName = "";
+
+    protected:
+        void closeEvent(QCloseEvent*) override;
 
     private slots:
         void onFunctionActionTriggered();
