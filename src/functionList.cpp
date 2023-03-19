@@ -165,12 +165,18 @@ FUNC {
         const auto& a = *static_cast<const Point*>(objs[0]);
         const auto& l = *static_cast<const Line*>(objs[1]);
 
-        auto d = dist(a, l) * norm(l);
-        auto v = a + d;
-        if (!eq(dist(v, l), 0)) {
-            v = a - d;
-        }
+        return { new Line(a, a + norm(l)) };
+    }
+};
 
-        return { new Line(a, v) };
+FUNC {
+    "midpoint",
+    {Type::Point, Type::Point},
+    1,
+    DO {
+        const auto& p1 = *static_cast<const Point*>(objs[0]);
+        const auto& p2 = *static_cast<const Point*>(objs[1]);
+
+        return {new Point((p1 + p2) / 2)};
     }
 };
