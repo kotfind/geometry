@@ -25,13 +25,10 @@ Geometry::~Geometry() {
     clear();
 }
 
-bool Geometry::hasGenerators() const {
-    return !gens.isEmpty();
-}
-
 void Geometry::addGenerator(Generator* gen) {
     gens << gen;
     gen->setGeometry(this);
+    setChanged();
 }
 
 void Geometry::removeGenerator(Generator* gen) {
@@ -142,4 +139,8 @@ void Geometry::populateScene(QGraphicsScene* scene) {
     for (auto* gen : gens) {
         scene->addItem(gen->getGeometryItem());
     }
+}
+
+void Geometry::setChanged(bool v) {
+    changed = v;
 }

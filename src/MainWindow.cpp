@@ -136,7 +136,7 @@ void MainWindow::onFunctionActionTriggered() {
 void MainWindow::onNewActionTriggered() {
     auto* geom = scene->getGeometry();
 
-    if (geom->hasGenerators()) {
+    if (geom->isChanged()) {
         auto reply = QMessageBox::question(
             this,
             tr("Save file?"),
@@ -145,10 +145,10 @@ void MainWindow::onNewActionTriggered() {
         if (reply == QMessageBox::Yes) {
             onSaveActionTriggered();
         }
-
-        geom->clear();
     }
 
+    geom->clear();
+    geom->setChanged(false);
     updateTitle();
 }
 
@@ -158,9 +158,12 @@ void MainWindow::onSaveActionTriggered() {
         return;
     }
 
+    auto* geom = scene->getGeometry();
+
     try {
-        scene->getGeometry()->save(openedFileName);
+        geom->save(openedFileName);
         updateTitle();
+        geom->setChanged(false);
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
@@ -178,10 +181,13 @@ void MainWindow::onSaveAsActionTriggered() {
 
     if (fileName.isEmpty()) return;
 
+    auto* geom = scene->getGeometry();
+
     try {
-        scene->getGeometry()->save(fileName);
+        geom->save(fileName);
         openedFileName = fileName;
         updateTitle();
+        geom->setChanged(false);
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
@@ -209,6 +215,7 @@ void MainWindow::onOpenActionTriggered() {
         openedFileName = fileName;
 
         updateTitle();
+        geom->setChanged(false);
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,

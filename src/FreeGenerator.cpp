@@ -21,6 +21,8 @@ FreeGenerator::~FreeGenerator() {
 }
 
 void FreeGenerator::move(const QPointF& delta) {
+    geom->setChanged();
+
     item->beginResetObject();
     origPoint->move(delta);
     item->endResetObject();

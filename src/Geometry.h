@@ -14,7 +14,6 @@ class Geometry {
         Geometry();
         ~Geometry();
 
-        bool hasGenerators() const;
         void addGenerator(Generator*);
         void removeGenerator(Generator*);
 
@@ -36,6 +35,9 @@ class Geometry {
 
         void populateScene(QGraphicsScene*);
 
+        void setChanged(bool v = true);
+        bool isChanged() const { return changed; }
+
     private:
         void recalcAll();
 
@@ -44,4 +46,6 @@ class Geometry {
         QList<Generator*> gens;
 
         QPointF shift = QPointF(0, 0);
+
+        bool changed = false;
 };

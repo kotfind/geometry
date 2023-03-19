@@ -40,6 +40,8 @@ void Generator::addDependant(Generator* g) {
 }
 
 void Generator::removeDependant(Generator* g) {
+    geom->setChanged();
+
     auto i = dependant.indexOf(g);
     assert(i != -1);
 
