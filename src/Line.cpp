@@ -12,6 +12,17 @@
 
 Line::Line() : Line(0, 1, 0) {}
 Line::Line(double a, double b, double c) : GeometryObject(), a(a), b(b), c(c) {}
+Line::Line(const Point& p1, const Point& p2) : GeometryObject() {
+    if (eq(p1.x, p2.x)) {
+        a = 1;
+        b = 0;
+        c = -p1.x;
+    } else {
+        a = p2.y - p1.y;
+        b = p1.x - p2.x;
+        c = -(a * p1.x + b * p1.y);
+    }
+}
 
 void Line::paint(QPainter* qp) const {
     auto pen = qp->pen();

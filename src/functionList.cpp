@@ -23,19 +23,7 @@ FUNC {
         if (p1 == p2)
             return {};
 
-        Line l;
-
-        if (eq(p1.x, p2.x)) {
-            l.a = 1;
-            l.b = 0;
-            l.c = -p1.x;
-            return {new Line(l)};
-        }
-
-        l.a = p2.y - p1.y;
-        l.b = p1.x - p2.x;
-        l.c = -(l.a * p1.x + l.b * p1.y);
-        return {new Line(l)};
+        return {new Line(p1, p2)};
     }
 };
 
@@ -142,5 +130,47 @@ FUNC {
                 new Point(h - x),
             };
         }
+    }
+};
+
+FUNC {
+    "angleBisector",
+    {Type::Point, Type::Point, Type::Point},
+    1,
+    DO {
+        const auto& a = *static_cast<const Point*>(objs[0]);
+        const auto& o = *static_cast<const Point*>(objs[1]);
+        const auto& b = *static_cast<const Point*>(objs[2]);
+
+        auto oa = a - o;
+        auto ob = b - o;
+
+        auto l1 = len(oa);
+        auto l2 = len(ob);
+
+        oa *= l2;
+        ob *= l1;
+
+        auto oc = oa + ob;
+
+        return { new Line(o, o + oc) };
+    }
+};
+
+FUNC {
+    "perpendicular",
+    {Type::Point, Type::Line},
+    1,
+    DO {
+        const auto& a = *static_cast<const Point*>(objs[0]);
+        const auto& l = *static_cast<const Line*>(objs[1]);
+
+        auto d = dist(a, l) * norm(l);
+        auto v = a + d;
+        if (!eq(dist(v, l), 0)) {
+            v = a - d;
+        }
+
+        return { new Line(a, v) };
     }
 };
