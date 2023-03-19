@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Circle.h"
 #include "global.h"
+#include <QDebug>
 
 #define CAT2(a,b) a##b // actually concatenate
 #define CAT(a,b) CAT2(a,b) // force expand
@@ -56,21 +57,62 @@ FUNC {
 };
 
 FUNC {
-    "intersectTwoLines",
-    {Type::Line, Type::Line},
-    1,
+    "intersect",
+    {Type::Line | Type::Circle, Type::Line | Type::Circle},
+    2,
     DO {
-        const auto& l1 = *dynamic_cast<const Line*>(objs[0]);
-        const auto& l2 = *dynamic_cast<const Line*>(objs[1]);
+        if (objs[0]->is(Type::Line) && objs[1]->is(Type::Line)) {
+            const auto& l1 = *dynamic_cast<const Line*>(objs[0]);
+            const auto& l2 = *dynamic_cast<const Line*>(objs[1]);
 
-        double d  = l1.a * l2.b - l2.a * l1.b;
-        double dx = l2.c * l1.b - l1.c * l2.b;
-        double dy = l2.a * l1.c - l1.a * l2.c;
+            double d  = l1.a * l2.b - l2.a * l1.b;
+            double dx = l2.c * l1.b - l1.c * l2.b;
+            double dy = l2.a * l1.c - l1.a * l2.c;
 
-        if (eq(d, 0)) {
-            return {};
+            if (eq(d, 0)) {
+                return {};
+            }
+
+            return {new Point(dx / d, dy / d)};
+        } else if (objs[0]->is(Type::Circle) && objs[1]->is(Type::Circle)) {
+            const auto& w1 = *dynamic_cast<const Circle*>(objs[0]);
+            const auto& w2 = *dynamic_cast<const Circle*>(objs[1]);
+
+            //    /\
+            // r1/   \ r2
+            //  /a     \
+            //  ---------
+            //      d
+
+            double r1 = w1.r;
+            double r2 = w2.r;
+            double d = dist(w1.o, w2.o);
+
+            // XXX one intersection point
+
+            if (!(le(abs(r1 - r2), d) && le(d, r1 + r2)))
+                return {};
+
+            double cos_a = (r1*r1 + d*d - r2*r2) /
+                        // ---------------------
+                               (2 * r1 * d);
+
+            double sin_a = sqrt(1 - cos_a*cos_a);
+
+            double x = (w2.o.x - w1.o.x) / d * r1;
+            double y = (w2.o.y - w1.o.y) / d * r1;
+
+            auto* p1 = new Point(
+                x*cos_a - y*sin_a + w1.o.x,
+                y*cos_a + x*sin_a + w1.o.y
+            );
+
+            auto* p2 = new Point(
+                x*cos_a + y*sin_a + w1.o.x,
+                y*cos_a - x*sin_a + w1.o.y
+            );
+
+            return {p1, p2};
         }
-
-        return {new Point(dx / d, dy / d)};
     }
 };
