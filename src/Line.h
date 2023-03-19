@@ -2,10 +2,10 @@
 
 #include "GeometryObject.h"
 
-#include <QPair> // TODO delete me
-#include <QPointF> // TODO delete me
+#include <QPair>
 
 class Point;
+class QPointF;
 
 // Line with equation a*x + b*y + c = 0
 class Line : public GeometryObject {
@@ -24,7 +24,6 @@ class Line : public GeometryObject {
         static constexpr double paintWidth = 3e-3;
 
     private:
-        // XXX the size of line is quite random
         QPair<QPointF, QPointF> getTwoPoints() const;
 
         QPointF getNorm() const;

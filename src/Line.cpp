@@ -8,6 +8,7 @@
 #include <QPainterPath>
 #include <QPen>
 #include <math.h>
+#include <QPointF>
 
 Line::Line() : Line(0, 1, 0) {}
 Line::Line(double a, double b, double c) : GeometryObject(), a(a), b(b), c(c) {}
@@ -48,10 +49,10 @@ QPainterPath Line::shape() const {
 QPair<QPointF, QPointF> Line::getTwoPoints() const {
     if (eq(b, 0)) {
         double x = -c / a;
-        return {{x, -1000}, {x, 1000}};
+        return {{x, -10}, {x, 10}};
     } else {
-        double x1 = -1000;
-        double x2 = 1000;
+        double x1 = -10;
+        double x2 = 10;
         double y1 = -(a * x1 + c) / b;
         double y2 = -(a * x2 + c) / b;
         return {{x1, y1}, {x2, y2}};
