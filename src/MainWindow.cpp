@@ -31,34 +31,6 @@ MainWindow::MainWindow() : QMainWindow() {
         view,
         &View::setCursor
     );
-
-    connect(
-        newAction,
-        &QAction::triggered,
-        this,
-        &MainWindow::onNewActionTriggered
-    );
-
-    connect(
-        saveAction,
-        &QAction::triggered,
-        this,
-        &MainWindow::onSaveActionTriggered
-    );
-
-    connect(
-        saveAsAction,
-        &QAction::triggered,
-        this,
-        &MainWindow::onSaveAsActionTriggered
-    );
-
-    connect(
-        openAction,
-        &QAction::triggered,
-        this,
-        &MainWindow::onOpenActionTriggered
-    );
 }
 
 void MainWindow::createUi() {
@@ -71,15 +43,43 @@ void MainWindow::createFileMenu() {
     auto* menu = menuBar()->addMenu(tr("File"));
 
     newAction = new QAction(tr("New"), this);
+    newAction->setShortcut(Qt::CTRL | Qt::Key_N);
+    connect(
+        newAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onNewActionTriggered
+    );
     menu->addAction(newAction);
 
     saveAction = new QAction(tr("Save"), this);
+    saveAction->setShortcut(Qt::CTRL | Qt::Key_S);
+    connect(
+        saveAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onSaveActionTriggered
+    );
     menu->addAction(saveAction);
 
     saveAsAction = new QAction(tr("Save As"), this);
+    saveAsAction->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_S);
+    connect(
+        saveAsAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onSaveAsActionTriggered
+    );
     menu->addAction(saveAsAction);
 
     openAction = new QAction(tr("Open"), this);
+    openAction->setShortcut(Qt::CTRL | Qt::Key_O);
+    connect(
+        openAction,
+        &QAction::triggered,
+        this,
+        &MainWindow::onOpenActionTriggered
+    );
     menu->addAction(openAction);
 }
 
