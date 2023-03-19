@@ -30,6 +30,17 @@ QRectF Circle::boundingRect() const {
 
 QPainterPath Circle::shape() const {
     QPainterPath path;
-    path.addEllipse(boundingRect());
+    path.addEllipse(QRectF(
+        o.x - r - paintWidth,
+        o.y - r - paintWidth,
+        (paintWidth + r) * 2,
+        (paintWidth + r) * 2
+    ));
+    path.addEllipse(QRectF(
+        o.x - r + paintWidth,
+        o.y - r + paintWidth,
+        (r - paintWidth) * 2,
+        (r - paintWidth) * 2
+    ));
     return path;
 }
