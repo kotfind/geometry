@@ -32,4 +32,21 @@ class Point : public GeometryObject {
 
 bool operator==(const Point& p1, const Point& p2);
 
+Point& operator+=(Point& lhs, const Point& rhs);
+Point& operator-=(Point& lhs, const Point& rhs);
+Point& operator*=(Point& lhs, double rhs);
+Point& operator/=(Point& lhs, double rhs);
+
+Point operator+(const Point& lhs, const Point& rhs);
+Point operator-(const Point& lhs, const Point& rhs);
+Point operator*(const Point& lhs, double rhs);
+Point operator*(double lhs, const Point& rhs);
+Point operator/(const Point& lhs, double rhs);
+
 double dist(const Point& p1, const Point& p2);
+double len(const Point& v);
+
+Point rot(const Point& v, double sin_a, double cos_a);
+Point rot(const Point& v, double a);
+
+Point norm(const Point& v);

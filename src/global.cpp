@@ -21,3 +21,7 @@ bool leq(double a, double b) {
 bool geq(double a, double b) {
     return a > b - eps;
 }
+
+double sq(double x) {
+    return x*x;
+}

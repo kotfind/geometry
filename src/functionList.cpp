@@ -17,8 +17,8 @@ FUNC {
     {Type::Point, Type::Point},
     1,
     DO {
-        const auto& p1 = *dynamic_cast<const Point*>(objs[0]);
-        const auto& p2 = *dynamic_cast<const Point*>(objs[1]);
+        const auto& p1 = *static_cast<const Point*>(objs[0]);
+        const auto& p2 = *static_cast<const Point*>(objs[1]);
 
         if (p1 == p2)
             return {};
@@ -44,8 +44,8 @@ FUNC {
     {Type::Point, Type::Point},
     1,
     DO {
-        const auto& o = *dynamic_cast<const Point*>(objs[0]);
-        const auto& p = *dynamic_cast<const Point*>(objs[1]);
+        const auto& o = *static_cast<const Point*>(objs[0]);
+        const auto& p = *static_cast<const Point*>(objs[1]);
 
         if (o == p)
             return {};
@@ -62,8 +62,8 @@ FUNC {
     2,
     DO {
         if (objs[0]->is(Type::Line) && objs[1]->is(Type::Line)) {
-            const auto& l1 = *dynamic_cast<const Line*>(objs[0]);
-            const auto& l2 = *dynamic_cast<const Line*>(objs[1]);
+            const auto& l1 = *static_cast<const Line*>(objs[0]);
+            const auto& l2 = *static_cast<const Line*>(objs[1]);
 
             double d  = l1.a * l2.b - l2.a * l1.b;
             double dx = l2.c * l1.b - l1.c * l2.b;
@@ -75,8 +75,8 @@ FUNC {
 
             return {new Point(dx / d, dy / d)};
         } else if (objs[0]->is(Type::Circle) && objs[1]->is(Type::Circle)) {
-            const auto& w1 = *dynamic_cast<const Circle*>(objs[0]);
-            const auto& w2 = *dynamic_cast<const Circle*>(objs[1]);
+            const auto& w1 = *static_cast<const Circle*>(objs[0]);
+            const auto& w2 = *static_cast<const Circle*>(objs[1]);
 
             //    /\
             // r1/   \ r2
@@ -113,6 +113,37 @@ FUNC {
             );
 
             return {p1, p2};
+        } else {
+            const Line* lPtr;
+            const Circle* wPtr;
+            if (objs[0]->is(Type::Line)) {
+                lPtr = static_cast<const Line*>(objs[0]);
+                wPtr = static_cast<const Circle*>(objs[1]);
+            } else {
+                lPtr = static_cast<const Line*>(objs[1]);
+                wPtr = static_cast<const Circle*>(objs[0]);
+            }
+
+            const auto& l = *lPtr;
+            const auto& w = *wPtr;
+
+            double d = dist(w.o, l);
+            if (gr(d, w.r))
+                return {};
+
+            auto h = w.o + norm(l) * d;
+            if (!eq(dist(h, l), 0)) {
+                h = w.o - norm(l) * d;
+            }
+            if (eq(d, w.r))
+                return {new Point(h)};
+
+            auto x = sqrt(sq(w.r) - sq(d)) * dir(l);
+
+            return {
+                new Point(h + x),
+                new Point(h - x),
+            };
         }
     }
 };

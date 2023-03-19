@@ -57,10 +57,6 @@ bool operator==(const Point& p1, const Point& p2) {
     return eq(p1.x, p2.x) && eq(p1.y, p2.y);
 }
 
-double dist(const Point& p1, const Point& p2) {
-    return std::hypot(p1.x - p2.x, p1.y - p2.y);
-}
-
 QPointF Point::getPos() const {
     return QPointF(x, y);
 }
@@ -77,4 +73,79 @@ Point* Point::fromJson(const QJsonObject& json) {
     pt->x = getOrThrow(json["x"]).toDouble();
     pt->y = getOrThrow(json["y"]).toDouble();
     return pt;
+}
+
+Point& operator+=(Point& lhs, const Point& rhs) {
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    return lhs;
+}
+
+Point& operator-=(Point& lhs, const Point& rhs){
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    return lhs;
+}
+
+Point& operator*=(Point& lhs, double rhs){
+    lhs.x *= rhs;
+    lhs.y *= rhs;
+    return lhs;
+}
+
+Point& operator/=(Point& lhs, double rhs){
+    lhs.x /= rhs;
+    lhs.y /= rhs;
+    return lhs;
+}
+
+Point operator+(const Point& lhs, const Point& rhs){
+    auto ans = lhs;
+    ans += rhs;
+    return ans;
+}
+
+Point operator-(const Point& lhs, const Point& rhs){
+    auto ans = lhs;
+    ans -= rhs;
+    return ans;
+}
+
+Point operator*(const Point& lhs, double rhs) {
+    auto ans = lhs;
+    ans *= rhs;
+    return ans;
+}
+
+Point operator*(double lhs, const Point& rhs) {
+    return rhs * lhs;
+}
+
+Point operator/(const Point& lhs, double rhs) {
+    auto ans = lhs;
+    ans /= rhs;
+    return ans;
+}
+
+double dist(const Point& p1, const Point& p2) {
+    return std::hypot(p1.x - p2.x, p1.y - p2.y);
+}
+
+double len(const Point& v) {
+    return std::hypot(v.x, v.y);
+}
+
+Point rot(const Point& v, double sin_a, double cos_a) {
+    return Point(
+        v.x*cos_a - v.y*sin_a,
+        v.y*cos_a + v.x*sin_a
+    );
+}
+
+Point rot(const Point& v, double a) {
+    return rot(v, sin(a), cos(a));
+}
+
+Point norm(const Point& v) {
+    return v / len(v);
 }

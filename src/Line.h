@@ -5,6 +5,8 @@
 #include <QPair> // TODO delete me
 #include <QPointF> // TODO delete me
 
+class Point;
+
 // Line with equation a*x + b*y + c = 0
 class Line : public GeometryObject {
     public:
@@ -27,3 +29,9 @@ class Line : public GeometryObject {
 
         QPointF getNorm() const;
 };
+
+double dist(const Line& l, const Point& p);
+double dist(const Point& p, const Line& l);
+
+Point norm(const Line& l);
+Point dir(const Line& l);

@@ -1,6 +1,7 @@
 #include "Line.h"
 
 #include "global.h"
+#include "Point.h"
 
 #include <QRectF>
 #include <QPainter>
@@ -63,3 +64,19 @@ QPointF Line::getNorm() const {
     return res;
 }
 
+double dist(const Line& l, const Point& p) {
+    return abs(l.a * p.x + l.b * p.y + l.c) / hypot(l.a, l.b);
+}
+
+double dist(const Point& p, const Line& l) {
+    return dist(l, p);
+}
+
+Point norm(const Line& l) {
+    return norm(Point(l.a, l.b));
+}
+
+Point dir(const Line& l) {
+    auto ans = norm(l);
+    return Point(-ans.y, ans.x);
+}
