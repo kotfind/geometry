@@ -13,12 +13,15 @@
 #define FUNC Function CAT(function,__COUNTER__)
 
 #define DO [](const QList<const Object*>& objs) -> QList<Object*>
-#define DESC(desc) QObject::tr(desc)
+#define TR
 
 FUNC {
     "line",
-    DESC("Creates line by two points."),
-    {Type::Point, Type::Point},
+    TR("Creates line by two points."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Second point")},
+    },
     1,
     DO {
         const auto& p1 = *static_cast<const Point*>(objs[0]);
@@ -33,8 +36,11 @@ FUNC {
 
 FUNC {
     "circleByCenterAndPoint",
-    DESC("Creates circle by center and point on it."),
-    {Type::Point, Type::Point},
+    TR("Creates circle by center and point on it."),
+    {
+        {Type::Point, TR("Center")},
+        {Type::Point, TR("Point on circle")},
+    },
     1,
     DO {
         const auto& o = *static_cast<const Point*>(objs[0]);
@@ -51,8 +57,11 @@ FUNC {
 
 FUNC {
     "intersect",
-    DESC("Intersects two objects."),
-    {Type::Line | Type::Circle, Type::Line | Type::Circle},
+    TR("Intersects two objects."),
+    {
+        {Type::Line | Type::Circle, TR("First object")},
+        {Type::Line | Type::Circle, TR("Second object")},
+    },
     2,
     DO {
         if (objs[0]->is(Type::Line) && objs[1]->is(Type::Line)) {
@@ -141,8 +150,12 @@ FUNC {
 
 FUNC {
     "angleBisector",
-    DESC("Creates bisector line of angle formed by three points."),
-    {Type::Point, Type::Point, Type::Point},
+    TR("Creates bisector line of angle formed by three points."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Angle vertex")},
+        {Type::Point, TR("Second point")},
+    },
     1,
     DO {
         const auto& a = *static_cast<const Point*>(objs[0]);
@@ -166,8 +179,11 @@ FUNC {
 
 FUNC {
     "perpendicular",
-    DESC("Creates line perpendicular to current line through current point."),
-    {Type::Point, Type::Line},
+    TR("Creates line perpendicular to current line through current point."),
+    {
+        {Type::Point, TR("Point")},
+        {Type::Line, TR("Line")},
+    },
     1,
     DO {
         const auto& a = *static_cast<const Point*>(objs[0]);
@@ -179,8 +195,11 @@ FUNC {
 
 FUNC {
     "midpoint",
-    DESC("Creates point between two current."),
-    {Type::Point, Type::Point},
+    TR("Creates point between two current."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Second point")},
+    },
     1,
     DO {
         const auto& p1 = *static_cast<const Point*>(objs[0]);

@@ -63,7 +63,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
             auto* gen = getGeneratorAt(
                 pos,
-                func->getTypeHints()[selectedFuncArgs.size()]
+                func->getArgInfo(selectedFuncArgs.size()).getType()
             );
             if (!gen) break;
 
@@ -177,7 +177,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
         case EditMode::FUNCTION:
             if (getGeneratorAt(
                 pos,
-                func->getTypeHints()[selectedFuncArgs.size()]
+                func->getArgInfo(selectedFuncArgs.size()).getType()
             )) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;

@@ -9,12 +9,12 @@ QHash<QString, Function*> Function::funcs;
 Function::Function(
     const QString& name,
     const QString& description,
-    const QList<Type>& typeHints,
+    const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
 ) : name(name),
     description(description),
-    typeHints(typeHints),
+    argsInfo(argsInfo),
     maxReturnSize(maxReturnSize),
     func(func)
 {
@@ -26,7 +26,7 @@ QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
         throw std::invalid_argument("Invalid number of objects");
 
     for (int i = 0; i < objs.size(); ++i) {
-        if (!objs[i]->is(typeHints[i])) {
+        if (!objs[i]->is(getArgInfo(i).getType())) {
             throw std::invalid_argument("Invalid type of object");
         }
     }

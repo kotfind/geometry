@@ -45,6 +45,8 @@ add_executable(geometry
     Type.cpp
 
     FunctionInfoWidget.cpp
+
+    ArgumentInfo.cpp
 )
 
 target_link_libraries(geometry
