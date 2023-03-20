@@ -4,16 +4,20 @@
 #include "Point.h"
 #include "Circle.h"
 #include "global.h"
+
 #include <QDebug>
+#include <QObject>
 
 #define CAT2(a,b) a##b // actually concatenate
 #define CAT(a,b) CAT2(a,b) // force expand
 #define FUNC Function CAT(function,__COUNTER__)
 
 #define DO [](const QList<const Object*>& objs) -> QList<Object*>
+#define DESC(desc) QObject::tr(desc)
 
 FUNC {
-    "lineByTwoPoints",
+    "line",
+    DESC("Creates line by two points."),
     {Type::Point, Type::Point},
     1,
     DO {
@@ -29,6 +33,7 @@ FUNC {
 
 FUNC {
     "circleByCenterAndPoint",
+    DESC("Creates circle by center and point on it."),
     {Type::Point, Type::Point},
     1,
     DO {
@@ -46,6 +51,7 @@ FUNC {
 
 FUNC {
     "intersect",
+    DESC("Intersects two objects."),
     {Type::Line | Type::Circle, Type::Line | Type::Circle},
     2,
     DO {
@@ -135,6 +141,7 @@ FUNC {
 
 FUNC {
     "angleBisector",
+    DESC("Creates bisector line of angle formed by three points."),
     {Type::Point, Type::Point, Type::Point},
     1,
     DO {
@@ -159,6 +166,7 @@ FUNC {
 
 FUNC {
     "perpendicular",
+    DESC("Creates line perpendicular to current line through current point."),
     {Type::Point, Type::Line},
     1,
     DO {
@@ -171,6 +179,7 @@ FUNC {
 
 FUNC {
     "midpoint",
+    DESC("Creates point between two current."),
     {Type::Point, Type::Point},
     1,
     DO {

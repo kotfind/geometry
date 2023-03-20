@@ -10,6 +10,7 @@ class Scene;
 class View;
 class QString;
 class QCloseEvent;
+class FunctionInfoWidget;
 
 class MainWindow : public QMainWindow {
     public:
@@ -22,21 +23,22 @@ class MainWindow : public QMainWindow {
 
         void createActionsMenu();
 
+        void createDocks();
+
+        void createDock(QWidget* widget, const QString& name);
+
         QAction* createModeAction(const QString& name, EditMode mode);
 
         void updateTitle();
 
         void askForSave();
 
-        QAction* newAction;
-        QAction* saveAction;
-        QAction* saveAsAction;
-        QAction* openAction;
+        QString openedFileName = "";
 
         Scene* scene;
         View* view;
 
-        QString openedFileName = "";
+        FunctionInfoWidget* functionInfoWidget;
 
     protected:
         void closeEvent(QCloseEvent*) override;

@@ -8,10 +8,12 @@ QHash<QString, Function*> Function::funcs;
 
 Function::Function(
     const QString& name,
+    const QString& description,
     const QList<Type>& typeHints,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
 ) : name(name),
+    description(description),
     typeHints(typeHints),
     maxReturnSize(maxReturnSize),
     func(func)

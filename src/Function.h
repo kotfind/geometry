@@ -12,6 +12,7 @@ class Function {
     public:
         Function(
             const QString& name,
+            const QString& description,
             const QList<Type>& typeHints,
             int maxReturnSize,
             const std::function<QList<Object*>(const QList<const Object*>&)>& func
@@ -20,6 +21,7 @@ class Function {
         QList<Object*> operator()(const QList<const Object*>& objs) const;
 
         const QString& getName() const { return name; }
+        const QString& getDescription() const { return description; }
         int countArgs() const { return typeHints.size(); }
         const QList<Type>& getTypeHints() const { return typeHints; }
         int getMaxReturnSize() const { return maxReturnSize; }
@@ -31,6 +33,7 @@ class Function {
         static QHash<QString, Function*> funcs;
 
         QString name;
+        QString description;
         QList<Type> typeHints;
         int maxReturnSize;
         std::function<QList<Object*>(const QList<const Object*>&)> func;

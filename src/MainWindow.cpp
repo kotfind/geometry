@@ -6,6 +6,7 @@
 #include "View.h"
 #include "Geometry.h"
 #include "IOError.h"
+#include "FunctionInfoWidget.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -14,6 +15,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QCloseEvent>
+#include <QDockWidget>
 
 MainWindow::MainWindow() : QMainWindow() {
     updateTitle();
@@ -21,6 +23,7 @@ MainWindow::MainWindow() : QMainWindow() {
     createUi();
     createFileMenu();
     createActionsMenu();
+    createDocks();
 
     scene = new Scene(this);
     view->setScene(scene);
@@ -42,7 +45,7 @@ void MainWindow::createUi() {
 void MainWindow::createFileMenu() {
     auto* menu = menuBar()->addMenu(tr("File"));
 
-    newAction = new QAction(tr("New"), this);
+    auto* newAction = new QAction(tr("New"), this);
     newAction->setShortcut(Qt::CTRL | Qt::Key_N);
     connect(
         newAction,
@@ -52,7 +55,7 @@ void MainWindow::createFileMenu() {
     );
     menu->addAction(newAction);
 
-    saveAction = new QAction(tr("Save"), this);
+    auto* saveAction = new QAction(tr("Save"), this);
     saveAction->setShortcut(Qt::CTRL | Qt::Key_S);
     connect(
         saveAction,
@@ -62,7 +65,7 @@ void MainWindow::createFileMenu() {
     );
     menu->addAction(saveAction);
 
-    saveAsAction = new QAction(tr("Save As"), this);
+    auto* saveAsAction = new QAction(tr("Save As"), this);
     saveAsAction->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_S);
     connect(
         saveAsAction,
@@ -72,7 +75,7 @@ void MainWindow::createFileMenu() {
     );
     menu->addAction(saveAsAction);
 
-    openAction = new QAction(tr("Open"), this);
+    auto* openAction = new QAction(tr("Open"), this);
     openAction->setShortcut(Qt::CTRL | Qt::Key_O);
     connect(
         openAction,
@@ -114,6 +117,19 @@ void MainWindow::createActionsMenu() {
     }
 }
 
+void MainWindow::createDocks() {
+    functionInfoWidget = new FunctionInfoWidget(this);
+    createDock(functionInfoWidget, tr("Function Info"));
+}
+
+void MainWindow::createDock(QWidget* widget, const QString& name) {
+    auto* dock = new QDockWidget(name, this);
+    dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock->setWidget(widget);
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    menuBar()->addMenu(tr("View"))->addAction(dock->toggleViewAction());
+}
+
 QAction* MainWindow::createModeAction(const QString& name, EditMode mode) {
     auto* action = new QAction(name, this);
     connect(
@@ -132,6 +148,7 @@ void MainWindow::onFunctionActionTriggered() {
 
     scene->setMode(EditMode::FUNCTION);
     scene->setFunction(func);
+    functionInfoWidget->setFunction(func);
 }
 
 void MainWindow::askForSave() {
