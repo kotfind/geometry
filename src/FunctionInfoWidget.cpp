@@ -1,13 +1,18 @@
 #include "FunctionInfoWidget.h"
 
+#include "ArgumentInfoModel.h"
 #include "Function.h"
 
 #include <QVBoxLayout>
+#include <QTreeView>
 #include <QLabel>
 
 FunctionInfoWidget::FunctionInfoWidget(QWidget* parent) : QWidget(parent) {
-    createUi();
     setEnabled(false);
+    createUi();
+
+    argsModel = new ArgumentInfoModel(this);
+    argsView->setModel(argsModel);
 }
 
 void FunctionInfoWidget::createUi() {
@@ -22,11 +27,15 @@ void FunctionInfoWidget::createUi() {
     descriptionLabel->setWordWrap(true);
     vbox->addWidget(descriptionLabel, 0);
 
+    argsView = new QTreeView(this);
+    vbox->addWidget(argsView, 0);
+
     vbox->addStretch(1);
 }
 
 void FunctionInfoWidget::setFunction(Function* f) {
     func = f;
+    argsModel->setFunction(func);
     if (func) {
         nameLabel->setText(f->getName());
         descriptionLabel->setText(f->getDescription());

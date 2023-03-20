@@ -1,5 +1,9 @@
 #pragma once
 
+#include <QStringList>
+
+class QString;
+
 enum class Type : unsigned int {
     None    = 0,
     Any     = static_cast<unsigned int>(-1),
@@ -10,5 +14,7 @@ enum class Type : unsigned int {
 };
 
 Type operator|(Type lhs, Type rhs);
-
 Type operator&(Type lhs, Type rhs);
+
+QString typeName(Type);
+QStringList complexTypeName(Type);

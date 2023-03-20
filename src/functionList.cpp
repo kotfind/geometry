@@ -13,7 +13,6 @@
 #define FUNC Function CAT(function,__COUNTER__)
 
 #define DO [](const QList<const Object*>& objs) -> QList<Object*>
-#define TR
 
 FUNC {
     "line",

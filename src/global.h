@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QObject>
+
 constexpr double eps = 1e-9;
 
 bool eq(double a, double b);
@@ -9,3 +11,5 @@ bool leq(double a, double b);
 bool geq(double a, double b);
 
 double sq(double x);
+
+#define TR(text) QObject::tr(text)
