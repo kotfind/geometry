@@ -25,6 +25,7 @@ void FunctionInfoWidget::createUi() {
 
     descriptionLabel = new QLabel(this);
     descriptionLabel->setWordWrap(true);
+    descriptionLabel->setFrameShape(QFrame::StyledPanel);
     vbox->addWidget(descriptionLabel, 0);
 
     argsView = new QTreeView(this);
