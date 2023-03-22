@@ -16,6 +16,7 @@
 #include <QFileInfo>
 #include <QCloseEvent>
 #include <QDockWidget>
+#include <QHash>
 
 MainWindow::MainWindow() : QMainWindow() {
     updateTitle();
@@ -113,8 +114,13 @@ void MainWindow::createInstrumentsMenu() {
         EditMode::REMOVE
     ));
 
-    for (const auto& [name, func] : Function::getAll().asKeyValueRange()) {
-        auto* action = new QAction(name, this);
+    QHash<QString, QMenu*> menus;
+    for (const auto& name : Function::getSections()){
+        menus[name] = new QMenu(name, this);
+        menu->addMenu(menus[name]);
+    }
+    for (auto* func : Function::getAll().values()) {
+        auto* action = new QAction(func->getName(), this);
         action->setData(QVariant::fromValue(func));
         connect(
             action,
@@ -122,7 +128,7 @@ void MainWindow::createInstrumentsMenu() {
             this,
             &MainWindow::onFunctionActionTriggered
         );
-        menu->addAction(action);
+        menus[func->getSectionName()]->addAction(action);
     }
 }
 

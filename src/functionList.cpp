@@ -6,7 +6,6 @@
 #include "global.h"
 
 #include <QDebug>
-#include <QObject>
 
 #define CAT2(a,b) a##b // actually concatenate
 #define CAT(a,b) CAT2(a,b) // force expand
@@ -14,47 +13,10 @@
 
 #define DO [](const QList<const Object*>& objs) -> QList<Object*>
 
-FUNC {
-    "line",
-    TR("Creates line by two points."),
-    {
-        {Type::Point, TR("First point")},
-        {Type::Point, TR("Second point")},
-    },
-    1,
-    DO {
-        const auto& p1 = *static_cast<const Point*>(objs[0]);
-        const auto& p2 = *static_cast<const Point*>(objs[1]);
-
-        if (p1 == p2)
-            return {};
-
-        return {new Line(p1, p2)};
-    }
-};
+// -------------------- General Section --------------------
 
 FUNC {
-    "circleByCenterAndPoint",
-    TR("Creates circle by center and point on it."),
-    {
-        {Type::Point, TR("Center")},
-        {Type::Point, TR("Point on circle")},
-    },
-    1,
-    DO {
-        const auto& o = *static_cast<const Point*>(objs[0]);
-        const auto& p = *static_cast<const Point*>(objs[1]);
-
-        if (o == p)
-            return {};
-
-        auto r = dist(o, p);
-
-        return {new Circle(o, r)};
-    }
-};
-
-FUNC {
+    "general",
     "intersect",
     TR("Intersects two objects."),
     {
@@ -148,6 +110,7 @@ FUNC {
 };
 
 FUNC {
+    "general",
     "angleBisector",
     TR("Creates bisector line of angle formed by three points."),
     {
@@ -176,7 +139,49 @@ FUNC {
     }
 };
 
+// -------------------- Points Section --------------------
+
 FUNC {
+    "points",
+    "midpoint",
+    TR("Creates point between two current."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Second point")},
+    },
+    1,
+    DO {
+        const auto& p1 = *static_cast<const Point*>(objs[0]);
+        const auto& p2 = *static_cast<const Point*>(objs[1]);
+
+        return {new Point((p1 + p2) / 2)};
+    }
+};
+
+// -------------------- Line Section --------------------
+
+FUNC {
+    "line",
+    "line",
+    TR("Creates line by two points."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Second point")},
+    },
+    1,
+    DO {
+        const auto& p1 = *static_cast<const Point*>(objs[0]);
+        const auto& p2 = *static_cast<const Point*>(objs[1]);
+
+        if (p1 == p2)
+            return {};
+
+        return {new Line(p1, p2)};
+    }
+};
+
+FUNC {
+    "line",
     "perpendicular",
     TR("Creates line perpendicular to current line through current point."),
     {
@@ -193,22 +198,7 @@ FUNC {
 };
 
 FUNC {
-    "midpoint",
-    TR("Creates point between two current."),
-    {
-        {Type::Point, TR("First point")},
-        {Type::Point, TR("Second point")},
-    },
-    1,
-    DO {
-        const auto& p1 = *static_cast<const Point*>(objs[0]);
-        const auto& p2 = *static_cast<const Point*>(objs[1]);
-
-        return {new Point((p1 + p2) / 2)};
-    }
-};
-
-FUNC {
+    "line",
     "tangents",
     TR("Creates tangents to circle from point."),
     {
@@ -241,5 +231,29 @@ FUNC {
             new Line(p, p + rot(v, +sin_a, cos_a)),
             new Line(p, p + rot(v, -sin_a, cos_a))
         };
+    }
+};
+
+// -------------------- Circle Section --------------------
+
+FUNC {
+    "circle",
+    "circleByCenterAndPoint",
+    TR("Creates circle by center and point on it."),
+    {
+        {Type::Point, TR("Center")},
+        {Type::Point, TR("Point on circle")},
+    },
+    1,
+    DO {
+        const auto& o = *static_cast<const Point*>(objs[0]);
+        const auto& p = *static_cast<const Point*>(objs[1]);
+
+        if (o == p)
+            return {};
+
+        auto r = dist(o, p);
+
+        return {new Circle(o, r)};
     }
 };

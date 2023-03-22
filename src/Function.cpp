@@ -5,20 +5,26 @@
 #include <exception>
 
 QHash<QString, Function*> Function::funcs;
+QList<QString> Function::sections;
 
 Function::Function(
+    const QString& sectionName,
     const QString& name,
     const QString& description,
     const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
-) : name(name),
+) : sectionName(sectionName),
+    name(name),
     description(description),
     argsInfo(argsInfo),
     maxReturnSize(maxReturnSize),
     func(func)
 {
     funcs[name] = this;
+    if (sections.indexOf(sectionName) == -1) {
+        sections << sectionName;
+    }
 }
 
 QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
@@ -32,8 +38,4 @@ QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
     }
 
     return func(objs);
-}
-
-Function* Function::get(const QString& name) {
-    return funcs[name];
 }
