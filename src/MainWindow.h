@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow {
         Scene* scene;
         View* view;
 
-        InstrumentInfoWidget* functionInfoWidget;
+        InstrumentInfoWidget* instrumentInfoWidget;
 
     protected:
         void closeEvent(QCloseEvent*) override;

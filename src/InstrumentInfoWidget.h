@@ -30,4 +30,5 @@ class InstrumentInfoWidget : public QWidget {
     public slots:
         void setFunction(Function* func = nullptr);
         void setMode(EditMode);
+        void updateSelectedCount(int n);
 };

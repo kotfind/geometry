@@ -15,6 +15,7 @@ InstrumentInfoWidget::InstrumentInfoWidget(QWidget* parent) : QWidget(parent) {
 
     argsModel = new ArgumentInfoModel(this);
     argsView->setModel(argsModel);
+    argsView->setSelectionMode(QTreeView::SelectionMode::NoSelection);
 }
 
 void InstrumentInfoWidget::createUi() {
@@ -67,4 +68,8 @@ void InstrumentInfoWidget::setMode(EditMode m) {
         argsView->setVisible(false);
         setEnabled(true);
     }
+}
+
+void InstrumentInfoWidget::updateSelectedCount(int n) {
+    argsModel->updateSelectedCount(n);
 }

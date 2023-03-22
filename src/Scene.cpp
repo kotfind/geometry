@@ -27,6 +27,7 @@ Scene::~Scene() {
 void Scene::setMode(EditMode m) {
     mode = m;
     selectedFuncArgs.clear();
+    emit selectedCountChanged(selectedFuncArgs.size());
 }
 
 void Scene::setFunction(Function* f) {
@@ -65,9 +66,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
                 pos,
                 func->getArgInfo(selectedFuncArgs.size()).getType()
             );
+            emit selectedCountChanged(selectedFuncArgs.size());
             if (!gen) break;
 
             selectedFuncArgs << gen;
+            emit selectedCountChanged(selectedFuncArgs.size());
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
                     auto* gen = new DependantGenerator(func, selectedFuncArgs, funcResNum);
@@ -77,6 +80,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
                 }
 
                 selectedFuncArgs.clear();
+                emit selectedCountChanged(selectedFuncArgs.size());
             }
         }
         break;

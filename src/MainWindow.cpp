@@ -28,13 +28,20 @@ MainWindow::MainWindow() : QMainWindow() {
     scene = new Scene(this);
     view->setScene(scene);
 
-    functionInfoWidget->setMode(EditMode::MOVE);
+    instrumentInfoWidget->setMode(EditMode::MOVE);
 
     connect(
         scene,
         &Scene::cursorChanged,
         view,
         &View::setCursor
+    );
+
+    connect(
+        scene,
+        &Scene::selectedCountChanged,
+        instrumentInfoWidget,
+        &InstrumentInfoWidget::updateSelectedCount
     );
 }
 
@@ -120,8 +127,8 @@ void MainWindow::createInstrumentsMenu() {
 }
 
 void MainWindow::createDocks() {
-    functionInfoWidget = new InstrumentInfoWidget(this);
-    createDock(functionInfoWidget, tr("Instrument Info"));
+    instrumentInfoWidget = new InstrumentInfoWidget(this);
+    createDock(instrumentInfoWidget, tr("Instrument Info"));
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name) {
@@ -150,8 +157,8 @@ void MainWindow::onFunctionActionTriggered() {
 
     scene->setMode(EditMode::FUNCTION);
     scene->setFunction(func);
-    functionInfoWidget->setMode(EditMode::FUNCTION);
-    functionInfoWidget->setFunction(func);
+    instrumentInfoWidget->setMode(EditMode::FUNCTION);
+    instrumentInfoWidget->setFunction(func);
 }
 
 void MainWindow::onModeActionTriggered() {
@@ -159,7 +166,7 @@ void MainWindow::onModeActionTriggered() {
     auto mode = action->data().value<EditMode>();
 
     scene->setMode(mode);
-    functionInfoWidget->setMode(mode);
+    instrumentInfoWidget->setMode(mode);
 }
 
 void MainWindow::askForSave() {

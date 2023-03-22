@@ -19,6 +19,9 @@ class ArgumentInfoModel : public QAbstractListModel {
     private:
         Function* func = nullptr;
 
+        int selectedCount = 0;
+
     public slots:
         void setFunction(Function*);
+        void updateSelectedCount(int n);
 };

@@ -4,6 +4,7 @@
 #include "ArgumentInfo.h"
 #include "Type.h"
 
+#include <QColor>
 #include <QStringList>
 
 ArgumentInfoModel::ArgumentInfoModel(QObject* parent)
@@ -19,14 +20,22 @@ int ArgumentInfoModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant ArgumentInfoModel::data(const QModelIndex& index, int role) const {
-    if (!index.isValid() || role != Qt::DisplayRole) return QVariant();
+    if (!index.isValid()) return QVariant();
 
-    const auto& argInfo = func->getArgInfo(index.row());
-    switch (index.column()) {
-        case 0: return complexTypeName(argInfo.getType()).join(" or ");
-        case 1: return argInfo.getDescription();
-        default: return QVariant();
+    if (role == Qt::DisplayRole) {
+        const auto& argInfo = func->getArgInfo(index.row());
+        switch (index.column()) {
+            case 0: return complexTypeName(argInfo.getType()).join(" or ");
+            case 1: return argInfo.getDescription();
+        }
+    } else if (role == Qt::BackgroundRole) {
+        if (index.row() < selectedCount) {
+            return QColor(Qt::lightGray);
+        } else if (index.row() == selectedCount) {
+            return QColor(Qt::green);
+        }
     }
+    return QVariant();
 }
 
 QVariant ArgumentInfoModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -43,4 +52,13 @@ void ArgumentInfoModel::setFunction(Function* f) {
     beginResetModel();
     func = f;
     endResetModel();
+}
+
+void ArgumentInfoModel::updateSelectedCount(int n) {
+    selectedCount = n;
+    dataChanged(
+        index(0, 0),
+        index(rowCount(), columnCount()),
+        {Qt::BackgroundRole}
+    );
 }
