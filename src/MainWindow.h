@@ -45,6 +45,7 @@ class MainWindow : public QMainWindow {
 
     private slots:
         void onFunctionActionTriggered();
+        void onModeActionTriggered();
 
         void onNewActionTriggered();
         void onSaveActionTriggered();

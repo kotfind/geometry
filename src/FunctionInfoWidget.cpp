@@ -6,6 +6,8 @@
 #include <QVBoxLayout>
 #include <QTreeView>
 #include <QLabel>
+#include <cassert>
+#include <QSizePolicy>
 
 FunctionInfoWidget::FunctionInfoWidget(QWidget* parent) : QWidget(parent) {
     setEnabled(false);
@@ -26,15 +28,21 @@ void FunctionInfoWidget::createUi() {
     descriptionLabel = new QLabel(this);
     descriptionLabel->setWordWrap(true);
     descriptionLabel->setFrameShape(QFrame::StyledPanel);
+    descriptionLabel->setAlignment(Qt::AlignJustify);
+    descriptionLabel->setMargin(5);
     vbox->addWidget(descriptionLabel, 0);
 
     argsView = new QTreeView(this);
+    auto policy = argsView->sizePolicy();
+    policy.setRetainSizeWhenHidden(true);
+    argsView->setSizePolicy(policy);
     vbox->addWidget(argsView, 0);
 
     vbox->addStretch(1);
 }
 
 void FunctionInfoWidget::setFunction(Function* f) {
+    assert(mode == EditMode::FUNCTION);
     func = f;
     argsModel->setFunction(func);
     if (func) {
@@ -45,5 +53,18 @@ void FunctionInfoWidget::setFunction(Function* f) {
         nameLabel->setText("");
         descriptionLabel->setText("");
         setEnabled(false);
+    }
+}
+
+void FunctionInfoWidget::setMode(EditMode m) {
+    mode = m;
+    if (mode == EditMode::FUNCTION) {
+        setFunction();
+        argsView->setVisible(true);
+    } else {
+        nameLabel->setText(modeName(m));
+        descriptionLabel->setText(modeDescription(m));
+        argsView->setVisible(false);
+        setEnabled(true);
     }
 }

@@ -48,6 +48,8 @@ add_executable(geometry
 
     ArgumentInfo.cpp
     ArgumentInfoModel.cpp
+
+    EditMode.cpp
 )
 
 target_link_libraries(geometry

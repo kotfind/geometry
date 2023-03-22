@@ -28,6 +28,8 @@ MainWindow::MainWindow() : QMainWindow() {
     scene = new Scene(this);
     view->setScene(scene);
 
+    functionInfoWidget->setMode(EditMode::MOVE);
+
     connect(
         scene,
         &Scene::cursorChanged,
@@ -132,12 +134,12 @@ void MainWindow::createDock(QWidget* widget, const QString& name) {
 
 QAction* MainWindow::createModeAction(const QString& name, EditMode mode) {
     auto* action = new QAction(name, this);
+    action->setData(QVariant::fromValue(mode));
     connect(
         action,
         &QAction::triggered,
-        [this, mode]() {
-            scene->setMode(mode);
-        }
+        this,
+        &MainWindow::onModeActionTriggered
     );
     return action;
 }
@@ -148,7 +150,16 @@ void MainWindow::onFunctionActionTriggered() {
 
     scene->setMode(EditMode::FUNCTION);
     scene->setFunction(func);
+    functionInfoWidget->setMode(EditMode::FUNCTION);
     functionInfoWidget->setFunction(func);
+}
+
+void MainWindow::onModeActionTriggered() {
+    auto* action = static_cast<QAction*>(sender());
+    auto mode = action->data().value<EditMode>();
+
+    scene->setMode(mode);
+    functionInfoWidget->setMode(mode);
 }
 
 void MainWindow::askForSave() {
