@@ -149,3 +149,7 @@ Point rot(const Point& v, double a) {
 Point norm(const Point& v) {
     return v / len(v);
 }
+
+Point perp(const Point& v) {
+    return {-v.y, v.x};
+}

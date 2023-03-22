@@ -50,3 +50,5 @@ Point rot(const Point& v, double sin_a, double cos_a);
 Point rot(const Point& v, double a);
 
 Point norm(const Point& v);
+
+Point perp(const Point& v);

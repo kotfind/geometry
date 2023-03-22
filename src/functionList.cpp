@@ -207,3 +207,39 @@ FUNC {
         return {new Point((p1 + p2) / 2)};
     }
 };
+
+FUNC {
+    "tangents",
+    TR("Creates tangents to circle from point."),
+    {
+        {Type::Point, TR("Point")},
+        {Type::Circle, TR("Circle")},
+    },
+    2,
+    DO {
+        const auto& p = *static_cast<const Point*>(objs[0]);
+        const auto& w = *static_cast<const Circle*>(objs[1]);
+
+        const auto& o = w.o;
+        const auto& r = w.r;
+        auto d = dist(p, o);
+
+        if (le(d, r))
+            return {};
+
+        if (eq(d, r)) {
+            return { new Line(p, p + perp(o - p)) };
+        }
+
+        auto x = sqrt(sq(d) - sq(r));
+        auto sin_a = r / d;
+        auto cos_a = x / d;
+
+        auto v = norm(o - p) * x;
+
+        return {
+            new Line(p, p + rot(v, +sin_a, cos_a)),
+            new Line(p, p + rot(v, -sin_a, cos_a))
+        };
+    }
+};
