@@ -44,7 +44,7 @@ add_executable(geometry
 
     Type.cpp
 
-    FunctionInfoWidget.cpp
+    InstrumentInfoWidget.cpp
 
     ArgumentInfo.cpp
     ArgumentInfoModel.cpp

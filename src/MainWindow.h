@@ -10,7 +10,7 @@ class Scene;
 class View;
 class QString;
 class QCloseEvent;
-class FunctionInfoWidget;
+class InstrumentInfoWidget;
 
 class MainWindow : public QMainWindow {
     public:
@@ -21,7 +21,7 @@ class MainWindow : public QMainWindow {
 
         void createFileMenu();
 
-        void createActionsMenu();
+        void createInstrumentsMenu();
 
         void createDocks();
 
@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow {
         Scene* scene;
         View* view;
 
-        FunctionInfoWidget* functionInfoWidget;
+        InstrumentInfoWidget* functionInfoWidget;
 
     protected:
         void closeEvent(QCloseEvent*) override;

@@ -1,4 +1,4 @@
-#include "FunctionInfoWidget.h"
+#include "InstrumentInfoWidget.h"
 
 #include "ArgumentInfoModel.h"
 #include "Function.h"
@@ -9,7 +9,7 @@
 #include <cassert>
 #include <QSizePolicy>
 
-FunctionInfoWidget::FunctionInfoWidget(QWidget* parent) : QWidget(parent) {
+InstrumentInfoWidget::InstrumentInfoWidget(QWidget* parent) : QWidget(parent) {
     setEnabled(false);
     createUi();
 
@@ -17,7 +17,7 @@ FunctionInfoWidget::FunctionInfoWidget(QWidget* parent) : QWidget(parent) {
     argsView->setModel(argsModel);
 }
 
-void FunctionInfoWidget::createUi() {
+void InstrumentInfoWidget::createUi() {
     auto* vbox = new QVBoxLayout(this);
     setLayout(vbox);
 
@@ -41,7 +41,7 @@ void FunctionInfoWidget::createUi() {
     vbox->addStretch(1);
 }
 
-void FunctionInfoWidget::setFunction(Function* f) {
+void InstrumentInfoWidget::setFunction(Function* f) {
     assert(mode == EditMode::FUNCTION);
     func = f;
     argsModel->setFunction(func);
@@ -56,7 +56,7 @@ void FunctionInfoWidget::setFunction(Function* f) {
     }
 }
 
-void FunctionInfoWidget::setMode(EditMode m) {
+void InstrumentInfoWidget::setMode(EditMode m) {
     mode = m;
     if (mode == EditMode::FUNCTION) {
         setFunction();

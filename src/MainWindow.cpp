@@ -6,7 +6,7 @@
 #include "View.h"
 #include "Geometry.h"
 #include "IOError.h"
-#include "FunctionInfoWidget.h"
+#include "InstrumentInfoWidget.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -22,7 +22,7 @@ MainWindow::MainWindow() : QMainWindow() {
 
     createUi();
     createFileMenu();
-    createActionsMenu();
+    createInstrumentsMenu();
     createDocks();
 
     scene = new Scene(this);
@@ -88,8 +88,8 @@ void MainWindow::createFileMenu() {
     menu->addAction(openAction);
 }
 
-void MainWindow::createActionsMenu() {
-    auto* menu = menuBar()->addMenu(tr("Actions"));
+void MainWindow::createInstrumentsMenu() {
+    auto* menu = menuBar()->addMenu(tr("Instruments"));
 
     menu->addAction(createModeAction(
         tr("Move"),
@@ -120,8 +120,8 @@ void MainWindow::createActionsMenu() {
 }
 
 void MainWindow::createDocks() {
-    functionInfoWidget = new FunctionInfoWidget(this);
-    createDock(functionInfoWidget, tr("Function Info"));
+    functionInfoWidget = new InstrumentInfoWidget(this);
+    createDock(functionInfoWidget, tr("Instrument Info"));
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name) {
