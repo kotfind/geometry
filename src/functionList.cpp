@@ -297,3 +297,34 @@ FUNC {
         return { new Circle(Point(x0, y0), r) };
     }
 };
+
+FUNC {
+    "circle",
+    "incircle",
+    TR("Incircle by three vertexes of triangle."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Second point")},
+        {Type::Point, TR("Third point")},
+    },
+    1,
+    DO {
+        const auto& A = *static_cast<const Point*>(objs[0]);
+        const auto& B = *static_cast<const Point*>(objs[1]);
+        const auto& C = *static_cast<const Point*>(objs[2]);
+
+        // Calc center
+        auto a = dist(B, C);
+        auto b = dist(A, C);
+        auto c = dist(A, B);
+
+        auto O = (a * A + b * B + c * C) / (a + b + c);
+
+        // Calc radius
+        auto p = (a + b + c) / 2;
+        auto S = sqrt(p * (p - a) * (p - b) * (p - c));
+        auto r = S / p;
+
+        return { new Circle(O, r) };
+    }
+};
