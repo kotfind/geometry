@@ -11,7 +11,9 @@ class View;
 class QString;
 class QCloseEvent;
 class ToolInfoWidget;
+class ToolModel;
 class Section;
+class QTreeView;
 
 class MainWindow : public QMainWindow {
     public:
@@ -42,6 +44,9 @@ class MainWindow : public QMainWindow {
         View* view;
 
         ToolInfoWidget* toolInfoWidget;
+
+        QTreeView* toolView;
+        ToolModel* toolModel;
 
     protected:
         void closeEvent(QCloseEvent*) override;
