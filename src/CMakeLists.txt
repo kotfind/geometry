@@ -50,6 +50,8 @@ add_executable(geometry
     ArgumentInfoModel.cpp
 
     EditMode.cpp
+
+    cramer.cpp
 )
 
 target_link_libraries(geometry

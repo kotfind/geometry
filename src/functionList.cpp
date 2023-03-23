@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Circle.h"
 #include "global.h"
+#include "cramer.h"
 
 #include <QDebug>
 
@@ -29,15 +30,15 @@ FUNC {
             const auto& l1 = *static_cast<const Line*>(objs[0]);
             const auto& l2 = *static_cast<const Line*>(objs[1]);
 
-            double d  = l1.a * l2.b - l2.a * l1.b;
-            double dx = l2.c * l1.b - l1.c * l2.b;
-            double dy = l2.a * l1.c - l1.a * l2.c;
+            auto cramerAns = cramer({
+                {l1.a, l1.b, -l1.c},
+                {l2.a, l2.b, -l2.c},
+            });
 
-            if (eq(d, 0)) {
+            if (cramerAns.isEmpty())
                 return {};
-            }
 
-            return {new Point(dx / d, dy / d)};
+            return {new Point(cramerAns[0], cramerAns[1])};
         } else if (objs[0]->is(Type::Circle) && objs[1]->is(Type::Circle)) {
             const auto& w1 = *static_cast<const Circle*>(objs[0]);
             const auto& w2 = *static_cast<const Circle*>(objs[1]);
@@ -255,5 +256,44 @@ FUNC {
         auto r = dist(o, p);
 
         return {new Circle(o, r)};
+    }
+};
+
+FUNC {
+    "circle",
+    "circleByThreePoints",
+    TR("Creates circle by three points on it."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Second point")},
+        {Type::Point, TR("Third point")},
+    },
+    1,
+    DO {
+        const auto& [x1, y1] = *static_cast<const Point*>(objs[0]);
+        const auto& [x2, y2] = *static_cast<const Point*>(objs[1]);
+        const auto& [x3, y3] = *static_cast<const Point*>(objs[2]);
+
+        // (x - x_0)^2 + (y - y_0)^2 = r^2
+        // M = r^2 - x_0^2 - y_0^2
+
+        auto cramerAns = cramer({
+        //    x0    y0   M
+        //  ---------------
+            {2*x1, 2*y1, 1, sq(x1) + sq(y1)},
+            {2*x2, 2*y2, 1, sq(x2) + sq(y2)},
+            {2*x3, 2*y3, 1, sq(x3) + sq(y3)},
+        });
+
+        if (cramerAns.isEmpty())
+            return {};
+
+        auto x0 = cramerAns[0];
+        auto y0 = cramerAns[1];
+        auto M  = cramerAns[2];
+
+        auto r = sqrt(M + sq(x0) + sq(y0));
+
+        return { new Circle(Point(x0, y0), r) };
     }
 };
