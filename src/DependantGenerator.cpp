@@ -48,7 +48,7 @@ void DependantGenerator::remove() {
 
 QJsonObject DependantGenerator::toJson(const QHash<Generator*, int>& ids) const {
     auto json = Generator::toJson(ids);
-    json["funcName"] = func->getName();
+    json["funcName"] = func->getFullName();
     json["funcResNum"] = funcResNum;
     QJsonArray jsonArgs;
     for (auto arg : args) {

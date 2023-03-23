@@ -11,6 +11,7 @@ class View;
 class QString;
 class QCloseEvent;
 class InstrumentInfoWidget;
+class Section;
 
 class MainWindow : public QMainWindow {
     public:
@@ -22,6 +23,8 @@ class MainWindow : public QMainWindow {
         void createFileMenu();
 
         void createInstrumentsMenu();
+
+        QMenu* getSectionMenu(Section*);
 
         void createDocks();
 

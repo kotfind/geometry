@@ -52,6 +52,8 @@ add_executable(geometry
     EditMode.cpp
 
     cramer.cpp
+
+    Section.cpp
 )
 
 target_link_libraries(geometry

@@ -7,6 +7,7 @@
 #include "Geometry.h"
 #include "IOError.h"
 #include "InstrumentInfoWidget.h"
+#include "Section.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -97,6 +98,7 @@ void MainWindow::createFileMenu() {
 }
 
 void MainWindow::createInstrumentsMenu() {
+    menuBar()->addAction(new QAction("|", this)); // Separator
     auto* menu = menuBar()->addMenu(tr("Instruments"));
 
     menu->addAction(createModeAction(
@@ -114,13 +116,20 @@ void MainWindow::createInstrumentsMenu() {
         EditMode::REMOVE
     ));
 
-    QHash<QString, QMenu*> menus;
-    for (const auto& name : Function::getSections()){
-        menus[name] = new QMenu(name, this);
-        menu->addMenu(menus[name]);
+    for (auto* sec : Section::getMaster()->getSections()) {
+        menuBar()->addMenu(getSectionMenu(sec));
     }
-    for (auto* func : Function::getAll().values()) {
-        auto* action = new QAction(func->getName(), this);
+
+    menuBar()->addAction(new QAction("|", this)); // Separator
+}
+
+QMenu* MainWindow::getSectionMenu(Section* section) {
+    auto* menu = new QMenu(section->getName(), this);
+    for (auto* sec : section->getSections()) {
+        menu->addMenu(getSectionMenu(sec));
+    }
+    for (auto* func : section->getFunctions()) {
+        auto* action = new QAction(func->getSelfName(), this);
         action->setData(QVariant::fromValue(func));
         connect(
             action,
@@ -128,8 +137,9 @@ void MainWindow::createInstrumentsMenu() {
             this,
             &MainWindow::onFunctionActionTriggered
         );
-        menus[func->getSectionName()]->addAction(action);
+        menu->addAction(action);
     }
+    return menu;
 }
 
 void MainWindow::createDocks() {

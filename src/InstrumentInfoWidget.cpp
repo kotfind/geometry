@@ -47,7 +47,7 @@ void InstrumentInfoWidget::setFunction(Function* f) {
     func = f;
     argsModel->setFunction(func);
     if (func) {
-        nameLabel->setText(f->getName());
+        nameLabel->setText(f->getFullName());
         descriptionLabel->setText(f->getDescription());
         setEnabled(true);
     } else {

@@ -14,11 +14,10 @@
 
 #define DO [](const QList<const Object*>& objs) -> QList<Object*>
 
-// -------------------- General Section --------------------
+// -------------------- Point Section --------------------
 
 FUNC {
-    "general",
-    "intersect",
+    "Point/Intersect",
     TR("Intersects two objects."),
     {
         {Type::Line | Type::Circle, TR("First object")},
@@ -111,40 +110,7 @@ FUNC {
 };
 
 FUNC {
-    "general",
-    "angleBisector",
-    TR("Creates bisector line of angle formed by three points."),
-    {
-        {Type::Point, TR("First point")},
-        {Type::Point, TR("Angle vertex")},
-        {Type::Point, TR("Second point")},
-    },
-    1,
-    DO {
-        const auto& a = *static_cast<const Point*>(objs[0]);
-        const auto& o = *static_cast<const Point*>(objs[1]);
-        const auto& b = *static_cast<const Point*>(objs[2]);
-
-        auto oa = a - o;
-        auto ob = b - o;
-
-        auto l1 = len(oa);
-        auto l2 = len(ob);
-
-        oa *= l2;
-        ob *= l1;
-
-        auto oc = oa + ob;
-
-        return { new Line(o, o + oc) };
-    }
-};
-
-// -------------------- Points Section --------------------
-
-FUNC {
-    "points",
-    "midpoint",
+    "Point/Middle",
     TR("Creates point between two current."),
     {
         {Type::Point, TR("First point")},
@@ -162,8 +128,7 @@ FUNC {
 // -------------------- Line Section --------------------
 
 FUNC {
-    "line",
-    "line",
+    "Line/By Two Points",
     TR("Creates line by two points."),
     {
         {Type::Point, TR("First point")},
@@ -182,8 +147,7 @@ FUNC {
 };
 
 FUNC {
-    "line",
-    "perpendicular",
+    "Line/Perpendicular",
     TR("Creates line perpendicular to current line through current point."),
     {
         {Type::Point, TR("Point")},
@@ -199,8 +163,7 @@ FUNC {
 };
 
 FUNC {
-    "line",
-    "tangents",
+    "Line/Tangents",
     TR("Creates tangents to circle from point."),
     {
         {Type::Point, TR("Point")},
@@ -235,11 +198,39 @@ FUNC {
     }
 };
 
+FUNC {
+    "Line/Bisector",
+    TR("Creates bisector line of angle formed by three points."),
+    {
+        {Type::Point, TR("First point")},
+        {Type::Point, TR("Angle vertex")},
+        {Type::Point, TR("Second point")},
+    },
+    1,
+    DO {
+        const auto& a = *static_cast<const Point*>(objs[0]);
+        const auto& o = *static_cast<const Point*>(objs[1]);
+        const auto& b = *static_cast<const Point*>(objs[2]);
+
+        auto oa = a - o;
+        auto ob = b - o;
+
+        auto l1 = len(oa);
+        auto l2 = len(ob);
+
+        oa *= l2;
+        ob *= l1;
+
+        auto oc = oa + ob;
+
+        return { new Line(o, o + oc) };
+    }
+};
+
 // -------------------- Circle Section --------------------
 
 FUNC {
-    "circle",
-    "circleByCenterAndPoint",
+    "Circle/By Center And Point",
     TR("Creates circle by center and point on it."),
     {
         {Type::Point, TR("Center")},
@@ -260,8 +251,7 @@ FUNC {
 };
 
 FUNC {
-    "circle",
-    "circleByThreePoints",
+    "Circle/By Three Points",
     TR("Creates circle by three points on it."),
     {
         {Type::Point, TR("First point")},
@@ -299,8 +289,7 @@ FUNC {
 };
 
 FUNC {
-    "circle",
-    "incircle",
+    "Circle/Incircle",
     TR("Incircle by three vertexes of triangle."),
     {
         {Type::Point, TR("First point")},

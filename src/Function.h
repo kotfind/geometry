@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ArgumentInfo.h"
+#include "Section.h"
 
 #include <functional>
 #include <QList>
@@ -13,7 +14,6 @@ enum class Type : unsigned int;
 class Function {
     public:
         Function(
-            const QString& sectionName,
             const QString& name,
             const QString& description,
             const QList<ArgumentInfo>& argsInfo,
@@ -23,25 +23,27 @@ class Function {
 
         QList<Object*> operator()(const QList<const Object*>& objs) const;
 
-        const QString& getSectionName() const { return sectionName; }
-        const QString& getName() const { return name; }
+        const QString& getFullName() const { return fullName; }
         const QString& getDescription() const { return description; }
         int countArgs() const { return argsInfo.size(); }
         const ArgumentInfo& getArgInfo(int i) const { return argsInfo[i]; }
         int getMaxReturnSize() const { return maxReturnSize; }
 
+        const QString& getSelfName() const { return selfName; }
+        Section* getSection() const { return section; }
+
         static Function* get(const QString& name) { return funcs[name]; }
         static const QHash<QString, Function*>& getAll() { return funcs; }
-        static const QList<QString>& getSections() { return sections; }
 
     private:
         static QHash<QString, Function*> funcs;
-        static QList<QString> sections;
 
-        QString name;
-        QString sectionName;
+        QString fullName;
         QString description;
         QList<ArgumentInfo> argsInfo;
         int maxReturnSize;
         std::function<QList<Object*>(const QList<const Object*>&)> func;
+
+        QString selfName;
+        Section* section;
 };
