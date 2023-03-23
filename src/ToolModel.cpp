@@ -109,6 +109,10 @@ ToolModel::ToolModel(QObject* parent)
     root(new ToolModelItem)
 {}
 
+ToolModel::~ToolModel() {
+    delete root;
+}
+
 QModelIndex ToolModel::parent(const QModelIndex& index) const {
     if (!index.isValid()) return QModelIndex();
 

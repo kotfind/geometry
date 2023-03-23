@@ -7,6 +7,7 @@ class ToolModelItem;
 class ToolModel : public QAbstractItemModel {
     public:
         ToolModel(QObject* parent = nullptr);
+        ~ToolModel();
 
         QModelIndex parent(const QModelIndex& index) const override;
         QModelIndex index(int row, int column, const QModelIndex& parent) const override;
