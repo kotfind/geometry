@@ -8,12 +8,15 @@ class Function;
 class QLabel;
 class QTreeView;
 class ArgumentInfoModel;
+class QSize;
 
 class ToolInfoWidget : public QWidget {
     Q_OBJECT
 
     public:
         ToolInfoWidget(QWidget* parent = nullptr);
+
+        QSize sizeHint() const override;
 
     private:
         void createUi();
