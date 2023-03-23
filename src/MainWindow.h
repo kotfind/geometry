@@ -10,7 +10,7 @@ class Scene;
 class View;
 class QString;
 class QCloseEvent;
-class InstrumentInfoWidget;
+class ToolInfoWidget;
 class Section;
 
 class MainWindow : public QMainWindow {
@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow {
 
         void createFileMenu();
 
-        void createInstrumentsMenu();
+        void createToolsMenu();
 
         QMenu* getSectionMenu(Section*);
 
@@ -41,7 +41,7 @@ class MainWindow : public QMainWindow {
         Scene* scene;
         View* view;
 
-        InstrumentInfoWidget* instrumentInfoWidget;
+        ToolInfoWidget* toolInfoWidget;
 
     protected:
         void closeEvent(QCloseEvent*) override;

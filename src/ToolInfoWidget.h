@@ -9,11 +9,11 @@ class QLabel;
 class QTreeView;
 class ArgumentInfoModel;
 
-class InstrumentInfoWidget : public QWidget {
+class ToolInfoWidget : public QWidget {
     Q_OBJECT
 
     public:
-        InstrumentInfoWidget(QWidget* parent = nullptr);
+        ToolInfoWidget(QWidget* parent = nullptr);
 
     private:
         void createUi();

@@ -6,7 +6,7 @@
 #include "View.h"
 #include "Geometry.h"
 #include "IOError.h"
-#include "InstrumentInfoWidget.h"
+#include "ToolInfoWidget.h"
 #include "Section.h"
 
 #include <QAction>
@@ -24,13 +24,13 @@ MainWindow::MainWindow() : QMainWindow() {
 
     createUi();
     createFileMenu();
-    createInstrumentsMenu();
+    createToolsMenu();
     createDocks();
 
     scene = new Scene(this);
     view->setScene(scene);
 
-    instrumentInfoWidget->setMode(EditMode::MOVE);
+    toolInfoWidget->setMode(EditMode::MOVE);
 
     connect(
         scene,
@@ -42,8 +42,8 @@ MainWindow::MainWindow() : QMainWindow() {
     connect(
         scene,
         &Scene::selectedCountChanged,
-        instrumentInfoWidget,
-        &InstrumentInfoWidget::updateSelectedCount
+        toolInfoWidget,
+        &ToolInfoWidget::updateSelectedCount
     );
 }
 
@@ -97,9 +97,9 @@ void MainWindow::createFileMenu() {
     menu->addAction(openAction);
 }
 
-void MainWindow::createInstrumentsMenu() {
+void MainWindow::createToolsMenu() {
     menuBar()->addAction(new QAction("|", this)); // Separator
-    auto* menu = menuBar()->addMenu(tr("Instruments"));
+    auto* menu = menuBar()->addMenu(tr("Tools"));
 
     menu->addAction(createModeAction(
         tr("Move"),
@@ -143,8 +143,8 @@ QMenu* MainWindow::getSectionMenu(Section* section) {
 }
 
 void MainWindow::createDocks() {
-    instrumentInfoWidget = new InstrumentInfoWidget(this);
-    createDock(instrumentInfoWidget, tr("Instrument Info"));
+    toolInfoWidget = new ToolInfoWidget(this);
+    createDock(toolInfoWidget, tr("Tool Info"));
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name) {
@@ -173,8 +173,8 @@ void MainWindow::onFunctionActionTriggered() {
 
     scene->setMode(EditMode::FUNCTION);
     scene->setFunction(func);
-    instrumentInfoWidget->setMode(EditMode::FUNCTION);
-    instrumentInfoWidget->setFunction(func);
+    toolInfoWidget->setMode(EditMode::FUNCTION);
+    toolInfoWidget->setFunction(func);
 }
 
 void MainWindow::onModeActionTriggered() {
@@ -182,7 +182,7 @@ void MainWindow::onModeActionTriggered() {
     auto mode = action->data().value<EditMode>();
 
     scene->setMode(mode);
-    instrumentInfoWidget->setMode(mode);
+    toolInfoWidget->setMode(mode);
 }
 
 void MainWindow::askForSave() {

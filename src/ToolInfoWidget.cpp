@@ -1,4 +1,4 @@
-#include "InstrumentInfoWidget.h"
+#include "ToolInfoWidget.h"
 
 #include "ArgumentInfoModel.h"
 #include "Function.h"
@@ -9,7 +9,7 @@
 #include <cassert>
 #include <QSizePolicy>
 
-InstrumentInfoWidget::InstrumentInfoWidget(QWidget* parent) : QWidget(parent) {
+ToolInfoWidget::ToolInfoWidget(QWidget* parent) : QWidget(parent) {
     setEnabled(false);
     createUi();
 
@@ -18,7 +18,7 @@ InstrumentInfoWidget::InstrumentInfoWidget(QWidget* parent) : QWidget(parent) {
     argsView->setSelectionMode(QTreeView::SelectionMode::NoSelection);
 }
 
-void InstrumentInfoWidget::createUi() {
+void ToolInfoWidget::createUi() {
     auto* vbox = new QVBoxLayout(this);
     setLayout(vbox);
 
@@ -42,7 +42,7 @@ void InstrumentInfoWidget::createUi() {
     vbox->addStretch(1);
 }
 
-void InstrumentInfoWidget::setFunction(Function* f) {
+void ToolInfoWidget::setFunction(Function* f) {
     assert(mode == EditMode::FUNCTION);
     func = f;
     argsModel->setFunction(func);
@@ -57,7 +57,7 @@ void InstrumentInfoWidget::setFunction(Function* f) {
     }
 }
 
-void InstrumentInfoWidget::setMode(EditMode m) {
+void ToolInfoWidget::setMode(EditMode m) {
     mode = m;
     if (mode == EditMode::FUNCTION) {
         setFunction();
@@ -70,6 +70,6 @@ void InstrumentInfoWidget::setMode(EditMode m) {
     }
 }
 
-void InstrumentInfoWidget::updateSelectedCount(int n) {
+void ToolInfoWidget::updateSelectedCount(int n) {
     argsModel->updateSelectedCount(n);
 }
