@@ -163,6 +163,22 @@ FUNC {
 };
 
 FUNC {
+    "Line/Parallel",
+    TR("Creates line parallel to current line through current point."),
+    {
+        {Type::Point, TR("Point")},
+        {Type::Line, TR("Line")},
+    },
+    1,
+    DO {
+        const auto& a = *static_cast<const Point*>(objs[0]);
+        const auto& l = *static_cast<const Line*>(objs[1]);
+
+        return { new Line(a, a + dir(l)) };
+    }
+};
+
+FUNC {
     "Line/Tangents",
     TR("Creates tangents to circle from point."),
     {
