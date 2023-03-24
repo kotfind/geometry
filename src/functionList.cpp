@@ -199,6 +199,67 @@ FUNC {
 };
 
 FUNC {
+    "Line/Common Tangent",
+    TR("Creates common tangents for two circle."),
+    {
+        {Type::Circle, TR("Fistt circle")},
+        {Type::Circle, TR("Second circle")},
+    },
+    2,
+    DO {
+        auto w1 = *static_cast<const Circle*>(objs[0]);
+        auto w2 = *static_cast<const Circle*>(objs[1]);
+
+        if (gr(w1.r, w2.r)) {
+            std::swap(w1, w2);
+        }
+
+        // r2 > r1
+        const auto& [o1, r1] = w1;
+        const auto& [o2, r2] = w2;
+
+        if (gr(r2 - r1, dist(o1, o2))) {
+            return {};
+        }
+
+        if (eq(r2 - r1, dist(o1, o2))) {
+            auto v = norm(o1 - o2) * r2;
+            auto p = o2 + v;
+            return { new Line(p, p + perp(v)) };
+        }
+
+        if (eq(r1, r2)) {
+            Line o1o2(o1, o2);
+            auto d = norm(o1o2) * r1;
+            return {
+                new Line(o1 + d, o2 + d),
+                new Line(o1 - d, o2 - d)
+            };
+        }
+
+        Circle w(o2, r2 - r1);
+        auto tangents = (*Function::get("Line/Tangents"))({&o1, &w});
+
+        QList<Object*> ans;
+        for (int i = 0; i < 2; ++i) {
+            const auto* lPtr = static_cast<const Line*>(tangents[i]);
+            const auto& l = *lPtr;
+            auto [p1, p2] = l.getTwoPoints();
+
+            auto d = norm(l) * r1;
+            auto L = Line(p1 + d, p2 + d);
+            if (!eq(r2, dist(L, o2))) {
+                L = Line(p1 - d, p2 - d);
+            }
+
+            ans << new Line(L);
+            delete lPtr;
+        }
+        return ans;
+    }
+};
+
+FUNC {
     "Line/Bisector",
     TR("Creates bisector line of angle formed by three points."),
     {

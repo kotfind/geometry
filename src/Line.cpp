@@ -29,12 +29,12 @@ void Line::paint(QPainter* qp) const {
     pen.setWidthF(paintWidth);
     qp->setPen(pen);
 
-    auto [p1, p2] = getTwoPoints();
+    auto [p1, p2] = getTwoQPointFs();
     qp->drawLine(p1, p2);
 }
 
 QRectF Line::boundingRect() const {
-    auto [p1, p2] = getTwoPoints();
+    auto [p1, p2] = getTwoQPointFs();
     auto [x1, y1] = p1;
     auto [x2, y2] = p2;
     return QRectF(
@@ -47,7 +47,7 @@ QRectF Line::boundingRect() const {
 
 QPainterPath Line::shape() const {
     auto d = getNorm() * paintWidth;
-    auto [p1, p2] = getTwoPoints();
+    auto [p1, p2] = getTwoQPointFs();
 
     QPainterPath path;
     path.moveTo(p1 - d);
@@ -57,7 +57,7 @@ QPainterPath Line::shape() const {
     return path;
 }
 
-QPair<QPointF, QPointF> Line::getTwoPoints() const {
+QPair<Point, Point> Line::getTwoPoints() const {
     if (eq(b, 0)) {
         double x = -c / a;
         return {{x, -10}, {x, 10}};
@@ -68,6 +68,11 @@ QPair<QPointF, QPointF> Line::getTwoPoints() const {
         double y2 = -(a * x2 + c) / b;
         return {{x1, y1}, {x2, y2}};
     }
+}
+
+QPair<QPointF, QPointF> Line::getTwoQPointFs() const {
+    auto [p1, p2] = getTwoPoints();
+    return {p1.getPos(), p2.getPos()};
 }
 
 QPointF Line::getNorm() const {

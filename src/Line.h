@@ -20,12 +20,14 @@ class Line : public GeometryObject {
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
+        QPair<Point, Point> getTwoPoints() const;
+
         double a, b, c;
 
         static constexpr double paintWidth = 3e-3;
 
     private:
-        QPair<QPointF, QPointF> getTwoPoints() const;
+        QPair<QPointF, QPointF> getTwoQPointFs() const;
 
         QPointF getNorm() const;
 };
