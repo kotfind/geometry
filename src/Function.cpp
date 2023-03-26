@@ -3,11 +3,13 @@
 #include "Object.h"
 
 #include <exception>
+#include <QIcon>
 
 QHash<QString, Function*> Function::funcs;
 
 Function::Function(
     const QString& fullName,
+    const QString& iconName,
     const QString& description,
     const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
@@ -18,6 +20,10 @@ Function::Function(
     maxReturnSize(maxReturnSize),
     func(func)
 {
+    Q_INIT_RESOURCE(imgs);
+
+    icon = QIcon(iconName);
+
     funcs[fullName] = this;
 
     selfName = fullName.section('/', -1);

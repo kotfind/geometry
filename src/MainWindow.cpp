@@ -8,7 +8,7 @@
 #include "IOError.h"
 #include "ToolInfoWidget.h"
 #include "Section.h"
-#include "ToolModel.h"
+#include "ToolWidget.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -23,6 +23,8 @@
 MainWindow::MainWindow() : QMainWindow() {
     updateTitle();
 
+    createModeAndFuncActions();
+
     createUi();
     createFileMenu();
     createToolsMenu();
@@ -32,10 +34,6 @@ MainWindow::MainWindow() : QMainWindow() {
     view->setScene(scene);
 
     toolInfoWidget->setMode(EditMode::MOVE);
-
-    toolModel = new ToolModel(this);
-    toolView->setModel(toolModel);
-    toolView->expandAll();
 
     connect(
         scene,
@@ -50,6 +48,41 @@ MainWindow::MainWindow() : QMainWindow() {
         toolInfoWidget,
         &ToolInfoWidget::updateSelectedCount
     );
+}
+
+void MainWindow::createModeAndFuncActions() {
+    for (auto* section : Section::getMaster()->getSections()) {
+        for (auto mode : section->getModes()) {
+            auto* action = new QAction(
+                modeIcon(mode),
+                modeName(mode),
+                this
+            );
+            action->setData(QVariant::fromValue(mode));
+            connect(
+                action,
+                &QAction::triggered,
+                this,
+                &MainWindow::onModeActionTriggered
+            );
+            modeToAction[mode] = action;
+        }
+        for (auto* func : section->getFunctions()) {
+            auto* action = new QAction(
+                func->getIcon(),
+                func->getSelfName(),
+                this
+            );
+            action->setData(QVariant::fromValue(func));
+            connect(
+                action,
+                &QAction::triggered,
+                this,
+                &MainWindow::onFunctionActionTriggered
+            );
+            funcToAction[func] = action;
+        }
+    }
 }
 
 void MainWindow::createUi() {
@@ -105,49 +138,26 @@ void MainWindow::createFileMenu() {
 void MainWindow::createToolsMenu() {
     menuBar()->addAction(new QAction("|", this)); // Separator
 
-    for (auto* sec : Section::getMaster()->getSections()) {
-        menuBar()->addMenu(getSectionMenu(sec));
+    for (auto* section : Section::getMaster()->getSections()) {
+        auto* menu = menuBar()->addMenu(section->getName());
+
+        for (auto mode : section->getModes()) {
+            menu->addAction(modeToAction[mode]);
+        }
+        for (auto* func : section->getFunctions()) {
+            menu->addAction(funcToAction[func]);
+        }
     }
 
     menuBar()->addAction(new QAction("|", this)); // Separator
-}
-
-QMenu* MainWindow::getSectionMenu(Section* section) {
-    auto* menu = new QMenu(section->getName(), this);
-    for (auto* sec : section->getSections()) {
-        menu->addMenu(getSectionMenu(sec));
-    }
-    for (auto mode : section->getModes()) {
-        auto* action = new QAction(modeName(mode), this);
-        action->setData(QVariant::fromValue(mode));
-        connect(
-            action,
-            &QAction::triggered,
-            this,
-            &MainWindow::onModeActionTriggered
-        );
-        menu->addAction(action);
-    }
-    for (auto* func : section->getFunctions()) {
-        auto* action = new QAction(func->getSelfName(), this);
-        action->setData(QVariant::fromValue(func));
-        connect(
-            action,
-            &QAction::triggered,
-            this,
-            &MainWindow::onFunctionActionTriggered
-        );
-        menu->addAction(action);
-    }
-    return menu;
 }
 
 void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(this);
     createDock(toolInfoWidget, tr("Tool Info"));
 
-    toolView = new QTreeView(this);
-    createDock(toolView, tr("Tools"));
+    toolWidget = new ToolWidget(modeToAction, funcToAction, this);
+    createDock(toolWidget, tr("Tools"));
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name) {
@@ -155,7 +165,9 @@ void MainWindow::createDock(QWidget* widget, const QString& name) {
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock->setWidget(widget);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
-    menuBar()->addMenu(tr("View"))->addAction(dock->toggleViewAction());
+
+    static QMenu* viewMenu = menuBar()->addMenu(tr("View"));
+    viewMenu->addAction(dock->toggleViewAction());
 }
 
 void MainWindow::onFunctionActionTriggered() {

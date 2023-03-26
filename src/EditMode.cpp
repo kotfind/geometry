@@ -4,6 +4,7 @@
 #include "Section.h"
 
 #include <QString>
+#include <QIcon>
 
 QString modeName(EditMode m) {
     switch (m) {
@@ -15,6 +16,19 @@ QString modeName(EditMode m) {
 
         case EditMode::REMOVE:
             return TR("Remove");
+    }
+}
+
+QIcon modeIcon(EditMode m) {
+    switch (m) {
+        case EditMode::MOVE:
+            return QIcon(":none.svg");
+
+        case EditMode::CREATE_POINT:
+            return QIcon(":none.svg");
+
+        case EditMode::REMOVE:
+            return QIcon(":none.svg");
     }
 }
 

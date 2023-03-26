@@ -16,8 +16,6 @@ class ToolInfoWidget : public QWidget {
     public:
         ToolInfoWidget(QWidget* parent = nullptr);
 
-        QSize sizeHint() const override;
-
     private:
         void createUi();
 

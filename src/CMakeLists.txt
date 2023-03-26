@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-fsanitize=undefined,address -g3 -O0")
 find_package(Qt6 REQUIRED
     Core
     Widgets
+    Svg
 )
 
 qt_standard_project_setup()
@@ -55,12 +56,20 @@ add_executable(geometry
 
     Section.cpp
 
-    ToolModel.cpp
+    ToolWidget.cpp
 )
 
 target_link_libraries(geometry
     Qt6::Core
     Qt6::Widgets
+    Qt6::Svg
+)
+
+qt_add_resources(geometry "imgs"
+    PREFIX "/"
+    BASE "img/"
+    FILES
+        "img/none.svg"
 )
 
 find_package(Doxygen)

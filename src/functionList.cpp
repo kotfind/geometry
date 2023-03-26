@@ -7,6 +7,7 @@
 #include "cramer.h"
 
 #include <QDebug>
+#include <QIcon>
 
 #define CAT2(a,b) a##b // actually concatenate
 #define CAT(a,b) CAT2(a,b) // force expand
@@ -18,6 +19,7 @@
 
 FUNC {
     "Point/Intersect",
+    ":none.svg",
     TR("Intersects two objects."),
     {
         {Type::Line | Type::Circle, TR("First object")},
@@ -111,6 +113,7 @@ FUNC {
 
 FUNC {
     "Point/Middle",
+    ":none.svg",
     TR("Creates point between two current."),
     {
         {Type::Point, TR("First point")},
@@ -129,6 +132,7 @@ FUNC {
 
 FUNC {
     "Line/By Two Points",
+    ":none.svg",
     TR("Creates line by two points."),
     {
         {Type::Point, TR("First point")},
@@ -148,6 +152,7 @@ FUNC {
 
 FUNC {
     "Line/Perpendicular",
+    ":none.svg",
     TR("Creates line perpendicular to current line through current point."),
     {
         {Type::Point, TR("Point")},
@@ -164,6 +169,7 @@ FUNC {
 
 FUNC {
     "Line/Parallel",
+    ":none.svg",
     TR("Creates line parallel to current line through current point."),
     {
         {Type::Point, TR("Point")},
@@ -180,6 +186,7 @@ FUNC {
 
 FUNC {
     "Line/Tangents",
+    ":none.svg",
     TR("Creates tangents to circle from point."),
     {
         {Type::Point, TR("Point")},
@@ -216,6 +223,7 @@ FUNC {
 
 FUNC {
     "Line/Common Tangent",
+    ":none.svg",
     TR("Creates common tangents for two circle."),
     {
         {Type::Circle, TR("Fistt circle")},
@@ -277,6 +285,7 @@ FUNC {
 
 FUNC {
     "Line/Bisector",
+    ":none.svg",
     TR("Creates bisector line of angle formed by three points."),
     {
         {Type::Point, TR("First point")},
@@ -308,6 +317,7 @@ FUNC {
 
 FUNC {
     "Circle/By Center And Point",
+    ":none.svg",
     TR("Creates circle by center and point on it."),
     {
         {Type::Point, TR("Center")},
@@ -329,6 +339,7 @@ FUNC {
 
 FUNC {
     "Circle/By Three Points",
+    ":none.svg",
     TR("Creates circle by three points on it."),
     {
         {Type::Point, TR("First point")},
@@ -367,6 +378,7 @@ FUNC {
 
 FUNC {
     "Circle/Incircle",
+    ":none.svg",
     TR("Incircle by three vertexes of triangle."),
     {
         {Type::Point, TR("First point")},

@@ -16,8 +16,6 @@ ToolInfoWidget::ToolInfoWidget(QWidget* parent) : QWidget(parent) {
     argsModel = new ArgumentInfoModel(this);
     argsView->setModel(argsModel);
     argsView->setSelectionMode(QTreeView::SelectionMode::NoSelection);
-
-    setMinimumSize(QSize(1, 1));
 }
 
 void ToolInfoWidget::createUi() {
@@ -74,8 +72,4 @@ void ToolInfoWidget::setMode(EditMode m) {
 
 void ToolInfoWidget::updateSelectedCount(int n) {
     argsModel->updateSelectedCount(n);
-}
-
-QSize ToolInfoWidget::sizeHint() const {
-    return minimumSize();
 }
