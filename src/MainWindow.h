@@ -1,9 +1,8 @@
 #pragma once
 
-#include "EditMode.h"
-
 #include <QMainWindow>
 #include <QString>
+#include <QHash>
 
 class QGraphicsView;
 class Scene;
@@ -12,20 +11,21 @@ class QString;
 class QCloseEvent;
 class ToolInfoWidget;
 class Section;
-class QTreeView;
+class Function;
+enum class EditMode;
 
 class MainWindow : public QMainWindow {
     public:
         MainWindow();
 
     private:
+        void createModeAndFuncActions();
+
         void createUi();
 
         void createFileMenu();
 
         void createToolsMenu();
-
-        QMenu* getSectionMenu(Section*);
 
         void createDocks();
 
@@ -41,6 +41,9 @@ class MainWindow : public QMainWindow {
         View* view;
 
         ToolInfoWidget* toolInfoWidget;
+
+        QHash<Function*, QAction*> funcToAction;
+        QHash<EditMode, QAction*> modeToAction;
 
     protected:
         void closeEvent(QCloseEvent*) override;
