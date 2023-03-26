@@ -8,6 +8,7 @@
 #include "IOError.h"
 #include "ToolInfoWidget.h"
 #include "Section.h"
+#include "ToolWidget.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -146,6 +147,9 @@ void MainWindow::createToolsMenu() {
 void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(this);
     createDock(toolInfoWidget, tr("Tool Info"));
+
+    toolWidget = new ToolWidget(modeToAction, funcToAction, this);
+    createDock(toolWidget, tr("Tools"));
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name) {
@@ -153,7 +157,9 @@ void MainWindow::createDock(QWidget* widget, const QString& name) {
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock->setWidget(widget);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
-    menuBar()->addMenu(tr("View"))->addAction(dock->toggleViewAction());
+
+    static QMenu* viewMenu = menuBar()->addMenu(tr("View"));
+    viewMenu->addAction(dock->toggleViewAction());
 }
 
 void MainWindow::onFunctionActionTriggered() {

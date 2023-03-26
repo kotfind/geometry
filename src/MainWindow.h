@@ -13,6 +13,7 @@ class ToolInfoWidget;
 class Section;
 class Function;
 enum class EditMode;
+class ToolWidget;
 
 class MainWindow : public QMainWindow {
     public:
@@ -41,9 +42,10 @@ class MainWindow : public QMainWindow {
         View* view;
 
         ToolInfoWidget* toolInfoWidget;
+        ToolWidget* toolWidget;
 
-        QHash<Function*, QAction*> funcToAction;
         QHash<EditMode, QAction*> modeToAction;
+        QHash<Function*, QAction*> funcToAction;
 
     protected:
         void closeEvent(QCloseEvent*) override;
