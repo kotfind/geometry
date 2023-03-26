@@ -7,6 +7,7 @@
 #include <QList>
 #include <QHash>
 #include <QString>
+#include <QIcon>
 
 class Object;
 enum class Type : unsigned int;
@@ -15,6 +16,7 @@ class Function {
     public:
         Function(
             const QString& name,
+            const QString& icon,
             const QString& description,
             const QList<ArgumentInfo>& argsInfo,
             int maxReturnSize,
@@ -24,6 +26,7 @@ class Function {
         QList<Object*> operator()(const QList<const Object*>& objs) const;
 
         const QString& getFullName() const { return fullName; }
+        const QIcon& getIcon() const { return icon; }
         const QString& getDescription() const { return description; }
         int countArgs() const { return argsInfo.size(); }
         const ArgumentInfo& getArgInfo(int i) const { return argsInfo[i]; }
@@ -39,6 +42,7 @@ class Function {
         static QHash<QString, Function*> funcs;
 
         QString fullName;
+        QIcon icon;
         QString description;
         QList<ArgumentInfo> argsInfo;
         int maxReturnSize;

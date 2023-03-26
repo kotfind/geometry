@@ -53,7 +53,11 @@ MainWindow::MainWindow() : QMainWindow() {
 void MainWindow::createModeAndFuncActions() {
     for (auto* section : Section::getMaster()->getSections()) {
         for (auto mode : section->getModes()) {
-            auto* action = new QAction(modeName(mode), this);
+            auto* action = new QAction(
+                modeIcon(mode),
+                modeName(mode),
+                this
+            );
             action->setData(QVariant::fromValue(mode));
             connect(
                 action,
@@ -64,7 +68,11 @@ void MainWindow::createModeAndFuncActions() {
             modeToAction[mode] = action;
         }
         for (auto* func : section->getFunctions()) {
-            auto* action = new QAction(func->getSelfName(), this);
+            auto* action = new QAction(
+                func->getIcon(),
+                func->getSelfName(),
+                this
+            );
             action->setData(QVariant::fromValue(func));
             connect(
                 action,

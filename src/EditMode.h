@@ -2,6 +2,7 @@
 
 class QString;
 class Section;
+class QIcon;
 
 enum class EditMode {
     MOVE,
@@ -11,6 +12,7 @@ enum class EditMode {
 };
 
 QString modeName(EditMode);
+QIcon modeIcon(EditMode);
 QString modeDescription(EditMode);
 Section* modeSection(EditMode);
 
