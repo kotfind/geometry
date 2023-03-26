@@ -22,4 +22,7 @@ class ToolWidget : public QTabWidget {
             const QHash<EditMode, QAction*>& modeToAction,
             const QHash<Function*, QAction*>& funcToAction
         );
+
+        static const int iconWidth = 50;
+        static const int buttonWidth = 100;
 };

@@ -3,7 +3,7 @@
 #include "Section.h"
 
 #include <QList>
-#include <QVBoxLayout>
+#include <QGridLayout>
 #include <QToolButton>
 
 ToolWidget::ToolWidget(
@@ -31,14 +31,26 @@ void ToolWidget::createUi(
         auto* tab = new QWidget(this);
         addTab(tab, section->getName());
 
-        auto* layout = new QVBoxLayout(this);
+        auto* layout = new QGridLayout(this);
         tab->setLayout(layout);
 
-        for (auto* action : actions) {
+        for (int i = 0; i < actions.size(); ++i) {
             auto* btn = new QToolButton(this);
-            btn->setDefaultAction(action);
+
             btn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-            layout->addWidget(btn);
+            btn->setFixedWidth(buttonWidth);
+            btn->setIconSize(QSize(iconWidth, iconWidth));
+            btn->setAutoRaise(true);
+
+            btn->setDefaultAction(actions[i]);
+            layout->addWidget(
+                btn,
+                i / 3,
+                i % 3,
+                Qt::AlignTop
+            );
         }
+
+        layout->setRowStretch(actions.size() / 3, 1);
     }
 }
