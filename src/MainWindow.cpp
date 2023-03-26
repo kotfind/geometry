@@ -8,7 +8,6 @@
 #include "IOError.h"
 #include "ToolInfoWidget.h"
 #include "Section.h"
-#include "ToolModel.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -32,10 +31,6 @@ MainWindow::MainWindow() : QMainWindow() {
     view->setScene(scene);
 
     toolInfoWidget->setMode(EditMode::MOVE);
-
-    toolModel = new ToolModel(this);
-    toolView->setModel(toolModel);
-    toolView->expandAll();
 
     connect(
         scene,
@@ -145,9 +140,6 @@ QMenu* MainWindow::getSectionMenu(Section* section) {
 void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(this);
     createDock(toolInfoWidget, tr("Tool Info"));
-
-    toolView = new QTreeView(this);
-    createDock(toolView, tr("Tools"));
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name) {
