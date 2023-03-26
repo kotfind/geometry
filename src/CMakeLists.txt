@@ -54,6 +54,8 @@ add_executable(geometry
     cramer.cpp
 
     Section.cpp
+
+    ToolWidget.cpp
 )
 
 target_link_libraries(geometry
