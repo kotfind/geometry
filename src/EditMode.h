@@ -1,6 +1,7 @@
 #pragma once
 
 class QString;
+class Section;
 
 enum class EditMode {
     MOVE,
@@ -11,3 +12,6 @@ enum class EditMode {
 
 QString modeName(EditMode);
 QString modeDescription(EditMode);
+Section* modeSection(EditMode);
+
+void initEditModes();

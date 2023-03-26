@@ -11,6 +11,10 @@ void Section::addSection(Section* s) {
     sections << s;
 } 
 
+void Section::addMode(EditMode m) {
+    modes << m;
+}
+
 void Section::addFunction(Function* f) {
     functions << f;
 }

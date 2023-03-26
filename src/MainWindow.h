@@ -32,8 +32,6 @@ class MainWindow : public QMainWindow {
 
         void createDock(QWidget* widget, const QString& name);
 
-        QAction* createModeAction(const QString& name, EditMode mode);
-
         void updateTitle();
 
         void askForSave();

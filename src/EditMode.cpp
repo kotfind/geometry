@@ -1,6 +1,7 @@
 #include "EditMode.h"
 
 #include "global.h"
+#include "Section.h"
 
 #include <QString>
 
@@ -10,7 +11,7 @@ QString modeName(EditMode m) {
             return TR("Move");
 
         case EditMode::CREATE_POINT:
-            return TR("Create Point");
+            return TR("Create");
 
         case EditMode::REMOVE:
             return TR("Remove");
@@ -28,5 +29,24 @@ QString modeDescription(EditMode m) {
             return TR("Click on the canvas to create a point.");
         case EditMode::REMOVE:
             return TR("Click on any object to delete it.");
+    }
+}
+
+Section* modeSection(EditMode m) {
+    switch (m) {
+        case EditMode::MOVE:
+            return Section::get("Special");
+
+        case EditMode::CREATE_POINT:
+            return Section::get("Point");
+
+        case EditMode::REMOVE:
+            return Section::get("Special");
+    }
+}
+
+void initEditModes() {
+    for (auto mode : {EditMode::MOVE, EditMode::CREATE_POINT, EditMode::REMOVE}) {
+        modeSection(mode)->addMode(mode);
     }
 }

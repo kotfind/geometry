@@ -104,22 +104,6 @@ void MainWindow::createFileMenu() {
 
 void MainWindow::createToolsMenu() {
     menuBar()->addAction(new QAction("|", this)); // Separator
-    auto* menu = menuBar()->addMenu(tr("Tools"));
-
-    menu->addAction(createModeAction(
-        tr("Move"),
-        EditMode::MOVE
-    ));
-
-    menu->addAction(createModeAction(
-        tr("Create Point"),
-        EditMode::CREATE_POINT
-    ));
-
-    menu->addAction(createModeAction(
-        tr("Remove"),
-        EditMode::REMOVE
-    ));
 
     for (auto* sec : Section::getMaster()->getSections()) {
         menuBar()->addMenu(getSectionMenu(sec));
@@ -132,6 +116,17 @@ QMenu* MainWindow::getSectionMenu(Section* section) {
     auto* menu = new QMenu(section->getName(), this);
     for (auto* sec : section->getSections()) {
         menu->addMenu(getSectionMenu(sec));
+    }
+    for (auto mode : section->getModes()) {
+        auto* action = new QAction(modeName(mode), this);
+        action->setData(QVariant::fromValue(mode));
+        connect(
+            action,
+            &QAction::triggered,
+            this,
+            &MainWindow::onModeActionTriggered
+        );
+        menu->addAction(action);
     }
     for (auto* func : section->getFunctions()) {
         auto* action = new QAction(func->getSelfName(), this);
@@ -161,18 +156,6 @@ void MainWindow::createDock(QWidget* widget, const QString& name) {
     dock->setWidget(widget);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     menuBar()->addMenu(tr("View"))->addAction(dock->toggleViewAction());
-}
-
-QAction* MainWindow::createModeAction(const QString& name, EditMode mode) {
-    auto* action = new QAction(name, this);
-    action->setData(QVariant::fromValue(mode));
-    connect(
-        action,
-        &QAction::triggered,
-        this,
-        &MainWindow::onModeActionTriggered
-    );
-    return action;
 }
 
 void MainWindow::onFunctionActionTriggered() {
