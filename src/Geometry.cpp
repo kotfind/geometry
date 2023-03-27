@@ -27,7 +27,6 @@ Geometry::~Geometry() {
 
 void Geometry::addGenerator(Generator* gen) {
     gens << gen;
-    gen->setGeometry(this);
     setChanged();
 }
 
@@ -40,6 +39,7 @@ void Geometry::removeGenerator(Generator* gen) {
 }
 
 static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) {
+    /* XXX
     if (u->isDependant()) {
         auto* U = static_cast<DependantGenerator*>(u);
         for (auto& v : U->getArgs()) {
@@ -50,6 +50,7 @@ static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) 
     }
     u->recalcSelf();
     recalced[u] = true;
+    */
 }
 
 void Geometry::recalcAll() {
@@ -136,9 +137,11 @@ void Geometry::clear() {
 }
 
 void Geometry::populateScene(QGraphicsScene* scene) {
+    /*
     for (auto* gen : gens) {
         scene->addItem(gen->getGeometryItem());
     }
+    */
 }
 
 void Geometry::setChanged(bool v) {

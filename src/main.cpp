@@ -1,9 +1,12 @@
 #include <QApplication>
 
+/*
 #include "EditMode.h"
 #include "MainWindow.h"
+*/
 
 int main(int argc, char** argv) {
+    /*
     QApplication app(argc, argv);
 
     initEditModes();
@@ -12,4 +15,5 @@ int main(int argc, char** argv) {
     master.show();
 
     return app.exec();
+    */
 }

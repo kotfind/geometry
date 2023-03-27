@@ -25,17 +25,19 @@ add_executable(geometry
     Generator.cpp
     FreeGenerator.cpp
     DependantGenerator.cpp
+    GeometryGenerator.cpp
+    RealGenerator.cpp
 
     Point.cpp
     Line.cpp
     Circle.cpp
 
-    MainWindow.cpp
+    # MainWindow.cpp
 
     GeometryItem.cpp
 
-    Scene.cpp
-    View.cpp
+    # Scene.cpp
+    # View.cpp
 
     Geometry.cpp
 
@@ -45,18 +47,18 @@ add_executable(geometry
 
     Type.cpp
 
-    ToolInfoWidget.cpp
+    # ToolInfoWidget.cpp
 
     ArgumentInfo.cpp
-    ArgumentInfoModel.cpp
+    # ArgumentInfoModel.cpp
 
-    EditMode.cpp
+    # EditMode.cpp
 
     cramer.cpp
 
     Section.cpp
 
-    ToolWidget.cpp
+    # ToolWidget.cpp
 )
 
 target_link_libraries(geometry

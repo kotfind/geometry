@@ -3,26 +3,25 @@
 #include "Generator.h"
 
 #include <QList>
-#include <QHash>
 
 class Function;
-class QJsonObject;
 
-class DependantGenerator : public Generator {
+class DependantGenerator : public virtual Generator {
     public:
-        DependantGenerator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
-
-        bool isFree() const override { return false; }
-
-        void recalcSelf() override;
-
-        const QList<Generator*>& getArgs() const { return args; }
+        // Call recalc() manually in child constructor
+        DependantGenerator(
+            Function* func,
+            const QList<Generator*>& args,
+            int funcResNum = 0,
+            Geometry* geom = nullptr
+        );
 
         void remove() override;
 
-        QJsonObject toJson(const QHash<Generator*, int>& ids) const override;
+        bool isFree() const override { return false; }
 
-        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
+    protected:
+        void recalcSelf() override;
 
     private:
         Function* func;

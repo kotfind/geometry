@@ -1,50 +1,50 @@
 #pragma once
 
+#include "NotImplementedError.h" // XXX
+
 #include <QList>
 #include <QHash>
+#include <QJsonObject> // XXX
+#include <QJsonArray> // XXX
 
 class Object;
-class GeometryItem;
 class Geometry;
 class QJsonObject;
 class QJsonArray;
 
 class Generator {
     public:
-        virtual ~Generator();
+        Generator(Geometry* geom = nullptr);
+        virtual ~Generator() {}
 
-        void setGeometry(Geometry*);
+        virtual void remove();
+
+        const Object* getObject() const { return object(); }
 
         virtual bool isFree() const = 0;
-        bool isDependant() const { return !isFree(); }
+        virtual bool hasGeometry() const = 0;
 
         void recalc();
-        virtual void recalcSelf() = 0;
-
-        GeometryItem* getGeometryItem() const { return item; }
 
         void addDependant(Generator*);
         void removeDependant(Generator*);
 
-        const Object* getObject() const { return object; }
+        virtual void beginResetObject() {}
+        virtual void endResetObject() {}
 
-        virtual void remove();
-
-        virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
-
-        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
+        QJsonObject toJson(const QHash<Generator*, int>& ids) const { throw NotImplementedError(); }
+        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) { throw NotImplementedError(); }
 
     protected:
-        Generator();
+        virtual Object*& object() = 0;
+        virtual const Object* object() const = 0;
 
-        Object* object = nullptr;
-        GeometryItem* item;
-
-        Geometry* geom;
+        virtual void recalcSelf() = 0;
 
     private:
         void recalcDependant() const;
 
-        // List of generators that depends on current
+        Geometry* geom;
+
         QList<Generator*> dependant;
 };
