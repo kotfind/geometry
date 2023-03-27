@@ -27,6 +27,7 @@ add_executable(geometry
     DependantGenerator.cpp
     GeometryGenerator.cpp
     RealGenerator.cpp
+    childGenerators.cpp
 
     Point.cpp
     Line.cpp
