@@ -5,8 +5,6 @@
 #include "GeometryItem.h"
 #include "Geometry.h"
 #include "Generator.h"
-#include "FreeGenerator.h"
-#include "DependantGenerator.h"
 
 #include <QDebug>
 #include <cassert>
@@ -50,11 +48,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
+            // FIXME
+            /*
             auto* point = new Point(pos);
             auto* gen = new FreeGenerator(point);
             geom->addGenerator(gen);
             auto* item = gen->getGeometryItem();
             addItem(item);
+            */
         }
         break;
 
@@ -73,10 +74,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             emit selectedCountChanged(selectedFuncArgs.size());
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
+                    // FIXME
+                    /*
                     auto* gen = new DependantGenerator(func, selectedFuncArgs, funcResNum);
                     geom->addGenerator(gen);
                     auto* item = gen->getGeometryItem();
                     addItem(item);
+                    */
                 }
 
                 selectedFuncArgs.clear();
@@ -113,7 +117,8 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::MOVE:
         {
             if (!currentFreeGenerator) break;
-            currentFreeGenerator->move(delta);
+            // FIXME
+            // currentFreeGenerator->move(delta);
         }
         break;
     }
@@ -133,13 +138,14 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
     }
 }
 
-FreeGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
+Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
         auto* gen = item->getGenerator();
         if (gen->isFree()) {
-            return static_cast<FreeGenerator*>(gen);
+            // FIXME
+            // return static_cast<FreeGenerator*>(gen);
         }
     }
     return nullptr;

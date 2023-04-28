@@ -1,76 +1,67 @@
 #include "Generator.h"
 
+#include "FreeCalculator.h"
+#include "DependantCalculator.h"
 #include "Object.h"
-#include "GeometryItem.h"
 #include "Geometry.h"
-#include "FreeGenerator.h"
-#include "DependantGenerator.h"
-#include "getOrThrow.h"
 
-#include <QJsonObject>
-#include <QJsonArray>
+#include <stdexcept>
 
-Generator::Generator() {
-    item = new GeometryItem(this);
+Generator::Generator(Object* obj)
+  : calc(
+        std::make_unique<FreeCalculator>(
+            std::unique_ptr<Object>(obj->clone())
+        )
+    )
+{
+    recalc();
 }
 
-Generator::~Generator() {
-    delete object;
+Generator::Generator(
+    Function* func,
+    const QList<Generator*>& args,
+    int funcResNum
+) : calc(
+        std::make_unique<DependantCalculator>(
+            func,
+            args,
+            funcResNum
+        )
+    )
+{
+    recalc();
+
+    for (auto* gen : args) {
+        gen->dependant << this;
+    }
 }
 
-void Generator::setGeometry(Geometry* g) {
-    geom = g;
+const Object* Generator::getObject() const {
+    return obj.get();
+}
+
+bool Generator::isFree() const {
+    return calc->isFree();
+}
+
+bool Generator::isDependant() const {
+    return !isFree();
 }
 
 void Generator::recalc() {
-    item->beginResetObject();
-    recalcSelf();
-    recalcDependant();
-    item->endResetObject();
-}
+    beginResetObject();
 
-void Generator::recalcDependant() const {
+    obj.reset(calc->calc());
+    if (!checkObjectType()) throw std::runtime_error("Wrong object type");
+
     for (auto* dep : dependant) {
         dep->recalc();
     }
-}
 
-void Generator::addDependant(Generator* g) {
-    dependant << g;
-}
-
-void Generator::removeDependant(Generator* g) {
-    geom->setChanged();
-
-    auto i = dependant.indexOf(g);
-    assert(i != -1);
-
-    std::swap(dependant[i], dependant.back());
-    dependant.pop_back();
+    endResetObject();
 }
 
 void Generator::remove() {
-    while (!dependant.empty()) {
-        // Next line will remove dependant[0] from dependant array,
-        // so dependant will eventually became empty
-        dependant[0]->remove();
-    }
-    geom->removeGenerator(this);
-    item->remove();
-    delete this;
+    throw std::logic_error("NotImplemented");
 }
 
-QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
-    QJsonObject json;
-    json["isFree"] = isFree();
-    return json;
-}
-
-void Generator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
-    auto isFree = getOrThrow(jsonGens[i]["isFree"]).toBool();
-    if (isFree) {
-        FreeGenerator::load(geom, jsonGens, gens, i);
-    } else {
-        DependantGenerator::load(geom, jsonGens, gens, i);
-    }
-}

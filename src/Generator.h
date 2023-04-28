@@ -1,50 +1,47 @@
 #pragma once
 
+#include <QPointF>
+#include <memory>
 #include <QList>
-#include <QHash>
 
 class Object;
-class GeometryItem;
+class Function;
+class Calculator;
 class Geometry;
-class QJsonObject;
-class QJsonArray;
 
 class Generator {
     public:
-        virtual ~Generator();
+        const Object* getObject() const;
 
-        void setGeometry(Geometry*);
-
-        virtual bool isFree() const = 0;
-        bool isDependant() const { return !isFree(); }
+        bool isFree() const;
+        bool isDependant() const;
 
         void recalc();
-        virtual void recalcSelf() = 0;
 
-        GeometryItem* getGeometryItem() const { return item; }
-
-        void addDependant(Generator*);
-        void removeDependant(Generator*);
-
-        const Object* getObject() const { return object; }
-
-        virtual void remove();
-
-        virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
-
-        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
+        void remove(); // TODO: Move to Geometry class ?
 
     protected:
-        Generator();
+        virtual void beginResetObject() {}
+        virtual void endResetObject() {}
 
-        Object* object = nullptr;
-        GeometryItem* item;
+        std::unique_ptr<Object> obj;
 
         Geometry* geom;
 
     private:
-        void recalcDependant() const;
+        // Constructs free Generator.
+        // Is called from Geometry::make_gen.
+        Generator(Object*);
 
-        // List of generators that depends on current
+        // Constructs dependant Generator.
+        // Is called from Geometry::make_gen.
+        Generator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
+
+        virtual bool checkObjectType() const = 0;
+
+        std::unique_ptr<Calculator> calc;
+
         QList<Generator*> dependant;
+
+    friend Geometry;
 };

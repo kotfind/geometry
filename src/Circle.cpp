@@ -9,6 +9,10 @@
 Circle::Circle() : Circle(Point(), 1) {}
 Circle::Circle(const Point& o, double r) : GeometryObject(), o(o), r(r) {}
 
+Object* Circle::clone() const {
+    return new Circle(*this);
+}
+
 void Circle::paint(QPainter* qp) const {
     auto pen = qp->pen();
     pen.setWidthF(paintWidth);

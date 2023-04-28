@@ -14,8 +14,8 @@ class Geometry {
         Geometry();
         ~Geometry();
 
-        void addGenerator(Generator*);
-        void removeGenerator(Generator*);
+        template<typename... Args>
+        Generator* make_gen(Args&&... args);
 
         const QRectF& getSceneRect() const { return sceneRect; }
 

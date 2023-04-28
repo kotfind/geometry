@@ -15,6 +15,10 @@ Point::Point() : Point(0, 0) {}
 Point::Point(const QPointF& pos) : Point(pos.x(), pos.y()) {}
 Point::Point(double x, double y) : GeometryObject(), x(x), y(y) {}
 
+Object* Point::clone() const {
+    return new Point(*this);
+}
+
 void Point::paint(QPainter* qp) const {
     auto pen = qp->pen();
     pen.setWidth(0);

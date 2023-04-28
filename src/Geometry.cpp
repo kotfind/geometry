@@ -1,10 +1,10 @@
 #include "Geometry.h"
 
 #include "Generator.h"
-#include "DependantGenerator.h"
 #include "GeometryItem.h"
 #include "getOrThrow.h"
 #include "IOError.h"
+#include "GeometryGenerator.h"
 
 #include <QHash>
 #include <cassert>
@@ -25,24 +25,17 @@ Geometry::~Geometry() {
     clear();
 }
 
-void Geometry::addGenerator(Generator* gen) {
-    gens << gen;
-    gen->setGeometry(this);
-    setChanged();
+template<typename... Args>
+Generator* Geometry::make_gen(Args&&... args) {
+    auto* gen = Generator(std::forward<Args>(args)...);
+    gen->geom = this;
+    return gen;
 }
 
-void Geometry::removeGenerator(Generator* gen) {
-    auto i = gens.indexOf(gen);
-    assert(i != -1);
-
-    std::swap(gens[i], gens.back());
-    gens.pop_back();
-}
-
-static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) {
+/*
+static void recalcGen(QHash<Generator*, int>& recalced, Generator* u) {
     if (u->isDependant()) {
-        auto* U = static_cast<DependantGenerator*>(u);
-        for (auto& v : U->getArgs()) {
+        for (auto& v : u->getArgs()) {
             if (!recalced[v]) {
                 recalcGen(recalced, v);
             }
@@ -51,14 +44,21 @@ static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) 
     u->recalcSelf();
     recalced[u] = true;
 }
+*/
 
 void Geometry::recalcAll() {
+    // FIXME
+    for (auto* gen : gens) {
+        gen->recalc();
+    }
+    /*
     QHash<Generator*, int> recalced;
     for (auto* u : gens) {
         if (!recalced[u]) {
             recalcGen(recalced, u);
         }
     }
+    */
 }
 
 void Geometry::move(const QPointF& delta) {
@@ -71,8 +71,10 @@ QPointF Geometry::transform(const QPointF& pt) {
 }
 
 QJsonObject Geometry::toJson() const {
+    // FIXME
     QJsonObject json;
 
+    /*
     QJsonObject shiftJson;
     shiftJson["x"] = shift.x();
     shiftJson["y"] = shift.y();
@@ -88,6 +90,7 @@ QJsonObject Geometry::toJson() const {
         gensJson << gen->toJson(ids);
     }
     json["gens"] = gensJson;
+    */
 
     return json;
 }
@@ -102,6 +105,8 @@ void Geometry::save(const QString& fileName) const {
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
+    // FIXME
+    /*
     const auto& shiftJson = getOrThrow(json["shift"]).toObject();
     shift.setX(getOrThrow(shiftJson["x"]).toInt());
     shift.setY(getOrThrow(shiftJson["y"]).toInt());
@@ -114,6 +119,7 @@ void Geometry::fromJson(const QJsonObject& json) {
             Generator::load(this, jsonGens, gens, i);
         }
     }
+    */
 }
 
 void Geometry::load(const QString& fileName) {
@@ -137,10 +143,13 @@ void Geometry::clear() {
 
 void Geometry::populateScene(QGraphicsScene* scene) {
     for (auto* gen : gens) {
-        scene->addItem(gen->getGeometryItem());
+        scene->addItem(
+            static_cast<GeometryGenerator*>(gen)->getGeometryItem()
+        );
     }
 }
 
 void Geometry::setChanged(bool v) {
     changed = v;
 }
+

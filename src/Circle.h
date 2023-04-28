@@ -10,6 +10,8 @@ class Circle : public GeometryObject {
         Circle();
         Circle(const Point& o, double r);
 
+        Object* clone() const override;
+
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
