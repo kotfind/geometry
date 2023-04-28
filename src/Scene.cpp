@@ -71,13 +71,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             emit selectedCountChanged(selectedFuncArgs.size());
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-                    // FIXME
-                    /*
-                    auto* gen = new DependantGenerator(func, selectedFuncArgs, funcResNum);
-                    geom->addGenerator(gen);
+                    auto* gen = geom->makeGeometryGenerator(
+                        func,
+                        selectedFuncArgs,
+                        funcResNum
+                    );
                     auto* item = gen->getGeometryItem();
                     addItem(item);
-                    */
                 }
 
                 selectedFuncArgs.clear();
