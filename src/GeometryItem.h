@@ -6,14 +6,14 @@ class GeometryObject;
 class QRectF;
 class QPainter;
 class QStyleOptionGraphicsItem;
-class Generator;
+class GeometryGenerator;
 
 // Is a proxy between GeometryObject and QGraphicsItem
 class GeometryItem : public QGraphicsItem {
     public:
-        GeometryItem(Generator* gen);
+        GeometryItem(GeometryGenerator* gen);
 
-        Generator* getGenerator() const { return gen; }
+        GeometryGenerator* getGeometryGenerator() const { return gen; }
 
         void beginResetObject();
         void endResetObject();
@@ -29,5 +29,5 @@ class GeometryItem : public QGraphicsItem {
 
         const GeometryObject* object() const;
 
-        Generator* gen = nullptr;
+        GeometryGenerator* gen = nullptr;
 };

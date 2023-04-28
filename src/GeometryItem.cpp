@@ -1,11 +1,11 @@
 #include "GeometryItem.h"
 
 #include "GeometryObject.h"
-#include "Generator.h"
+#include "GeometryGenerator.h"
 
 #include <QGraphicsScene>
 
-GeometryItem::GeometryItem(Generator* gen)
+GeometryItem::GeometryItem(GeometryGenerator* gen)
 : QGraphicsItem(),
   gen(gen)
 {

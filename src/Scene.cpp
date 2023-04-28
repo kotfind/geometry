@@ -114,8 +114,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::MOVE:
         {
             if (!currentFreeGenerator) break;
-            // FIXME
-            // currentFreeGenerator->move(delta);
+            currentFreeGenerator->move(delta);
         }
         break;
     }
@@ -135,24 +134,23 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
     }
 }
 
-Generator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
+GeometryGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
-        auto* gen = item->getGenerator();
+        auto* gen = item->getGeometryGenerator();
         if (gen->isFree()) {
-            // FIXME
-            // return static_cast<FreeGenerator*>(gen);
+            return gen;
         }
     }
     return nullptr;
 }
 
-Generator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
+GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
-        auto* gen = item->getGenerator();
+        auto* gen = item->getGeometryGenerator();
         if (gen->getObject()->is(type)) {
             return gen;
         }
