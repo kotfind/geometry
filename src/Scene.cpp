@@ -5,6 +5,7 @@
 #include "GeometryItem.h"
 #include "Geometry.h"
 #include "Generator.h"
+#include "GeometryGenerator.h"
 
 #include <QDebug>
 #include <cassert>
@@ -48,14 +49,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
-            // FIXME
-            /*
             auto* point = new Point(pos);
-            auto* gen = new FreeGenerator(point);
-            geom->addGenerator(gen);
+            auto* gen = geom->makeGeometryGenerator(point);
             auto* item = gen->getGeometryItem();
             addItem(item);
-            */
         }
         break;
 

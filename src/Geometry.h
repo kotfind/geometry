@@ -1,10 +1,10 @@
 #pragma once
 
+#include "GeometryGenerator.h"
+
 #include <QRectF>
 #include <QList>
 #include <QPointF>
-
-class Generator;
 class QJsonObject;
 class QString;
 class QGraphicsScene;
@@ -15,7 +15,13 @@ class Geometry {
         ~Geometry();
 
         template<typename... Args>
-        Generator* make_gen(Args&&... args);
+        GeometryGenerator* makeGeometryGenerator(Args&&... args) {
+            auto* gen = new GeometryGenerator(std::forward<Args>(args)...);
+            gen->recalc();
+            gen->geom = this;
+            geomGens << gen;
+            return gen;
+        }
 
         const QRectF& getSceneRect() const { return sceneRect; }
 
@@ -43,7 +49,7 @@ class Geometry {
 
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 
-        QList<Generator*> gens;
+        QList<GeometryGenerator*> geomGens;
 
         QPointF shift = QPointF(0, 0);
 

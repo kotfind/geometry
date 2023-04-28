@@ -25,13 +25,6 @@ Geometry::~Geometry() {
     clear();
 }
 
-template<typename... Args>
-Generator* Geometry::make_gen(Args&&... args) {
-    auto* gen = Generator(std::forward<Args>(args)...);
-    gen->geom = this;
-    return gen;
-}
-
 /*
 static void recalcGen(QHash<Generator*, int>& recalced, Generator* u) {
     if (u->isDependant()) {
@@ -48,7 +41,7 @@ static void recalcGen(QHash<Generator*, int>& recalced, Generator* u) {
 
 void Geometry::recalcAll() {
     // FIXME
-    for (auto* gen : gens) {
+    for (auto* gen : geomGens) {
         gen->recalc();
     }
     /*
@@ -135,14 +128,14 @@ void Geometry::load(const QString& fileName) {
 
 void Geometry::clear() {
     shift = QPointF(0, 0);
-    while (!gens.isEmpty()) {
-        auto* gen = gens.first();
+    while (!geomGens.isEmpty()) {
+        auto* gen = geomGens.first();
         gen->remove();
     }
 }
 
 void Geometry::populateScene(QGraphicsScene* scene) {
-    for (auto* gen : gens) {
+    for (auto* gen : geomGens) {
         scene->addItem(
             static_cast<GeometryGenerator*>(gen)->getGeometryItem()
         );

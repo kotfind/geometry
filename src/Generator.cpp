@@ -14,7 +14,6 @@ Generator::Generator(Object* obj)
         )
     )
 {
-    recalc();
 }
 
 Generator::Generator(
@@ -29,8 +28,6 @@ Generator::Generator(
         )
     )
 {
-    recalc();
-
     for (auto* gen : args) {
         gen->dependant << this;
     }

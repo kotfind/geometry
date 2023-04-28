@@ -4,9 +4,10 @@
 #include <memory>
 #include <QList>
 
+#include "Calculator.h"
+
 class Object;
 class Function;
-class Calculator;
 class Geometry;
 
 class Generator {
@@ -21,14 +22,6 @@ class Generator {
         void remove(); // TODO: Move to Geometry class ?
 
     protected:
-        virtual void beginResetObject() {}
-        virtual void endResetObject() {}
-
-        std::unique_ptr<Object> obj;
-
-        Geometry* geom;
-
-    private:
         // Constructs free Generator.
         // Is called from Geometry::make_gen.
         Generator(Object*);
@@ -37,6 +30,14 @@ class Generator {
         // Is called from Geometry::make_gen.
         Generator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
 
+        virtual void beginResetObject() {}
+        virtual void endResetObject() {}
+
+        std::unique_ptr<Object> obj;
+
+        Geometry* geom;
+
+    private:
         virtual bool checkObjectType() const = 0;
 
         std::unique_ptr<Calculator> calc;

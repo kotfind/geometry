@@ -6,7 +6,7 @@
 #include "Geometry.h"
 
 GeometryItem* GeometryGenerator::getGeometryItem() const {
-    return item;
+    return item.get();
 }
 
 bool GeometryGenerator::checkObjectType() const {
