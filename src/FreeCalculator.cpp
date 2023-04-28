@@ -1,10 +1,9 @@
 #include "FreeCalculator.h"
 
-FreeCalculator::FreeCalculator(std::unique_ptr<Object> obj)
-  : obj(std::move(obj))
+FreeCalculator::FreeCalculator()
 {}
 
-Object* FreeCalculator::calc() const {
+Object* FreeCalculator::calc(const Object* obj) const {
     return obj->clone();
 }
 

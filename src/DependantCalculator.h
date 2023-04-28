@@ -11,7 +11,7 @@ class DependantCalculator : public Calculator {
     public:
         DependantCalculator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
 
-        Object* calc() const override;
+        Object* calc(const Object*) const override;
         bool isFree() const override;
 
     private:

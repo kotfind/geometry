@@ -8,13 +8,9 @@
 #include <stdexcept>
 
 Generator::Generator(Object* obj)
-  : calc(
-        std::make_unique<FreeCalculator>(
-            std::unique_ptr<Object>(obj->clone())
-        )
-    )
-{
-}
+  : calc(std::make_unique<FreeCalculator>()),
+    obj(obj->clone())
+{}
 
 Generator::Generator(
     Function* func,
@@ -48,7 +44,7 @@ bool Generator::isDependant() const {
 void Generator::recalc() {
     beginResetObject();
 
-    obj.reset(calc->calc());
+    obj.reset(calc->calc(obj.get()));
     if (!checkObjectType()) throw std::runtime_error("Wrong object type");
 
     for (auto* dep : dependant) {

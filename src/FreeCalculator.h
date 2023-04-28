@@ -7,11 +7,8 @@
 
 class FreeCalculator : public Calculator {
     public:
-        FreeCalculator(std::unique_ptr<Object>);
+        FreeCalculator();
 
-        Object* calc() const override;
+        Object* calc(const Object*) const override;
         bool isFree() const override;
-
-    private:
-        std::unique_ptr<Object> obj;
 };

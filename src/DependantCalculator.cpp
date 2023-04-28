@@ -12,7 +12,7 @@ DependantCalculator::DependantCalculator(
     funcResNum(funcResNum)
 {}
 
-Object* DependantCalculator::calc() const {
+Object* DependantCalculator::calc(const Object*) const {
     QList<const Object*> objs;
     objs.reserve(args.size());
 
