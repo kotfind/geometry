@@ -35,3 +35,11 @@ bool DependantCalculator::isFree() const {
 const QList<Generator*> DependantCalculator::getArgs() const {
     return args;
 }
+
+Function* DependantCalculator::getFunc() const {
+    return func;
+}
+
+int DependantCalculator::getFuncResNum() const {
+    return funcResNum;
+}

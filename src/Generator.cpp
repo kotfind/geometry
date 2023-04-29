@@ -4,8 +4,11 @@
 #include "DependantCalculator.h"
 #include "Object.h"
 #include "Geometry.h"
+#include "Point.h"
+#include "Function.h"
 
 #include <stdexcept>
+#include <QJsonArray>
 
 Generator::Generator(Object* obj)
   : calc(std::make_unique<FreeCalculator>()),
@@ -52,5 +55,27 @@ void Generator::recalc() {
     }
 
     endResetObject();
+}
+
+QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
+    QJsonObject json;
+
+    json["isFree"] = isFree();
+
+    if (isFree()) {
+        json["object"] = static_cast<Point*>(obj.get())->toJson();
+    } else {
+        auto* depCalc = static_cast<DependantCalculator*>(calc.get());
+
+        json["funcName"] = depCalc->getFunc()->getFullName();
+        json["funcResNum"] = depCalc->getFuncResNum();
+        QJsonArray jsonArgs;
+        for (auto arg : depCalc->getArgs()) {
+            jsonArgs << ids[arg];
+        }
+        json["args"] = jsonArgs;
+    }
+
+    return json;
 }
 

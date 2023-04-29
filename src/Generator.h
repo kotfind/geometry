@@ -3,6 +3,8 @@
 #include <QPointF>
 #include <memory>
 #include <QList>
+#include <QHash>
+#include <QJsonObject>
 
 #include "Calculator.h"
 #include "Object.h"
@@ -20,6 +22,8 @@ class Generator {
         bool isDependant() const;
 
         void recalc();
+
+        QJsonObject toJson(const QHash<Generator*, int>& ids) const;
 
     protected:
         // Constructs free Generator.

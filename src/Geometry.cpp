@@ -65,26 +65,23 @@ QPointF Geometry::transform(const QPointF& pt) {
 }
 
 QJsonObject Geometry::toJson() const {
-    // FIXME
     QJsonObject json;
 
-    /*
     QJsonObject shiftJson;
     shiftJson["x"] = shift.x();
     shiftJson["y"] = shift.y();
     json["shift"] = shiftJson;
 
     QHash<Generator*, int> ids;
-    for (int i = 0; i < gens.size(); ++i) {
-        ids[gens[i]] = i;
+    for (int i = 0; i < geomGens.size(); ++i) {
+        ids[geomGens[i]] = i;
     }
 
     QJsonArray gensJson;
-    for (auto* gen : gens) {
+    for (auto* gen : geomGens) {
         gensJson << gen->toJson(ids);
     }
-    json["gens"] = gensJson;
-    */
+    json["geomGens"] = gensJson;
 
     return json;
 }
