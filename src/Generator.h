@@ -43,6 +43,8 @@ class Generator {
         Geometry* geom;
 
     private:
+        void recalcSelf();
+
         virtual bool checkObjectType() const = 0;
 
         std::unique_ptr<Calculator> calc;

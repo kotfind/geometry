@@ -48,6 +48,8 @@ class Geometry {
         void removeGenerator(Generator*);
 
     private:
+        QList<Generator*> getGeneratorRecalcOrder();
+
         void recalcAll();
 
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);

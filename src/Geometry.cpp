@@ -19,6 +19,8 @@
 #include <QJsonDocument>
 #include <QGraphicsScene>
 #include <algorithm>
+#include <QSet>
+#include <functional>
 
 Geometry::Geometry() {
 }
@@ -41,19 +43,55 @@ static void recalcGen(QHash<Generator*, int>& recalced, Generator* u) {
 }
 */
 
-void Geometry::recalcAll() {
-    // FIXME
+// Topsort algorithm.
+QList<Generator*> Geometry::getGeneratorRecalcOrder() {
+    // TODO: put getGens into separate function
+    QList<Generator*> gens;
+    gens.reserve(geomGens.size());
     for (auto* gen : geomGens) {
-        gen->recalc();
+        gens << gen;
     }
-    /*
-    QHash<Generator*, int> recalced;
-    for (auto* u : gens) {
-        if (!recalced[u]) {
-            recalcGen(recalced, u);
+
+    int n = gens.size();
+
+    QSet<Generator*> used;
+
+    QList<Generator*> ans;
+    ans.reserve(n);
+
+    // helper function
+    std::function<void(Generator*)> dfs = [&dfs, &gens, &ans, &used](Generator* u) {
+        used << u;
+
+        if (u->isDependant()) {
+            const auto& args = static_cast<DependantCalculator*>(
+                u->calc.get()
+            )->getArgs();
+
+            for (auto* v : args) {
+                if (!used.contains(v)) {
+                    dfs(v);
+                }
+            }
+        }
+
+        ans << u;
+    };
+
+    for (auto* gen : gens) {
+        if (!used.contains(gen)) {
+            dfs(gen);
         }
     }
-    */
+
+    return ans;
+}
+
+void Geometry::recalcAll() {
+    for (auto* gen : getGeneratorRecalcOrder()) {
+        qDebug() << gen;
+        gen->recalcSelf();
+    }
 }
 
 void Geometry::move(const QPointF& delta) {

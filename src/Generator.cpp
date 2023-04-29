@@ -47,14 +47,18 @@ bool Generator::isDependant() const {
 }
 
 void Generator::recalc() {
-    beginResetObject();
-
-    obj.reset(calc->calc(obj.get()));
-    if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
+    recalcSelf();
 
     for (auto* dep : dependant) {
         dep->recalc();
     }
+}
+
+void Generator::recalcSelf() {
+    beginResetObject();
+
+    obj.reset(calc->calc(obj.get()));
+    if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
 
     endResetObject();
 }
