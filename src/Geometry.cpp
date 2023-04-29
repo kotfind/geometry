@@ -186,7 +186,7 @@ void Geometry::fromJson(const QJsonObject& json) {
         gens[i]->geom = this;
     }
 
-    geomGens.clear();
+    clear();
     geomGens.reserve(gens.size());
     // TODO: differ between geometry and real gens
     for (auto* gen : gens) {

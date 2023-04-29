@@ -29,7 +29,7 @@ class Generator {
     protected:
         // Constructs free Generator.
         // Is called from Geometry::make_gen.
-        Generator(Object*);
+        Generator(std::unique_ptr<Object> obj);
 
         // Constructs dependant Generator.
         // Is called from Geometry::make_gen.

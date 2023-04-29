@@ -12,9 +12,9 @@
 #include <stdexcept>
 #include <QJsonArray>
 
-Generator::Generator(Object* obj)
+Generator::Generator(std::unique_ptr<Object> obj)
   : calc(std::make_unique<FreeCalculator>()),
-    obj(obj->clone())
+    obj(std::move(obj))
 {}
 
 Generator::Generator(
@@ -92,7 +92,7 @@ Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>&
 
     if (isFree) {
         auto* pt = Point::fromJson(getOrThrow(json["object"]).toObject());
-        gen = new GeometryGenerator(pt);
+        gen = new GeometryGenerator(std::unique_ptr<Point>(pt));
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
         auto* func = Function::get(funcName);
