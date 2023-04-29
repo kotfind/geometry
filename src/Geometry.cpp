@@ -75,7 +75,6 @@ QList<Generator*> Geometry::getGeneratorRecalcOrder() {
 
 void Geometry::recalcAll() {
     for (auto* gen : getGeneratorRecalcOrder()) {
-        qDebug() << gen;
         gen->recalcSelf();
     }
 }
@@ -122,26 +121,6 @@ void Geometry::save(const QString& fileName) const {
     file.write(QJsonDocument(toJson()).toJson());
 }
 
-// Should be called from getGeneratorLoadOrder only.
-static void getGeneratorLoadOrderDFS(const QJsonArray& jsonGens, QList<int>& ans, QList<int>& used, int u) {
-    used[u] = 1;
-
-    const auto& json = jsonGens[u];
-    auto isFree = getOrThrow(json["isFree"]).toBool();
-
-    if (!isFree) {
-        const auto& jsonArgs = getOrThrow(json["args"]).toArray();
-        for (const auto& jsonArg : jsonArgs) {
-            int v = jsonArg.toInt();
-            if (!used[v]) {
-                getGeneratorLoadOrderDFS(jsonGens, ans, used, v);
-            }
-        }
-    }
-
-    ans << u;
-}
-
 // Topsort algorithm.
 static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
     int n = jsonGens.size();
@@ -151,9 +130,28 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
     QList<int> ans;
     ans.reserve(n);
 
+    std::function<void(int)> dfs = [&dfs, &jsonGens, &ans, &used](int u) {
+        used[u] = 1;
+
+        const auto& json = jsonGens[u];
+        auto isFree = getOrThrow(json["isFree"]).toBool();
+
+        if (!isFree) {
+            const auto& jsonArgs = getOrThrow(json["args"]).toArray();
+            for (const auto& jsonArg : jsonArgs) {
+                int v = jsonArg.toInt();
+                if (!used[v]) {
+                    dfs(v);
+                }
+            }
+        }
+
+        ans << u;
+    };
+
     for (int i = 0; i < n; ++i) {
         if (!used[i]) {
-            getGeneratorLoadOrderDFS(jsonGens, ans, used, i);
+            dfs(i);
         }
     }
 
