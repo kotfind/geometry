@@ -29,20 +29,6 @@ Geometry::~Geometry() {
     clear();
 }
 
-/*
-static void recalcGen(QHash<Generator*, int>& recalced, Generator* u) {
-    if (u->isDependant()) {
-        for (auto& v : u->getArgs()) {
-            if (!recalced[v]) {
-                recalcGen(recalced, v);
-            }
-        }
-    }
-    u->recalcSelf();
-    recalced[u] = true;
-}
-*/
-
 // Topsort algorithm.
 QList<Generator*> Geometry::getGeneratorRecalcOrder() {
     // TODO: put getGens into separate function
@@ -95,6 +81,8 @@ void Geometry::recalcAll() {
 }
 
 void Geometry::move(const QPointF& delta) {
+    setChanged();
+
     shift += delta;
     recalcAll();
 }
@@ -227,6 +215,8 @@ void Geometry::setChanged(bool v) {
 }
 
 void Geometry::removeGenerator(Generator* gen) {
+    setChanged();
+
     int i = geomGens.indexOf(gen);
     if (i == -1) return;
     geomGens.remove(i);

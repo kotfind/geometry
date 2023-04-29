@@ -17,6 +17,8 @@ class Geometry {
 
         template<typename... Args>
         GeometryGenerator* makeGeometryGenerator(Args&&... args) {
+            setChanged();
+
             auto* gen = new GeometryGenerator(std::forward<Args>(args)...);
             gen->recalc();
             gen->geom = this;
