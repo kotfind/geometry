@@ -23,12 +23,18 @@ add_executable(geometry
     functionList.cpp
 
     Generator.cpp
-    FreeGenerator.cpp
-    DependantGenerator.cpp
+    RealGenerator.cpp
+    GeometryGenerator.cpp
 
+    Calculator.cpp
+    FreeCalculator.cpp
+    DependantCalculator.cpp
+
+    GeometryObject.cpp
     Point.cpp
     Line.cpp
     Circle.cpp
+    Real.cpp
 
     MainWindow.cpp
 

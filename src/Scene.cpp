@@ -5,8 +5,7 @@
 #include "GeometryItem.h"
 #include "Geometry.h"
 #include "Generator.h"
-#include "FreeGenerator.h"
-#include "DependantGenerator.h"
+#include "GeometryGenerator.h"
 
 #include <QDebug>
 #include <cassert>
@@ -50,9 +49,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
-            auto* point = new Point(pos);
-            auto* gen = new FreeGenerator(point);
-            geom->addGenerator(gen);
+            auto point = std::make_unique<Point>(pos);
+            auto* gen = geom->makeGeometryGenerator(std::move(point));
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -73,8 +71,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             emit selectedCountChanged(selectedFuncArgs.size());
             if (selectedFuncArgs.size() == func->countArgs()) {
                 for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-                    auto* gen = new DependantGenerator(func, selectedFuncArgs, funcResNum);
-                    geom->addGenerator(gen);
+                    auto* gen = geom->makeGeometryGenerator(
+                        func,
+                        selectedFuncArgs,
+                        funcResNum
+                    );
                     auto* item = gen->getGeometryItem();
                     addItem(item);
                 }
@@ -89,7 +90,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             auto* gen = getGeneratorAt(pos);
             if (gen) {
-                gen->remove();
+                geom->removeGenerator(gen);
             }
         }
         break;
@@ -133,23 +134,23 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
     }
 }
 
-FreeGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
+GeometryGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
-        auto* gen = item->getGenerator();
+        auto* gen = item->getGeometryGenerator();
         if (gen->isFree()) {
-            return static_cast<FreeGenerator*>(gen);
+            return gen;
         }
     }
     return nullptr;
 }
 
-Generator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
+GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
-        auto* gen = item->getGenerator();
+        auto* gen = item->getGeometryGenerator();
         if (gen->getObject()->is(type)) {
             return gen;
         }

@@ -6,8 +6,10 @@ class Real : public Object {
     public:
         Type getType() const { return Type::Real; }
 
-        Real() : Real(0) {}
-        Real(double value) : Object(), value(value) {}
+        Real();
+        Real(double value);
+
+        Object* clone() const override;
 
         double value;
 };

@@ -1,50 +1,55 @@
 #pragma once
 
+#include <QPointF>
+#include <memory>
 #include <QList>
 #include <QHash>
+#include <QJsonObject>
 
-class Object;
-class GeometryItem;
+#include "Calculator.h"
+#include "Object.h"
+
+class Function;
 class Geometry;
-class QJsonObject;
-class QJsonArray;
 
 class Generator {
     public:
-        virtual ~Generator();
+        virtual ~Generator() {}
 
-        void setGeometry(Geometry*);
+        const Object* getObject() const;
 
-        virtual bool isFree() const = 0;
-        bool isDependant() const { return !isFree(); }
+        bool isFree() const;
+        bool isDependant() const;
 
         void recalc();
-        virtual void recalcSelf() = 0;
 
-        GeometryItem* getGeometryItem() const { return item; }
-
-        void addDependant(Generator*);
-        void removeDependant(Generator*);
-
-        const Object* getObject() const { return object; }
-
-        virtual void remove();
-
-        virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
-
-        static void load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i);
+        QJsonObject toJson(const QHash<Generator*, int>& ids) const;
+        static Generator* fromJson(const QJsonObject& json, const QList<Generator*>& gens);
 
     protected:
-        Generator();
+        // Constructs free Generator.
+        // Is called from Geometry::make_gen.
+        Generator(std::unique_ptr<Object> obj);
 
-        Object* object = nullptr;
-        GeometryItem* item;
+        // Constructs dependant Generator.
+        // Is called from Geometry::make_gen.
+        Generator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
+
+        virtual void beginResetObject() {}
+        virtual void endResetObject() {}
+
+        std::unique_ptr<Object> obj;
 
         Geometry* geom;
 
     private:
-        void recalcDependant() const;
+        void recalcSelf();
 
-        // List of generators that depends on current
+        virtual bool checkObjectType() const = 0;
+
+        std::unique_ptr<Calculator> calc;
+
         QList<Generator*> dependant;
+
+    friend Geometry;
 };

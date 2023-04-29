@@ -13,12 +13,14 @@ class Point : public GeometryObject {
         Point(const QPointF& pos);
         Point(double x, double y);
 
+        Object* clone() const override;
+
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
         void setPos(const QPointF& pos);
-        void move(const QPointF& delta);
+        void move(const QPointF& delta) override;
 
         QPointF getPos() const;
 

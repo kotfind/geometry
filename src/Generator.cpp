@@ -1,76 +1,113 @@
 #include "Generator.h"
 
+#include "FreeCalculator.h"
+#include "DependantCalculator.h"
 #include "Object.h"
-#include "GeometryItem.h"
 #include "Geometry.h"
-#include "FreeGenerator.h"
-#include "DependantGenerator.h"
+#include "Point.h"
+#include "Function.h"
 #include "getOrThrow.h"
+#include "GeometryGenerator.h"
 
-#include <QJsonObject>
+#include <stdexcept>
 #include <QJsonArray>
 
-Generator::Generator() {
-    item = new GeometryItem(this);
+Generator::Generator(std::unique_ptr<Object> obj)
+  : calc(std::make_unique<FreeCalculator>()),
+    obj(std::move(obj))
+{}
+
+Generator::Generator(
+    Function* func,
+    const QList<Generator*>& args,
+    int funcResNum
+) : calc(
+        std::make_unique<DependantCalculator>(
+            func,
+            args,
+            funcResNum
+        )
+    )
+{
+    for (auto* gen : args) {
+        gen->dependant << this;
+    }
 }
 
-Generator::~Generator() {
-    delete object;
+const Object* Generator::getObject() const {
+    return obj.get();
 }
 
-void Generator::setGeometry(Geometry* g) {
-    geom = g;
+bool Generator::isFree() const {
+    return calc->isFree();
+}
+
+bool Generator::isDependant() const {
+    return !isFree();
 }
 
 void Generator::recalc() {
-    item->beginResetObject();
     recalcSelf();
-    recalcDependant();
-    item->endResetObject();
-}
 
-void Generator::recalcDependant() const {
     for (auto* dep : dependant) {
         dep->recalc();
     }
 }
 
-void Generator::addDependant(Generator* g) {
-    dependant << g;
-}
+void Generator::recalcSelf() {
+    beginResetObject();
 
-void Generator::removeDependant(Generator* g) {
-    geom->setChanged();
+    obj.reset(calc->calc(obj.get()));
+    if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
 
-    auto i = dependant.indexOf(g);
-    assert(i != -1);
-
-    std::swap(dependant[i], dependant.back());
-    dependant.pop_back();
-}
-
-void Generator::remove() {
-    while (!dependant.empty()) {
-        // Next line will remove dependant[0] from dependant array,
-        // so dependant will eventually became empty
-        dependant[0]->remove();
-    }
-    geom->removeGenerator(this);
-    item->remove();
-    delete this;
+    endResetObject();
 }
 
 QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     QJsonObject json;
+
     json["isFree"] = isFree();
+
+    if (isFree()) {
+        json["object"] = static_cast<Point*>(obj.get())->toJson();
+    } else {
+        auto* depCalc = static_cast<DependantCalculator*>(calc.get());
+
+        json["funcName"] = depCalc->getFunc()->getFullName();
+        json["funcResNum"] = depCalc->getFuncResNum();
+        QJsonArray jsonArgs;
+        for (auto arg : depCalc->getArgs()) {
+            jsonArgs << ids[arg];
+        }
+        json["args"] = jsonArgs;
+    }
+
     return json;
 }
 
-void Generator::load(Geometry* geom, const QJsonArray& jsonGens, QList<Generator*>& gens, int i) {
-    auto isFree = getOrThrow(jsonGens[i]["isFree"]).toBool();
+Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>& gens) {
+    auto isFree = getOrThrow(json["isFree"]).toBool();
+
+    Generator* gen;
+
     if (isFree) {
-        FreeGenerator::load(geom, jsonGens, gens, i);
+        auto* pt = Point::fromJson(getOrThrow(json["object"]).toObject());
+        gen = new GeometryGenerator(std::unique_ptr<Point>(pt));
     } else {
-        DependantGenerator::load(geom, jsonGens, gens, i);
+        const auto& funcName = getOrThrow(json["funcName"]).toString();
+        auto* func = Function::get(funcName);
+
+        QList<Generator*> args;
+        const auto& jsonArgs = getOrThrow(json["args"]).toArray();
+        for (const auto& arg : jsonArgs) {
+            int id = arg.toInt();
+            args << gens[id];
+        }
+
+        auto funcResNum = getOrThrow(json["funcResNum"]).toInt();
+
+        gen = new GeometryGenerator(func, args, funcResNum);
     }
+
+    return gen;
 }

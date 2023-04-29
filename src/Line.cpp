@@ -24,6 +24,10 @@ Line::Line(const Point& p1, const Point& p2) : GeometryObject() {
     }
 }
 
+Object* Line::clone() const {
+    return new Line(*this);
+}
+
 void Line::paint(QPainter* qp) const {
     auto pen = qp->pen();
     pen.setWidthF(paintWidth);

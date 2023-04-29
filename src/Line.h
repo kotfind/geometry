@@ -16,6 +16,8 @@ class Line : public GeometryObject {
         Line(double a, double b, double c);
         Line(const Point& p1, const Point& p2);
 
+        Object* clone() const override;
+
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;

@@ -1,10 +1,11 @@
 #include "Geometry.h"
 
 #include "Generator.h"
-#include "DependantGenerator.h"
 #include "GeometryItem.h"
 #include "getOrThrow.h"
 #include "IOError.h"
+#include "GeometryGenerator.h"
+#include "DependantCalculator.h"
 
 #include <QHash>
 #include <cassert>
@@ -17,6 +18,9 @@
 #include <stdexcept>
 #include <QJsonDocument>
 #include <QGraphicsScene>
+#include <algorithm>
+#include <QSet>
+#include <functional>
 
 Geometry::Geometry() {
 }
@@ -25,43 +29,59 @@ Geometry::~Geometry() {
     clear();
 }
 
-void Geometry::addGenerator(Generator* gen) {
-    gens << gen;
-    gen->setGeometry(this);
-    setChanged();
-}
+// Topsort algorithm.
+QList<Generator*> Geometry::getGeneratorRecalcOrder() {
+    // TODO: put getGens into separate function
+    QList<Generator*> gens;
+    gens.reserve(geomGens.size());
+    for (auto* gen : geomGens) {
+        gens << gen;
+    }
 
-void Geometry::removeGenerator(Generator* gen) {
-    auto i = gens.indexOf(gen);
-    assert(i != -1);
+    int n = gens.size();
 
-    std::swap(gens[i], gens.back());
-    gens.pop_back();
-}
+    QSet<Generator*> used;
 
-static void recalcGen(QHash<Generator*, int/* bool */>& recalced, Generator* u) {
-    if (u->isDependant()) {
-        auto* U = static_cast<DependantGenerator*>(u);
-        for (auto& v : U->getArgs()) {
-            if (!recalced[v]) {
-                recalcGen(recalced, v);
+    QList<Generator*> ans;
+    ans.reserve(n);
+
+    // helper function
+    std::function<void(Generator*)> dfs = [&dfs, &gens, &ans, &used](Generator* u) {
+        used << u;
+
+        if (u->isDependant()) {
+            const auto& args = static_cast<DependantCalculator*>(
+                u->calc.get()
+            )->getArgs();
+
+            for (auto* v : args) {
+                if (!used.contains(v)) {
+                    dfs(v);
+                }
             }
         }
+
+        ans << u;
+    };
+
+    for (auto* gen : gens) {
+        if (!used.contains(gen)) {
+            dfs(gen);
+        }
     }
-    u->recalcSelf();
-    recalced[u] = true;
+
+    return ans;
 }
 
 void Geometry::recalcAll() {
-    QHash<Generator*, int> recalced;
-    for (auto* u : gens) {
-        if (!recalced[u]) {
-            recalcGen(recalced, u);
-        }
+    for (auto* gen : getGeneratorRecalcOrder()) {
+        gen->recalcSelf();
     }
 }
 
 void Geometry::move(const QPointF& delta) {
+    setChanged();
+
     shift += delta;
     recalcAll();
 }
@@ -79,15 +99,15 @@ QJsonObject Geometry::toJson() const {
     json["shift"] = shiftJson;
 
     QHash<Generator*, int> ids;
-    for (int i = 0; i < gens.size(); ++i) {
-        ids[gens[i]] = i;
+    for (int i = 0; i < geomGens.size(); ++i) {
+        ids[geomGens[i]] = i;
     }
 
     QJsonArray gensJson;
-    for (auto* gen : gens) {
+    for (auto* gen : geomGens) {
         gensJson << gen->toJson(ids);
     }
-    json["gens"] = gensJson;
+    json["geomGens"] = gensJson;
 
     return json;
 }
@@ -101,19 +121,65 @@ void Geometry::save(const QString& fileName) const {
     file.write(QJsonDocument(toJson()).toJson());
 }
 
-void Geometry::fromJson(const QJsonObject& json) {
-    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
-    shift.setX(getOrThrow(shiftJson["x"]).toInt());
-    shift.setY(getOrThrow(shiftJson["y"]).toInt());
+// Topsort algorithm.
+static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
+    int n = jsonGens.size();
 
-    const auto& jsonGens = getOrThrow(json["gens"]).toArray();
-    gens.fill(nullptr, jsonGens.size());
+    QList<int> used(n, 0);
 
-    for (int i = 0; i < gens.size(); ++i) {
-        if (!gens[i]) {
-            Generator::load(this, jsonGens, gens, i);
+    QList<int> ans;
+    ans.reserve(n);
+
+    std::function<void(int)> dfs = [&dfs, &jsonGens, &ans, &used](int u) {
+        used[u] = 1;
+
+        const auto& json = jsonGens[u];
+        auto isFree = getOrThrow(json["isFree"]).toBool();
+
+        if (!isFree) {
+            const auto& jsonArgs = getOrThrow(json["args"]).toArray();
+            for (const auto& jsonArg : jsonArgs) {
+                int v = jsonArg.toInt();
+                if (!used[v]) {
+                    dfs(v);
+                }
+            }
+        }
+
+        ans << u;
+    };
+
+    for (int i = 0; i < n; ++i) {
+        if (!used[i]) {
+            dfs(i);
         }
     }
+
+    return ans;
+}
+
+void Geometry::fromJson(const QJsonObject& json) {
+    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
+    shift.setX(getOrThrow(shiftJson["x"]).toDouble());
+    shift.setY(getOrThrow(shiftJson["y"]).toDouble());
+
+    const auto& jsonGens = getOrThrow(json["geomGens"]).toArray();
+
+    QList<Generator*> gens(jsonGens.size(), nullptr);
+    const auto order = getGeneratorLoadOrder(jsonGens);
+    for (int i : order) {
+        gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
+        gens[i]->geom = this;
+    }
+
+    clear();
+    geomGens.reserve(gens.size());
+    // TODO: differ between geometry and real gens
+    for (auto* gen : gens) {
+        geomGens << static_cast<GeometryGenerator*>(gen);
+    }
+
+    recalcAll();
 }
 
 void Geometry::load(const QString& fileName) {
@@ -129,18 +195,45 @@ void Geometry::load(const QString& fileName) {
 
 void Geometry::clear() {
     shift = QPointF(0, 0);
-    while (!gens.isEmpty()) {
-        auto* gen = gens.first();
-        gen->remove();
+    while (!geomGens.isEmpty()) {
+        removeGenerator(geomGens.first());
     }
 }
 
 void Geometry::populateScene(QGraphicsScene* scene) {
-    for (auto* gen : gens) {
-        scene->addItem(gen->getGeometryItem());
+    for (auto* gen : geomGens) {
+        scene->addItem(
+            static_cast<GeometryGenerator*>(gen)->getGeometryItem()
+        );
     }
 }
 
 void Geometry::setChanged(bool v) {
     changed = v;
+}
+
+void Geometry::removeGenerator(Generator* gen) {
+    setChanged();
+
+    int i = geomGens.indexOf(gen);
+    if (i == -1) return;
+    geomGens.remove(i);
+
+    for (auto* dep : gen->dependant) {
+        removeGenerator(dep);
+    }
+
+    if (gen->isDependant()) {
+        const auto& args = static_cast<DependantCalculator*>(
+            gen->calc.get()
+        )->getArgs();
+
+        for (auto* arg : args) {
+            int i = arg->dependant.indexOf(gen);
+            assert(i != -1);
+            arg->dependant.remove(i);
+        }
+    }
+
+    delete gen;
 }

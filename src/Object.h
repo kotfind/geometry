@@ -10,6 +10,8 @@ class Object {
 
         bool is(Type) const;
 
+        virtual Object* clone() const = 0;
+
     protected:
         Object() {}
 };

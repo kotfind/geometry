@@ -10,8 +10,7 @@
 class Function;
 class Geometry;
 class Generator;
-class FreeGenerator;
-class DependantGenerator;
+class GeometryGenerator;
 
 class Scene : public QGraphicsScene {
     Q_OBJECT
@@ -24,8 +23,8 @@ class Scene : public QGraphicsScene {
         Geometry* getGeometry() { return geom; }
 
     private:
-        FreeGenerator* getFreeGeneratorAt(const QPointF& pos) const;
-        Generator* getGeneratorAt(const QPointF& pos, Type type = Type::Any) const;
+        GeometryGenerator* getFreeGeneratorAt(const QPointF& pos) const;
+        GeometryGenerator* getGeneratorAt(const QPointF& pos, Type type = Type::Any) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 
@@ -33,7 +32,7 @@ class Scene : public QGraphicsScene {
         Function* func = nullptr;
         QList<Generator*> selectedFuncArgs;
 
-        FreeGenerator* currentFreeGenerator = nullptr;
+        GeometryGenerator* currentFreeGenerator = nullptr;
 
         Geometry* geom;
 
