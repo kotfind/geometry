@@ -24,6 +24,7 @@ class Generator {
         void recalc();
 
         QJsonObject toJson(const QHash<Generator*, int>& ids) const;
+        static Generator* fromJson(const QJsonObject& json, const QList<Generator*>& gens);
 
     protected:
         // Constructs free Generator.

@@ -6,6 +6,8 @@
 #include "Geometry.h"
 #include "Point.h"
 #include "Function.h"
+#include "getOrThrow.h"
+#include "GeometryGenerator.h"
 
 #include <stdexcept>
 #include <QJsonArray>
@@ -79,3 +81,29 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     return json;
 }
 
+Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>& gens) {
+    auto isFree = getOrThrow(json["isFree"]).toBool();
+
+    Generator* gen;
+
+    if (isFree) {
+        auto* pt = Point::fromJson(getOrThrow(json["object"]).toObject());
+        gen = new GeometryGenerator(pt);
+    } else {
+        const auto& funcName = getOrThrow(json["funcName"]).toString();
+        auto* func = Function::get(funcName);
+
+        QList<Generator*> args;
+        const auto& jsonArgs = getOrThrow(json["args"]).toArray();
+        for (const auto& arg : jsonArgs) {
+            int id = arg.toInt();
+            args << gens[id];
+        }
+
+        auto funcResNum = getOrThrow(json["funcResNum"]).toInt();
+
+        gen = new GeometryGenerator(func, args, funcResNum);
+    }
+
+    return gen;
+}

@@ -30,4 +30,5 @@ class GeometryGenerator : public Generator {
         std::unique_ptr<GeometryItem> item;
 
     friend Geometry;
+    friend Generator;
 };

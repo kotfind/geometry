@@ -18,6 +18,7 @@
 #include <stdexcept>
 #include <QJsonDocument>
 #include <QGraphicsScene>
+#include <algorithm>
 
 Geometry::Geometry() {
 }
@@ -95,22 +96,66 @@ void Geometry::save(const QString& fileName) const {
     file.write(QJsonDocument(toJson()).toJson());
 }
 
-void Geometry::fromJson(const QJsonObject& json) {
-    // FIXME
-    /*
-    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
-    shift.setX(getOrThrow(shiftJson["x"]).toInt());
-    shift.setY(getOrThrow(shiftJson["y"]).toInt());
+// Should be called from getGeneratorLoadOrder only.
+static void getGeneratorLoadOrderDFS(const QJsonArray& jsonGens, QList<int>& ans, QList<int>& used, int u) {
+    used[u] = 1;
 
-    const auto& jsonGens = getOrThrow(json["gens"]).toArray();
-    gens.fill(nullptr, jsonGens.size());
+    const auto& json = jsonGens[u];
+    auto isFree = getOrThrow(json["isFree"]).toBool();
 
-    for (int i = 0; i < gens.size(); ++i) {
-        if (!gens[i]) {
-            Generator::load(this, jsonGens, gens, i);
+    if (!isFree) {
+        const auto& jsonArgs = getOrThrow(json["args"]).toArray();
+        for (const auto& jsonArg : jsonArgs) {
+            int v = jsonArg.toInt();
+            if (!used[v]) {
+                getGeneratorLoadOrderDFS(jsonGens, ans, used, v);
+            }
         }
     }
-    */
+
+    ans << u;
+}
+
+// Topsort algorithm.
+static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
+    int n = jsonGens.size();
+
+    QList<int> used(n, 0);
+
+    QList<int> ans;
+    ans.reserve(n);
+
+    for (int i = 0; i < n; ++i) {
+        if (!used[i]) {
+            getGeneratorLoadOrderDFS(jsonGens, ans, used, i);
+        }
+    }
+
+    return ans;
+}
+
+void Geometry::fromJson(const QJsonObject& json) {
+    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
+    shift.setX(getOrThrow(shiftJson["x"]).toDouble());
+    shift.setY(getOrThrow(shiftJson["y"]).toDouble());
+
+    const auto& jsonGens = getOrThrow(json["geomGens"]).toArray();
+
+    QList<Generator*> gens(jsonGens.size(), nullptr);
+    const auto order = getGeneratorLoadOrder(jsonGens);
+    for (int i : order) {
+        gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
+        gens[i]->geom = this;
+    }
+
+    geomGens.clear();
+    geomGens.reserve(gens.size());
+    // TODO: differ between geometry and real gens
+    for (auto* gen : gens) {
+        geomGens << static_cast<GeometryGenerator*>(gen);
+    }
+
+    recalcAll();
 }
 
 void Geometry::load(const QString& fileName) {
