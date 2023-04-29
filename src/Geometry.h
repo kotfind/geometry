@@ -5,6 +5,7 @@
 #include <QRectF>
 #include <QList>
 #include <QPointF>
+
 class QJsonObject;
 class QString;
 class QGraphicsScene;
@@ -43,6 +44,8 @@ class Geometry {
 
         void setChanged(bool v = true);
         bool isChanged() const { return changed; }
+
+        void removeGenerator(Generator*);
 
     private:
         void recalcAll();

@@ -5,6 +5,7 @@
 #include "getOrThrow.h"
 #include "IOError.h"
 #include "GeometryGenerator.h"
+#include "DependantCalculator.h"
 
 #include <QHash>
 #include <cassert>
@@ -129,8 +130,7 @@ void Geometry::load(const QString& fileName) {
 void Geometry::clear() {
     shift = QPointF(0, 0);
     while (!geomGens.isEmpty()) {
-        auto* gen = geomGens.first();
-        gen->remove();
+        removeGenerator(geomGens.first());
     }
 }
 
@@ -146,3 +146,26 @@ void Geometry::setChanged(bool v) {
     changed = v;
 }
 
+void Geometry::removeGenerator(Generator* gen) {
+    int i = geomGens.indexOf(gen);
+    if (i == -1) return;
+    geomGens.remove(i);
+
+    for (auto* dep : gen->dependant) {
+        removeGenerator(dep);
+    }
+
+    if (gen->isDependant()) {
+        const auto& args = static_cast<DependantCalculator*>(
+            gen->calc.get()
+        )->getArgs();
+
+        for (auto* arg : args) {
+            int i = arg->dependant.indexOf(gen);
+            assert(i != -1);
+            arg->dependant.remove(i);
+        }
+    }
+
+    delete gen;
+}

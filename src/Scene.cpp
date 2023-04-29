@@ -90,7 +90,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             auto* gen = getGeneratorAt(pos);
             if (gen) {
-                gen->remove();
+                geom->removeGenerator(gen);
             }
         }
         break;

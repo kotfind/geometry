@@ -45,16 +45,12 @@ void Generator::recalc() {
     beginResetObject();
 
     obj.reset(calc->calc(obj.get()));
-    if (!checkObjectType()) throw std::runtime_error("Wrong object type");
+    if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
 
     for (auto* dep : dependant) {
         dep->recalc();
     }
 
     endResetObject();
-}
-
-void Generator::remove() {
-    throw std::logic_error("NotImplemented");
 }
 

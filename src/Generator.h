@@ -5,21 +5,21 @@
 #include <QList>
 
 #include "Calculator.h"
+#include "Object.h"
 
-class Object;
 class Function;
 class Geometry;
 
 class Generator {
     public:
+        virtual ~Generator() {}
+
         const Object* getObject() const;
 
         bool isFree() const;
         bool isDependant() const;
 
         void recalc();
-
-        void remove(); // TODO: Move to Geometry class ?
 
     protected:
         // Constructs free Generator.

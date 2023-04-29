@@ -31,3 +31,7 @@ Object* DependantCalculator::calc(const Object*) const {
 bool DependantCalculator::isFree() const {
     return false;
 }
+
+const QList<Generator*> DependantCalculator::getArgs() const {
+    return args;
+}
