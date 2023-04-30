@@ -29,21 +29,25 @@ Geometry::~Geometry() {
     clear();
 }
 
-// Topsort algorithm.
-QList<Generator*> Geometry::getGeneratorRecalcOrder() {
-    // TODO: put getGens into separate function
+QList<Generator*> Geometry::getGens() {
     QList<Generator*> gens;
+
     gens.reserve(geomGens.size());
     for (auto* gen : geomGens) {
         gens << gen;
     }
 
-    int n = gens.size();
+    return gens;
+}
+
+// Topsort algorithm.
+QList<Generator*> Geometry::getGeneratorRecalcOrder() {
+    auto gens = getGens();
 
     QSet<Generator*> used;
 
     QList<Generator*> ans;
-    ans.reserve(n);
+    ans.reserve(gens.size());
 
     // helper function
     std::function<void(Generator*)> dfs = [&dfs, &gens, &ans, &used](Generator* u) {

@@ -50,6 +50,8 @@ class Geometry {
         void removeGenerator(Generator*);
 
     private:
+        QList<Generator*> getGens();
+
         QList<Generator*> getGeneratorRecalcOrder();
 
         void recalcAll();
