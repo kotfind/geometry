@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Geometry.h"
+
 #include <QMainWindow>
 #include <QString>
 #include <QHash>
+#include <memory>
 
 class QGraphicsView;
 class Scene;
@@ -35,6 +38,8 @@ class MainWindow : public QMainWindow {
         void updateTitle();
 
         void askForSave();
+
+        std::unique_ptr<Geometry> geom;
 
         QString openedFileName = "";
 

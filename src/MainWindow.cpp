@@ -20,7 +20,10 @@
 #include <QDockWidget>
 #include <QTreeView>
 
-MainWindow::MainWindow() : QMainWindow() {
+MainWindow::MainWindow()
+  : QMainWindow(),
+    geom(std::make_unique<Geometry>())
+{
     updateTitle();
 
     createModeAndFuncActions();
@@ -30,7 +33,7 @@ MainWindow::MainWindow() : QMainWindow() {
     createToolsMenu();
     createDocks();
 
-    scene = new Scene(this);
+    scene = new Scene(geom.get(), this);
     view->setScene(scene);
 
     toolInfoWidget->setMode(EditMode::MOVE);
@@ -189,7 +192,7 @@ void MainWindow::onModeActionTriggered() {
 }
 
 void MainWindow::askForSave() {
-    if (scene->getGeometry()->isChanged()) {
+    if (geom->isChanged()) {
         auto reply = QMessageBox::question(
             this,
             tr("Save file?"),
@@ -202,8 +205,6 @@ void MainWindow::askForSave() {
 }
 
 void MainWindow::onNewActionTriggered() {
-    auto* geom = scene->getGeometry();
-
     askForSave();
 
     geom->clear();
@@ -216,8 +217,6 @@ void MainWindow::onSaveActionTriggered() {
         onSaveAsActionTriggered();
         return;
     }
-
-    auto* geom = scene->getGeometry();
 
     try {
         geom->save(openedFileName);
@@ -240,8 +239,6 @@ void MainWindow::onSaveAsActionTriggered() {
 
     if (fileName.isEmpty()) return;
 
-    auto* geom = scene->getGeometry();
-
     try {
         geom->save(fileName);
         openedFileName = fileName;
@@ -257,8 +254,6 @@ void MainWindow::onSaveAsActionTriggered() {
 }
 
 void MainWindow::onOpenActionTriggered() {
-    auto* geom = scene->getGeometry();
-
     onNewActionTriggered();
 
     auto fileName = QFileDialog::getOpenFileName(

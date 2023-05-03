@@ -16,11 +16,7 @@ class Scene : public QGraphicsScene {
     Q_OBJECT
 
     public:
-        Scene(QObject* parent = nullptr);
-
-        ~Scene();
-
-        Geometry* getGeometry() { return geom; }
+        Scene(Geometry* geom, QObject* parent = nullptr);
 
     private:
         GeometryGenerator* getFreeGeneratorAt(const QPointF& pos) const;

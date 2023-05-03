@@ -13,14 +13,11 @@
 #include <QPointF>
 #include <QCursor>
 
-Scene::Scene(QObject* parent) : QGraphicsScene(parent) {
-    geom = new Geometry;
-
+Scene::Scene(Geometry* geom, QObject* parent)
+  : QGraphicsScene(parent),
+    geom(geom)
+{
     setSceneRect(geom->getSceneRect());
-}
-
-Scene::~Scene() {
-    delete geom;
 }
 
 void Scene::setMode(EditMode m) {
