@@ -2,6 +2,10 @@
 
 #include "Real.h"
 
+bool RealGenerator::isReal() const {
+    return true;
+}
+
 bool RealGenerator::checkObjectType() const {
     return obj->is(Type::Real);
 }

@@ -46,6 +46,10 @@ bool Generator::isDependant() const {
     return !isFree();
 }
 
+bool Generator::isGeometry() const {
+    return !isReal();
+}
+
 void Generator::recalc() {
     recalcSelf();
 

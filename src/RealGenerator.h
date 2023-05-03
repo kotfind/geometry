@@ -9,6 +9,8 @@ class Geometry;
 
 class RealGenerator : public Generator {
     public:
+        bool isReal() const override;
+
         QString getName() const;
         void setName(const QString&);
 

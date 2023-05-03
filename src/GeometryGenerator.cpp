@@ -5,17 +5,16 @@
 #include "Object.h"
 #include "Geometry.h"
 
+bool GeometryGenerator::isReal() const {
+    return false;
+}
+
 GeometryItem* GeometryGenerator::getGeometryItem() const {
     return item.get();
 }
 
 bool GeometryGenerator::checkObjectType() const {
-    // FIXME
-    return obj->is(
-        Type::Point |
-        Type::Line |
-        Type::Circle
-    );
+    return !obj->is(Type::Real);
 }
 
 void GeometryGenerator::beginResetObject() {
