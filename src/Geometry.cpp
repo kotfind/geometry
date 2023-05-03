@@ -6,6 +6,8 @@
 #include "IOError.h"
 #include "GeometryGenerator.h"
 #include "DependantCalculator.h"
+#include "RealGenerator.h"
+#include "Real.h"
 
 #include <QHash>
 #include <cassert>
@@ -23,6 +25,14 @@
 #include <functional>
 
 Geometry::Geometry() {
+    realGens
+        << new RealGenerator("x", std::make_unique<Real>(1))
+        << new RealGenerator("y", std::make_unique<Real>(2))
+        << new RealGenerator("z", std::make_unique<Real>(3))
+        << new RealGenerator("w", std::make_unique<Real>(4))
+        << new RealGenerator("m", std::make_unique<Real>(5))
+        << new RealGenerator("n", std::make_unique<Real>(6))
+        ;
 }
 
 Geometry::~Geometry() {
@@ -240,4 +250,8 @@ void Geometry::removeGenerator(Generator* gen) {
     }
 
     delete gen;
+}
+
+const QList<RealGenerator*>& Geometry::getRealGenerators() const {
+    return realGens;
 }

@@ -9,6 +9,7 @@
 #include "ToolInfoWidget.h"
 #include "Section.h"
 #include "ToolWidget.h"
+#include "VariableModel.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -19,6 +20,7 @@
 #include <QCloseEvent>
 #include <QDockWidget>
 #include <QTreeView>
+#include <QTableView>
 
 MainWindow::MainWindow()
   : QMainWindow(),
@@ -37,6 +39,9 @@ MainWindow::MainWindow()
     view->setScene(scene);
 
     toolInfoWidget->setMode(EditMode::MOVE);
+
+    varModel = new VariableModel(geom.get(), this);
+    varView->setModel(varModel);
 
     connect(
         scene,
@@ -157,17 +162,21 @@ void MainWindow::createToolsMenu() {
 
 void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(this);
-    createDock(toolInfoWidget, tr("Tool Info"));
+    createDock(toolInfoWidget, tr("Tool Info"), Qt::LeftDockWidgetArea);
 
     toolWidget = new ToolWidget(modeToAction, funcToAction, this);
-    createDock(toolWidget, tr("Tools"));
+    createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
+
+    varView = new QTableView(this);
+    varView->setSelectionMode(QAbstractItemView::NoSelection);
+    createDock(varView, tr("Variables"), Qt::RightDockWidgetArea);
 }
 
-void MainWindow::createDock(QWidget* widget, const QString& name) {
+void MainWindow::createDock(QWidget* widget, const QString& name, Qt::DockWidgetArea area) {
     auto* dock = new QDockWidget(name, this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock->setWidget(widget);
-    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    addDockWidget(area, dock);
 
     static QMenu* viewMenu = menuBar()->addMenu(tr("View"));
     viewMenu->addAction(dock->toggleViewAction());

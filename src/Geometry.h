@@ -9,6 +9,7 @@
 class QJsonObject;
 class QString;
 class QGraphicsScene;
+class RealGenerator;
 
 class Geometry {
     public:
@@ -49,6 +50,8 @@ class Geometry {
 
         void removeGenerator(Generator*);
 
+        const QList<RealGenerator*>& getRealGenerators() const;
+
     private:
         QList<Generator*> getGens();
 
@@ -59,6 +62,7 @@ class Geometry {
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 
         QList<GeometryGenerator*> geomGens;
+        QList<RealGenerator*> realGens;
 
         QPointF shift = QPointF(0, 0);
 

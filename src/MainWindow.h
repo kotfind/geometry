@@ -17,6 +17,8 @@ class Section;
 class Function;
 enum class EditMode;
 class ToolWidget;
+class VariableModel;
+class QTableView;
 
 class MainWindow : public QMainWindow {
     public:
@@ -33,7 +35,7 @@ class MainWindow : public QMainWindow {
 
         void createDocks();
 
-        void createDock(QWidget* widget, const QString& name);
+        void createDock(QWidget* widget, const QString& name, Qt::DockWidgetArea area);
 
         void updateTitle();
 
@@ -51,6 +53,9 @@ class MainWindow : public QMainWindow {
 
         QHash<EditMode, QAction*> modeToAction;
         QHash<Function*, QAction*> funcToAction;
+
+        VariableModel* varModel;
+        QTableView* varView;
 
     protected:
         void closeEvent(QCloseEvent*) override;
