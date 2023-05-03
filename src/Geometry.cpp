@@ -25,42 +25,27 @@
 #include <functional>
 
 Geometry::Geometry() {
-    realGens
-        << new RealGenerator("x", std::make_unique<Real>(1))
-        << new RealGenerator("y", std::make_unique<Real>(2))
-        << new RealGenerator("z", std::make_unique<Real>(3))
-        << new RealGenerator("w", std::make_unique<Real>(4))
-        << new RealGenerator("m", std::make_unique<Real>(5))
-        << new RealGenerator("n", std::make_unique<Real>(6))
-        ;
+    makeRealGenerator("x", std::make_unique<Real>(1));
+    makeRealGenerator("y", std::make_unique<Real>(2));
+    makeRealGenerator("z", std::make_unique<Real>(3));
+    makeRealGenerator("w", std::make_unique<Real>(4));
+    makeRealGenerator("m", std::make_unique<Real>(5));
+    makeRealGenerator("n", std::make_unique<Real>(6));
 }
 
 Geometry::~Geometry() {
     clear();
 }
 
-QList<Generator*> Geometry::getGens() {
-    QList<Generator*> gens;
-
-    gens.reserve(geomGens.size());
-    for (auto* gen : geomGens) {
-        gens << gen;
-    }
-
-    return gens;
-}
-
 // Topsort algorithm.
 QList<Generator*> Geometry::getGeneratorRecalcOrder() {
-    auto gens = getGens();
-
     QSet<Generator*> used;
 
     QList<Generator*> ans;
     ans.reserve(gens.size());
 
     // helper function
-    std::function<void(Generator*)> dfs = [&dfs, &gens, &ans, &used](Generator* u) {
+    std::function<void(Generator*)> dfs = [this, &dfs, &ans, &used](Generator* u) {
         used << u;
 
         if (u->isDependant()) {
@@ -113,15 +98,15 @@ QJsonObject Geometry::toJson() const {
     json["shift"] = shiftJson;
 
     QHash<Generator*, int> ids;
-    for (int i = 0; i < geomGens.size(); ++i) {
-        ids[geomGens[i]] = i;
+    for (int i = 0; i < gens.size(); ++i) {
+        ids[gens[i]] = i;
     }
 
     QJsonArray gensJson;
-    for (auto* gen : geomGens) {
+    for (auto* gen : gens) {
         gensJson << gen->toJson(ids);
     }
-    json["geomGens"] = gensJson;
+    json["gens"] = gensJson;
 
     return json;
 }
@@ -177,7 +162,7 @@ void Geometry::fromJson(const QJsonObject& json) {
     shift.setX(getOrThrow(shiftJson["x"]).toDouble());
     shift.setY(getOrThrow(shiftJson["y"]).toDouble());
 
-    const auto& jsonGens = getOrThrow(json["geomGens"]).toArray();
+    const auto& jsonGens = getOrThrow(json["gens"]).toArray();
 
     QList<Generator*> gens(jsonGens.size(), nullptr);
     const auto order = getGeneratorLoadOrder(jsonGens);
@@ -187,11 +172,7 @@ void Geometry::fromJson(const QJsonObject& json) {
     }
 
     clear();
-    geomGens.reserve(gens.size());
-    // TODO: differ between geometry and real gens
-    for (auto* gen : gens) {
-        geomGens << static_cast<GeometryGenerator*>(gen);
-    }
+    gens.reserve(gens.size());
 
     recalcAll();
 }
@@ -209,15 +190,15 @@ void Geometry::load(const QString& fileName) {
 
 void Geometry::clear() {
     shift = QPointF(0, 0);
-    while (!geomGens.isEmpty()) {
-        removeGenerator(geomGens.first());
+    while (!gens.isEmpty()) {
+        removeGenerator(gens.first());
     }
 }
 
 void Geometry::populateScene(QGraphicsScene* scene) {
-    for (auto* gen : geomGens) {
+    for (auto* gen : getGeomeryGenerators()) {
         scene->addItem(
-            static_cast<GeometryGenerator*>(gen)->getGeometryItem()
+            gen->getGeometryItem()
         );
     }
 }
@@ -229,9 +210,9 @@ void Geometry::setChanged(bool v) {
 void Geometry::removeGenerator(Generator* gen) {
     setChanged();
 
-    int i = geomGens.indexOf(gen);
+    int i = gens.indexOf(gen);
     if (i == -1) return;
-    geomGens.remove(i);
+    gens.remove(i);
 
     for (auto* dep : gen->dependant) {
         removeGenerator(dep);
@@ -252,6 +233,26 @@ void Geometry::removeGenerator(Generator* gen) {
     delete gen;
 }
 
-const QList<RealGenerator*>& Geometry::getRealGenerators() const {
-    return realGens;
+QList<RealGenerator*> Geometry::getRealGenerators() const {
+    QList<RealGenerator*> ans;
+
+    for (auto* gen : gens) {
+        if (gen->isReal()) {
+            ans << static_cast<RealGenerator*>(gen);
+        }
+    }
+
+    return ans;
+}
+
+QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
+    QList<GeometryGenerator*> ans;
+
+    for (auto* gen : gens) {
+        if (gen->isGeometry()) {
+            ans << static_cast<GeometryGenerator*>(gen);
+        }
+    }
+
+    return ans;
 }

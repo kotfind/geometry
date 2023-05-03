@@ -16,15 +16,28 @@ class Geometry {
         Geometry();
         ~Geometry();
 
-        template<typename... Args>
-        GeometryGenerator* makeGeometryGenerator(Args&&... args) {
+        template<typename GenT, typename... Args>
+        std::enable_if_t<std::is_base_of_v<Generator, GenT>, GenT*>
+        makeGenerator(Args&&... args) {
             setChanged();
 
-            auto* gen = new GeometryGenerator(std::forward<Args>(args)...);
+            auto* gen = new GenT(std::forward<Args>(args)...);
+
             gen->recalc();
             gen->geom = this;
-            geomGens << gen;
+            gens << gen;
+
             return gen;
+        }
+
+        template<typename... Args>
+        auto makeGeometryGenerator(Args&&... args) {
+            return makeGenerator<GeometryGenerator>(std::forward<Args>(args)...);
+        }
+
+        template<typename... Args>
+        auto makeRealGenerator(Args&&... args) {
+            return makeGenerator<RealGenerator>(std::forward<Args>(args)...);
         }
 
         const QRectF& getSceneRect() const { return sceneRect; }
@@ -50,19 +63,17 @@ class Geometry {
 
         void removeGenerator(Generator*);
 
-        const QList<RealGenerator*>& getRealGenerators() const;
+        QList<RealGenerator*> getRealGenerators() const;
+        QList<GeometryGenerator*> getGeomeryGenerators() const;
 
     private:
-        QList<Generator*> getGens();
-
         QList<Generator*> getGeneratorRecalcOrder();
 
         void recalcAll();
 
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 
-        QList<GeometryGenerator*> geomGens;
-        QList<RealGenerator*> realGens;
+        QList<Generator*> gens;
 
         QPointF shift = QPointF(0, 0);
 
