@@ -2,6 +2,7 @@
 
 #include "RealGenerator.h"
 #include "Geometry.h"
+#include "Real.h"
 
 VariableModel::VariableModel(Geometry* geom, QObject* parent)
   : QAbstractTableModel(parent),
@@ -87,4 +88,49 @@ void VariableModel::onGeneratorMade(Generator* gen_) {
     beginInsertRows(QModelIndex(), i, i);
     gens << gen;
     endInsertRows();
+}
+
+bool VariableModel::setData(const QModelIndex& index, const QVariant& data, int role) {
+    if (role != Qt::EditRole) return false;
+
+    auto* gen = gens[index.row()];
+    switch (index.column()) {
+        case 0: {
+            auto name = data.toString();
+            if (name.contains(' ')) return false;
+            gen->setName(name);
+        } break;
+
+        case 1: {
+            bool ok;
+            auto val = data.toDouble(&ok);
+            if (!ok) return false;
+            gen->setValue(val);
+        } break;
+
+        default:
+            return false;
+    }
+
+    return true;
+}
+
+Qt::ItemFlags VariableModel::flags(const QModelIndex& index) const {
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+}
+
+bool VariableModel::insertRows(int row, int count, const QModelIndex& parent) {
+    if (count != 1 || row != rowCount()) return false;
+
+    geom->makeRealGenerator("new", std::make_unique<Real>(0));
+
+    return true;
+}
+
+bool VariableModel::removeRows(int row, int count, const QModelIndex& parent) {
+    if (count != 1) return false;
+
+    geom->removeGenerator(gens[row]);
+
+    return true;
 }
