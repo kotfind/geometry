@@ -46,13 +46,6 @@ MainWindow::MainWindow()
     varModel = new VariableModel(geom, this);
     varWidget->setModel(varModel);
 
-    geom->makeRealGenerator("x", std::make_unique<Real>(1));
-    geom->makeRealGenerator("y", std::make_unique<Real>(2));
-    geom->makeRealGenerator("z", std::make_unique<Real>(3));
-    geom->makeRealGenerator("w", std::make_unique<Real>(4));
-    geom->makeRealGenerator("m", std::make_unique<Real>(5));
-    geom->makeRealGenerator("n", std::make_unique<Real>(6));
-
     connect(
         scene,
         &Scene::cursorChanged,
