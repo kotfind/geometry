@@ -28,6 +28,7 @@ void GeometryGenerator::endResetObject() {
 void GeometryGenerator::move(const QPointF& delta) {
     beginResetObject();
 
+    // XXX object should be changed in Calculator
     static_cast<GeometryObject*>(obj.get())->move(delta);
 
     endResetObject();

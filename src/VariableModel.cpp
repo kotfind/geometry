@@ -5,19 +5,33 @@
 
 VariableModel::VariableModel(Geometry* geom, QObject* parent)
   : QAbstractTableModel(parent),
-    geom(geom)
+    geom(geom),
+    gens(geom->getRealGenerators())
 {
-    const auto& gens = geom->getRealGenerators();
-    names.reserve(gens.size());
-    values.reserve(gens.size());
-    for (auto* gen : gens) {
-        names << gen->getName();
-        values << gen->getValue();
-    }
+    connect(
+        geom,
+        &Geometry::generatorRemoved,
+        this,
+        &VariableModel::onGeneratorRemoved
+    );
+
+    connect(
+        geom,
+        &Geometry::generatorChanged,
+        this,
+        &VariableModel::onGeneratorChanged
+    );
+
+    connect(
+        geom,
+        &Geometry::generatorMade,
+        this,
+        &VariableModel::onGeneratorMade
+    );
 }
 
 int VariableModel::rowCount(const QModelIndex& parent) const {
-    return names.size();
+    return gens.size();
 }
 
 int VariableModel::columnCount(const QModelIndex& parent) const {
@@ -27,10 +41,10 @@ int VariableModel::columnCount(const QModelIndex& parent) const {
 QVariant VariableModel::data(const QModelIndex& index, int role) const {
     if (!index.isValid() || role != Qt::DisplayRole) return QVariant();
 
-    int i = index.row();
+    auto* gen = gens[index.row()];
     switch (index.column()) {
-        case 0: return names[i];
-        case 1: return values[i];
+        case 0: return gen->getName();
+        case 1: return gen->getValue();
     }
     return QVariant();
 }
@@ -43,4 +57,34 @@ QVariant VariableModel::headerData(int section, Qt::Orientation orientation, int
         case 1: return tr("Value");
     }
     return QVariant();
+}
+
+void VariableModel::onGeneratorRemoved(Generator* gen_) {
+    if (!gen_->isReal()) return;
+    auto* gen = static_cast<RealGenerator*>(gen_);
+
+    int i = gens.indexOf(gen);
+
+    beginRemoveRows(QModelIndex(), i, i);
+    gens.remove(i);
+    endRemoveRows();
+}
+
+void VariableModel::onGeneratorChanged(Generator* gen_) {
+    if (!gen_->isReal()) return;
+    auto* gen = static_cast<RealGenerator*>(gen_);
+
+    int i = gens.indexOf(gen);
+    emit dataChanged(index(i, 0), index(i, 1), { Qt::DisplayRole });
+}
+
+void VariableModel::onGeneratorMade(Generator* gen_) {
+    if (!gen_->isReal()) return;
+    auto* gen = static_cast<RealGenerator*>(gen_);
+
+    int i = gens.size();
+
+    beginInsertRows(QModelIndex(), i, i);
+    gens << gen;
+    endInsertRows();
 }

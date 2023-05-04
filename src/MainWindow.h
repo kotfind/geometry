@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Geometry.h"
-
 #include <QMainWindow>
 #include <QString>
 #include <QHash>
@@ -19,6 +17,7 @@ enum class EditMode;
 class ToolWidget;
 class VariableModel;
 class QTableView;
+class Geometry;
 
 class MainWindow : public QMainWindow {
     public:
@@ -41,7 +40,7 @@ class MainWindow : public QMainWindow {
 
         void askForSave();
 
-        std::unique_ptr<Geometry> geom;
+        Geometry* geom;
 
         QString openedFileName = "";
 

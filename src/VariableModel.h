@@ -4,10 +4,13 @@
 #include <QList>
 #include <QString>
 
-class RealGenerator;
 class Geometry;
+class Generator;
+class RealGenerator;
 
 class VariableModel : public QAbstractTableModel {
+    Q_OBJECT
+
     public:
         VariableModel(Geometry* geom, QObject* parent = nullptr);
 
@@ -19,6 +22,11 @@ class VariableModel : public QAbstractTableModel {
 
     private:
         Geometry* geom;
-        QList<QString> names;
-        QList<double> values;
+
+        QList<RealGenerator*> gens;
+
+    private slots:
+        void onGeneratorRemoved(Generator*);
+        void onGeneratorChanged(Generator*);
+        void onGeneratorMade(Generator*);
 };

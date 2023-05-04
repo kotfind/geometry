@@ -51,6 +51,8 @@ bool Generator::isGeometry() const {
 }
 
 void Generator::recalc() {
+    geom->generatorChanged(this);
+
     recalcSelf();
 
     for (auto* dep : dependant) {

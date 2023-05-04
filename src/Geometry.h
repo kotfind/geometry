@@ -5,15 +5,19 @@
 #include <QRectF>
 #include <QList>
 #include <QPointF>
+#include <memory>
+#include <QObject>
 
 class QJsonObject;
 class QString;
 class QGraphicsScene;
 class RealGenerator;
 
-class Geometry {
+class Geometry : public QObject {
+    Q_OBJECT
+
     public:
-        Geometry();
+        Geometry(QObject* parent = nullptr);
         ~Geometry();
 
         template<typename GenT, typename... Args>
@@ -23,9 +27,11 @@ class Geometry {
 
             auto* gen = new GenT(std::forward<Args>(args)...);
 
-            gen->recalc();
-            gen->geom = this;
             gens << gen;
+            gen->geom = this;
+            gen->recalc();
+
+            emit generatorMade(gen);
 
             return gen;
         }
@@ -78,4 +84,9 @@ class Geometry {
         QPointF shift = QPointF(0, 0);
 
         bool changed = false;
+
+    signals:
+        void generatorChanged(Generator*);
+        void generatorMade(Generator*);
+        void generatorRemoved(Generator*);
 };

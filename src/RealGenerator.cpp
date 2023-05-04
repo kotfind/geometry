@@ -19,7 +19,9 @@ void RealGenerator::setName(const QString& n) {
 }
 
 void RealGenerator::setValue(double v) {
+    // XXX object should be changed in Calculator
     obj = std::make_unique<Real>(v);
+    recalc();
 }
 
 double RealGenerator::getValue() const {

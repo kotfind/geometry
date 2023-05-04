@@ -24,14 +24,9 @@
 #include <QSet>
 #include <functional>
 
-Geometry::Geometry() {
-    makeRealGenerator("x", std::make_unique<Real>(1));
-    makeRealGenerator("y", std::make_unique<Real>(2));
-    makeRealGenerator("z", std::make_unique<Real>(3));
-    makeRealGenerator("w", std::make_unique<Real>(4));
-    makeRealGenerator("m", std::make_unique<Real>(5));
-    makeRealGenerator("n", std::make_unique<Real>(6));
-}
+Geometry::Geometry(QObject* parent)
+  : QObject(parent)
+{}
 
 Geometry::~Geometry() {
     clear();
@@ -209,6 +204,8 @@ void Geometry::setChanged(bool v) {
 
 void Geometry::removeGenerator(Generator* gen) {
     setChanged();
+
+    emit generatorRemoved(gen);
 
     int i = gens.indexOf(gen);
     if (i == -1) return;

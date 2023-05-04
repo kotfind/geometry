@@ -10,6 +10,8 @@
 #include "Section.h"
 #include "ToolWidget.h"
 #include "VariableModel.h"
+#include "RealGenerator.h"
+#include "Real.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -23,8 +25,6 @@
 #include <QTableView>
 
 MainWindow::MainWindow()
-  : QMainWindow(),
-    geom(std::make_unique<Geometry>())
 {
     updateTitle();
 
@@ -35,13 +35,22 @@ MainWindow::MainWindow()
     createToolsMenu();
     createDocks();
 
-    scene = new Scene(geom.get(), this);
+    geom = new Geometry(this);
+
+    scene = new Scene(geom, this);
     view->setScene(scene);
 
     toolInfoWidget->setMode(EditMode::MOVE);
 
-    varModel = new VariableModel(geom.get(), this);
+    varModel = new VariableModel(geom, this);
     varView->setModel(varModel);
+
+    geom->makeRealGenerator("x", std::make_unique<Real>(1));
+    geom->makeRealGenerator("y", std::make_unique<Real>(2));
+    geom->makeRealGenerator("z", std::make_unique<Real>(3));
+    geom->makeRealGenerator("w", std::make_unique<Real>(4));
+    geom->makeRealGenerator("m", std::make_unique<Real>(5));
+    geom->makeRealGenerator("n", std::make_unique<Real>(6));
 
     connect(
         scene,
