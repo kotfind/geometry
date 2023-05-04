@@ -26,6 +26,8 @@ class VariableModel : public QAbstractTableModel {
         bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
         bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
+        RealGenerator* getVariable(int row) const;
+
     private:
         Geometry* geom;
 

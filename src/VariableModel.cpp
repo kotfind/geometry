@@ -134,3 +134,7 @@ bool VariableModel::removeRows(int row, int count, const QModelIndex& parent) {
 
     return true;
 }
+
+RealGenerator* VariableModel::getVariable(int row) const {
+    return gens[row];
+}
