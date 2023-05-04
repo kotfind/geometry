@@ -8,7 +8,9 @@
 #include "DependantCalculator.h"
 #include "RealGenerator.h"
 #include "Real.h"
-
+#include "EditMode.h"
+#include "Type.h"
+#include "Function.h"
 
 #include <QHash>
 #include <cassert>
@@ -261,7 +263,7 @@ EditMode Geometry::getEditMode() const {
 
 void Geometry::setEditMode(EditMode mode) {
     editMode = mode;
-    // TODO: clear selectedFuncArgs
+    clearFuncArgs();
 }
 
 Function* Geometry::getActiveFunction() const {
@@ -272,4 +274,35 @@ Function* Geometry::getActiveFunction() const {
 void Geometry::setActiveFunction(Function* func) {
     assert(editMode == EditMode::FUNCTION);
     activeFunction = func;
+}
+
+Type Geometry::getNextFuncArgType() const {
+    return getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType();
+}
+
+void Geometry::selectFuncArg(Generator* gen, QGraphicsScene* scene) {
+    auto* func = getActiveFunction();
+    selectedFuncArgs << gen;
+    emit selectedCountChanged(selectedFuncArgs.size());
+    if (selectedFuncArgs.size() == func->countArgs()) {
+        for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
+            auto* gen = makeGeometryGenerator(
+                func,
+                selectedFuncArgs,
+                funcResNum
+            );
+
+            auto* item = gen->getGeometryItem();
+            scene->addItem(item);
+        }
+
+        clearFuncArgs();
+    }
+
+    // TODO check for real args
+}
+
+void Geometry::clearFuncArgs() {
+    selectedFuncArgs.clear();
+    emit selectedCountChanged(selectedFuncArgs.size());
 }

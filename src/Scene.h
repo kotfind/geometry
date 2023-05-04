@@ -23,15 +23,12 @@ class Scene : public QGraphicsScene {
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 
-        QList<Generator*> selectedFuncArgs;
-
         GeometryGenerator* currentFreeGenerator = nullptr;
 
         Geometry* geom;
 
     signals:
         void cursorChanged(const QCursor& cursor);
-        void selectedCountChanged(int n);
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent*) override;

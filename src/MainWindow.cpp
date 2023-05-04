@@ -54,8 +54,8 @@ MainWindow::MainWindow()
     );
 
     connect(
-        scene,
-        &Scene::selectedCountChanged,
+        geom,
+        &Geometry::selectedCountChanged,
         toolInfoWidget,
         &ToolInfoWidget::updateSelectedCount
     );

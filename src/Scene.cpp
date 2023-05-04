@@ -46,33 +46,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::FUNCTION:
         {
-            auto* func = geom->getActiveFunction();
-
-            assert(func);
-
             auto* gen = getGeneratorAt(
                 pos,
-                func->getArgInfo(selectedFuncArgs.size()).getType()
+                geom->getNextFuncArgType()
             );
-            emit selectedCountChanged(selectedFuncArgs.size());
             if (!gen) break;
 
-            selectedFuncArgs << gen;
-            emit selectedCountChanged(selectedFuncArgs.size());
-            if (selectedFuncArgs.size() == func->countArgs()) {
-                for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-                    auto* gen = geom->makeGeometryGenerator(
-                        func,
-                        selectedFuncArgs,
-                        funcResNum
-                    );
-                    auto* item = gen->getGeometryItem();
-                    addItem(item);
-                }
-
-                selectedFuncArgs.clear();
-                emit selectedCountChanged(selectedFuncArgs.size());
-            }
+            geom->selectFuncArg(gen, this);
         }
         break;
 
@@ -172,7 +152,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
         case EditMode::FUNCTION:
             if (getGeneratorAt(
                 pos,
-                geom->getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType()
+                geom->getNextFuncArgType()
             )) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;
