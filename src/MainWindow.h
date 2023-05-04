@@ -16,8 +16,8 @@ class Function;
 enum class EditMode;
 class ToolWidget;
 class VariableModel;
-class QTableView;
 class Geometry;
+class VariableWidget;
 
 class MainWindow : public QMainWindow {
     public:
@@ -54,7 +54,7 @@ class MainWindow : public QMainWindow {
         QHash<Function*, QAction*> funcToAction;
 
         VariableModel* varModel;
-        QTableView* varView;
+        VariableWidget* varWidget;
 
     protected:
         void closeEvent(QCloseEvent*) override;

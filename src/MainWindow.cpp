@@ -12,6 +12,7 @@
 #include "VariableModel.h"
 #include "RealGenerator.h"
 #include "Real.h"
+#include "VariableWidget.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -43,7 +44,7 @@ MainWindow::MainWindow()
     toolInfoWidget->setMode(EditMode::MOVE);
 
     varModel = new VariableModel(geom, this);
-    varView->setModel(varModel);
+    varWidget->setModel(varModel);
 
     geom->makeRealGenerator("x", std::make_unique<Real>(1));
     geom->makeRealGenerator("y", std::make_unique<Real>(2));
@@ -176,9 +177,8 @@ void MainWindow::createDocks() {
     toolWidget = new ToolWidget(modeToAction, funcToAction, this);
     createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
 
-    varView = new QTableView(this);
-    varView->setSelectionMode(QAbstractItemView::NoSelection);
-    createDock(varView, tr("Variables"), Qt::RightDockWidgetArea);
+    varWidget = new VariableWidget(this);
+    createDock(varWidget, tr("Variables"), Qt::RightDockWidgetArea);
 }
 
 void MainWindow::createDock(QWidget* widget, const QString& name, Qt::DockWidgetArea area) {
