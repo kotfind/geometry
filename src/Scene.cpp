@@ -21,10 +21,6 @@ Scene::Scene(Geometry* geom, QObject* parent)
     setSceneRect(geom->getSceneRect());
 }
 
-void Scene::setFunction(Function* f) {
-    func = f;
-}
-
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
@@ -50,6 +46,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::FUNCTION:
         {
+            auto* func = geom->getActiveFunction();
+
             assert(func);
 
             auto* gen = getGeneratorAt(
@@ -174,7 +172,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
         case EditMode::FUNCTION:
             if (getGeneratorAt(
                 pos,
-                func->getArgInfo(selectedFuncArgs.size()).getType()
+                geom->getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType()
             )) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;

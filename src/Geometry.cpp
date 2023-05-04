@@ -9,6 +9,7 @@
 #include "RealGenerator.h"
 #include "Real.h"
 
+
 #include <QHash>
 #include <cassert>
 #include <QDebug>
@@ -261,4 +262,14 @@ EditMode Geometry::getEditMode() const {
 void Geometry::setEditMode(EditMode mode) {
     editMode = mode;
     // TODO: clear selectedFuncArgs
+}
+
+Function* Geometry::getActiveFunction() const {
+    assert(editMode == EditMode::FUNCTION);
+    return activeFunction;
+}
+
+void Geometry::setActiveFunction(Function* func) {
+    assert(editMode == EditMode::FUNCTION);
+    activeFunction = func;
 }

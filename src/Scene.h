@@ -23,7 +23,6 @@ class Scene : public QGraphicsScene {
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 
-        Function* func = nullptr;
         QList<Generator*> selectedFuncArgs;
 
         GeometryGenerator* currentFreeGenerator = nullptr;
@@ -38,7 +37,4 @@ class Scene : public QGraphicsScene {
         void mousePressEvent(QGraphicsSceneMouseEvent*) override;
         void mouseMoveEvent(QGraphicsSceneMouseEvent*) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent*) override;
-
-    public slots:
-        void setFunction(Function*);
 };

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GeometryGenerator.h"
 
 #include "EditMode.h"
@@ -74,6 +73,9 @@ class Geometry : public QObject {
         EditMode getEditMode() const;
         void setEditMode(EditMode);
 
+        Function* getActiveFunction() const;
+        void setActiveFunction(Function*);
+
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
@@ -91,6 +93,8 @@ class Geometry : public QObject {
         bool changed = false;
 
         EditMode editMode = EditMode::MOVE;
+
+        Function* activeFunction = nullptr;
 
     signals:
         void generatorChanged(Generator*);
