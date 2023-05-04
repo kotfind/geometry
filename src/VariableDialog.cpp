@@ -39,7 +39,7 @@ void VariableDialog::createUi() {
     );
 
     cancelButton = new QPushButton(tr("Cancel"), this);
-    hbox->addWidget(okButton);
+    hbox->addWidget(cancelButton);
     connect(
         cancelButton,
         &QPushButton::clicked,
@@ -55,9 +55,11 @@ RealGenerator* VariableDialog::getCurrentVariable() const {
     return varModel->getVariable(i);
 }
 
-RealGenerator* VariableDialog::getVariable(VariableModel* model, QWidget* parent) {
+RealGenerator* VariableDialog::getVariable(Geometry* geom, QWidget* parent) {
+    VariableModel model(geom);
+
     VariableDialog d(parent);
-    d.setModel(model);
+    d.setModel(&model);
     return d.exec() == QDialog::Accepted
         ? d.getCurrentVariable()
         : nullptr;

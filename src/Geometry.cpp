@@ -11,6 +11,7 @@
 #include "EditMode.h"
 #include "Type.h"
 #include "Function.h"
+#include "VariableDialog.h"
 
 #include <QHash>
 #include <cassert>
@@ -26,6 +27,7 @@
 #include <algorithm>
 #include <QSet>
 #include <functional>
+#include <QMessageBox>
 
 Geometry::Geometry(QObject* parent)
   : QObject(parent)
@@ -263,7 +265,6 @@ EditMode Geometry::getEditMode() const {
 
 void Geometry::setEditMode(EditMode mode) {
     editMode = mode;
-    clearFuncArgs();
 }
 
 Function* Geometry::getActiveFunction() const {
@@ -271,9 +272,10 @@ Function* Geometry::getActiveFunction() const {
     return activeFunction;
 }
 
-void Geometry::setActiveFunction(Function* func) {
+void Geometry::setActiveFunction(Function* func, QGraphicsScene* scene) {
     assert(editMode == EditMode::FUNCTION);
     activeFunction = func;
+    clearFuncArgs(scene);
 }
 
 Type Geometry::getNextFuncArgType() const {
@@ -281,28 +283,62 @@ Type Geometry::getNextFuncArgType() const {
 }
 
 void Geometry::selectFuncArg(Generator* gen, QGraphicsScene* scene) {
-    auto* func = getActiveFunction();
     selectedFuncArgs << gen;
     emit selectedCountChanged(selectedFuncArgs.size());
-    if (selectedFuncArgs.size() == func->countArgs()) {
-        for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-            auto* gen = makeGeometryGenerator(
-                func,
-                selectedFuncArgs,
-                funcResNum
-            );
 
-            auto* item = gen->getGeometryItem();
-            scene->addItem(item);
-        }
-
-        clearFuncArgs();
-    }
-
-    // TODO check for real args
+    checkSelectedFuncArgs(scene);
 }
 
-void Geometry::clearFuncArgs() {
+void Geometry::clearFuncArgs(QGraphicsScene* scene) {
     selectedFuncArgs.clear();
     emit selectedCountChanged(selectedFuncArgs.size());
+
+    checkSelectedFuncArgs(scene);
+}
+
+void Geometry::checkSelectedFuncArgs(QGraphicsScene* scene) {
+    if (selectedFuncArgs.size() == getActiveFunction()->countArgs()) {
+        createGeneratorFromSelectedFuncArgs(scene);
+    }
+
+    if (getNextFuncArgType() == Type::Real) {
+        processRealFuncArg(scene);
+    }
+}
+
+void Geometry::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
+    auto* func = getActiveFunction();
+    for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
+        auto* gen = makeGeometryGenerator(
+            func,
+            selectedFuncArgs,
+            funcResNum
+        );
+        auto* item = gen->getGeometryItem();
+        scene->addItem(item);
+    }
+
+    clearFuncArgs(scene);
+}
+
+void Geometry::processRealFuncArg(QGraphicsScene* scene) {
+    if (getRealGenerators().empty()) {
+        QMessageBox::critical(
+            nullptr,
+            tr("Error: No Variables"),
+            tr("This function argument is a variable. "
+                "Please create a variable to use it.")
+        );
+        clearFuncArgs(scene);
+        return;
+    }
+
+
+    auto* var = VariableDialog::getVariable(this);
+    if (!var) {
+        clearFuncArgs(scene);
+        return;
+    }
+
+    selectFuncArg(var, scene);
 }

@@ -189,7 +189,7 @@ void MainWindow::onFunctionActionTriggered() {
     auto* func = action->data().value<Function*>();
 
     geom->setEditMode(EditMode::FUNCTION);
-    geom->setActiveFunction(func);
+    geom->setActiveFunction(func, scene);
     toolInfoWidget->setMode(EditMode::FUNCTION); // XXX: use Geometry mode ?
     toolInfoWidget->setFunction(func); // XXX: use Geometry function ?
 }

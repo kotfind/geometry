@@ -75,11 +75,11 @@ class Geometry : public QObject {
         void setEditMode(EditMode);
 
         Function* getActiveFunction() const;
-        void setActiveFunction(Function*);
+        void setActiveFunction(Function*, QGraphicsScene*);
 
         Type getNextFuncArgType() const;
         void selectFuncArg(Generator*, QGraphicsScene*);
-        void clearFuncArgs(); // XXX
+        void clearFuncArgs(QGraphicsScene*);
 
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
@@ -88,6 +88,10 @@ class Geometry : public QObject {
         QList<Generator*> getGeneratorRecalcOrder();
 
         void recalcAll();
+
+        void checkSelectedFuncArgs(QGraphicsScene*);
+        void createGeneratorFromSelectedFuncArgs(QGraphicsScene*);
+        void processRealFuncArg(QGraphicsScene*);
 
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 

@@ -6,6 +6,7 @@ class VariableModel;
 class QComboBox;
 class QPushButton;
 class RealGenerator;
+class Geometry;
 
 class VariableDialog : public QDialog {
     public:
@@ -15,7 +16,7 @@ class VariableDialog : public QDialog {
 
         void setModel(VariableModel* model);
 
-        static RealGenerator* getVariable(VariableModel* model, QWidget* parent = nullptr);
+        static RealGenerator* getVariable(Geometry* geom, QWidget* parent = nullptr);
 
     private:
         void createUi();
