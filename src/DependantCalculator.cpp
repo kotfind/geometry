@@ -23,6 +23,12 @@ Object* DependantCalculator::calc(const Object*) const {
     }
 
     const auto& res = (*func)(objs);
+    // Delete redundant objects
+    for (int i = 0; i < res.size(); ++i) {
+        if (i != funcResNum) {
+            delete res[i];
+        }
+    }
     return funcResNum < res.size()
         ? res[funcResNum]
         : nullptr;
