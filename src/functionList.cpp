@@ -338,6 +338,26 @@ FUNC {
 };
 
 FUNC {
+    "Circle/By Center And Radius",
+    ":none.svg",
+    TR("Creates circle by its center and radius."),
+    {
+        {Type::Point, TR("Center")},
+        {Type::Real, TR("Radius")},
+    },
+    1,
+    DO {
+        const auto& o = *static_cast<const Point*>(objs[0]);
+        auto r = static_cast<const Real*>(objs[1])->value;
+
+        if (leq(r, 0))
+            return {};
+
+        return {new Circle(o, r)};
+    }
+};
+
+FUNC {
     "Circle/By Three Points",
     ":none.svg",
     TR("Creates circle by three points on it."),
