@@ -188,9 +188,9 @@ void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* func = action->data().value<Function*>();
 
-    scene->setMode(EditMode::FUNCTION);
+    geom->setEditMode(EditMode::FUNCTION);
     scene->setFunction(func);
-    toolInfoWidget->setMode(EditMode::FUNCTION);
+    toolInfoWidget->setMode(EditMode::FUNCTION); // XXX: use Geometry mode ?
     toolInfoWidget->setFunction(func);
 }
 
@@ -198,7 +198,7 @@ void MainWindow::onModeActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto mode = action->data().value<EditMode>();
 
-    scene->setMode(mode);
+    geom->setEditMode(mode);
     toolInfoWidget->setMode(mode);
 }
 

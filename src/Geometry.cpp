@@ -253,3 +253,12 @@ QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
 
     return ans;
 }
+
+EditMode Geometry::getEditMode() const {
+    return editMode;
+}
+
+void Geometry::setEditMode(EditMode mode) {
+    editMode = mode;
+    // TODO: clear selectedFuncArgs
+}

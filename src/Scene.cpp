@@ -6,6 +6,7 @@
 #include "Geometry.h"
 #include "Generator.h"
 #include "GeometryGenerator.h"
+#include "EditMode.h"
 
 #include <QDebug>
 #include <cassert>
@@ -20,12 +21,6 @@ Scene::Scene(Geometry* geom, QObject* parent)
     setSceneRect(geom->getSceneRect());
 }
 
-void Scene::setMode(EditMode m) {
-    mode = m;
-    selectedFuncArgs.clear();
-    emit selectedCountChanged(selectedFuncArgs.size());
-}
-
 void Scene::setFunction(Function* f) {
     func = f;
 }
@@ -37,7 +32,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (mode) {
+    switch (geom->getEditMode()) {
         case EditMode::MOVE:
         {
             currentFreeGenerator = getFreeGeneratorAt(pos);
@@ -107,7 +102,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (mode) {
+    switch (geom->getEditMode()) {
         case EditMode::MOVE:
         {
             if (!currentFreeGenerator) break;
@@ -122,7 +117,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (mode) {
+    switch (geom->getEditMode()) {
         case EditMode::MOVE:
         {
             currentFreeGenerator = nullptr;
@@ -158,7 +153,7 @@ GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
 void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
-    switch (mode) {
+    switch (geom->getEditMode()) {
         case EditMode::MOVE:
             if (currentFreeGenerator && (e->buttons() & Qt::LeftButton)) {
                 // Moving item

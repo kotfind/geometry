@@ -1,6 +1,5 @@
 #pragma once
 
-#include "EditMode.h"
 #include "Type.h"
 
 #include <QGraphicsScene>
@@ -24,7 +23,6 @@ class Scene : public QGraphicsScene {
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 
-        EditMode mode = EditMode::MOVE;
         Function* func = nullptr;
         QList<Generator*> selectedFuncArgs;
 
@@ -42,6 +40,5 @@ class Scene : public QGraphicsScene {
         void mouseReleaseEvent(QGraphicsSceneMouseEvent*) override;
 
     public slots:
-        void setMode(EditMode);
         void setFunction(Function*);
 };

@@ -2,6 +2,8 @@
 
 #include "GeometryGenerator.h"
 
+#include "EditMode.h"
+
 #include <QRectF>
 #include <QList>
 #include <QPointF>
@@ -69,6 +71,9 @@ class Geometry : public QObject {
 
         void removeGenerator(Generator*);
 
+        EditMode getEditMode() const;
+        void setEditMode(EditMode);
+
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
@@ -84,6 +89,8 @@ class Geometry : public QObject {
         QPointF shift = QPointF(0, 0);
 
         bool changed = false;
+
+        EditMode editMode = EditMode::MOVE;
 
     signals:
         void generatorChanged(Generator*);
