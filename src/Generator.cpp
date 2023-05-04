@@ -8,6 +8,8 @@
 #include "Function.h"
 #include "getOrThrow.h"
 #include "GeometryGenerator.h"
+#include "RealGenerator.h"
+#include "Real.h"
 
 #include <stdexcept>
 #include <QJsonArray>
@@ -73,9 +75,16 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     QJsonObject json;
 
     json["isFree"] = isFree();
+    json["isReal"] = isReal();
+
+    if (isReal()) {
+        json["name"] = static_cast<const RealGenerator*>(this)->getName();
+    }
 
     if (isFree()) {
-        json["object"] = static_cast<Point*>(obj.get())->toJson();
+        json["object"] = isReal()
+            ? static_cast<Real*>(obj.get())->toJson()
+            : static_cast<Point*>(obj.get())->toJson();
     } else {
         auto* depCalc = static_cast<DependantCalculator*>(calc.get());
 
@@ -93,12 +102,28 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
 
 Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>& gens) {
     auto isFree = getOrThrow(json["isFree"]).toBool();
+    auto isReal = getOrThrow(json["isReal"]).toBool();
 
     Generator* gen;
 
+    QString name;
+    if (isReal) {
+        name = getOrThrow(json["name"]).toString();
+    }
+
     if (isFree) {
-        auto* pt = Point::fromJson(getOrThrow(json["object"]).toObject());
-        gen = new GeometryGenerator(std::unique_ptr<Point>(pt));
+        auto jsonObject = getOrThrow(json["object"]).toObject();
+        if (isReal) {
+            auto obj = std::unique_ptr<Real>(
+                Real::fromJson(jsonObject)
+            );
+            gen = new RealGenerator(name, std::move(obj));
+        } else {
+            auto obj = std::unique_ptr<Point>(
+                Point::fromJson(jsonObject)
+            );
+            gen = new GeometryGenerator(std::move(obj));
+        }
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
         auto* func = Function::get(funcName);
@@ -112,7 +137,11 @@ Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>&
 
         auto funcResNum = getOrThrow(json["funcResNum"]).toInt();
 
-        gen = new GeometryGenerator(func, args, funcResNum);
+        if (isReal) {
+            gen = new RealGenerator(name, func, args, funcResNum);
+        } else {
+            gen = new GeometryGenerator(func, args, funcResNum);
+        }
     }
 
     return gen;

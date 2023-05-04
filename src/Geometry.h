@@ -110,6 +110,7 @@ class Geometry : public QObject {
         void generatorChanged(Generator*);
         void generatorMade(Generator*);
         void generatorRemoved(Generator*);
+        void resetCompleted();
 
         void selectedCountChanged(int n);
 };

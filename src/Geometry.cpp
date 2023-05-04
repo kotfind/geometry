@@ -164,15 +164,12 @@ void Geometry::fromJson(const QJsonObject& json) {
 
     const auto& jsonGens = getOrThrow(json["gens"]).toArray();
 
-    QList<Generator*> gens(jsonGens.size(), nullptr);
+    gens.resize(jsonGens.size(), nullptr);
     const auto order = getGeneratorLoadOrder(jsonGens);
     for (int i : order) {
         gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
         gens[i]->geom = this;
     }
-
-    clear();
-    gens.reserve(gens.size());
 
     recalcAll();
 }
@@ -186,6 +183,8 @@ void Geometry::load(const QString& fileName) {
         throw IOError("Couldn't open file");
 
     fromJson(QJsonDocument::fromJson(file.readAll()).object());
+
+    emit resetCompleted();
 }
 
 void Geometry::clear() {
@@ -193,6 +192,8 @@ void Geometry::clear() {
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());
     }
+
+    emit resetCompleted();
 }
 
 void Geometry::populateScene(QGraphicsScene* scene) {

@@ -37,4 +37,5 @@ class VariableModel : public QAbstractTableModel {
         void onGeneratorRemoved(Generator*);
         void onGeneratorChanged(Generator*);
         void onGeneratorMade(Generator*);
+        void onGeometryReset();
 };

@@ -30,4 +30,5 @@ class RealGenerator : public Generator {
         QString name;
 
     friend Geometry;
+    friend Generator;
 };

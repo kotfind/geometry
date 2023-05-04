@@ -29,6 +29,13 @@ VariableModel::VariableModel(Geometry* geom, QObject* parent)
         this,
         &VariableModel::onGeneratorMade
     );
+
+    connect(
+        geom,
+        &Geometry::resetCompleted,
+        this,
+        &VariableModel::onGeometryReset
+    );
 }
 
 int VariableModel::rowCount(const QModelIndex& parent) const {
@@ -88,6 +95,12 @@ void VariableModel::onGeneratorMade(Generator* gen_) {
     beginInsertRows(QModelIndex(), i, i);
     gens << gen;
     endInsertRows();
+}
+
+void VariableModel::onGeometryReset() {
+    beginResetModel();
+    gens = geom->getRealGenerators();
+    endResetModel();
 }
 
 bool VariableModel::setData(const QModelIndex& index, const QVariant& data, int role) {
