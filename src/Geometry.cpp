@@ -6,6 +6,12 @@
 #include "IOError.h"
 #include "GeometryGenerator.h"
 #include "DependantCalculator.h"
+#include "RealGenerator.h"
+#include "Real.h"
+#include "EditMode.h"
+#include "Type.h"
+#include "Function.h"
+#include "VariableDialog.h"
 
 #include <QHash>
 #include <cassert>
@@ -21,36 +27,25 @@
 #include <algorithm>
 #include <QSet>
 #include <functional>
+#include <QMessageBox>
 
-Geometry::Geometry() {
-}
+Geometry::Geometry(QObject* parent)
+  : QObject(parent)
+{}
 
 Geometry::~Geometry() {
     clear();
 }
 
-QList<Generator*> Geometry::getGens() {
-    QList<Generator*> gens;
-
-    gens.reserve(geomGens.size());
-    for (auto* gen : geomGens) {
-        gens << gen;
-    }
-
-    return gens;
-}
-
 // Topsort algorithm.
 QList<Generator*> Geometry::getGeneratorRecalcOrder() {
-    auto gens = getGens();
-
     QSet<Generator*> used;
 
     QList<Generator*> ans;
     ans.reserve(gens.size());
 
     // helper function
-    std::function<void(Generator*)> dfs = [&dfs, &gens, &ans, &used](Generator* u) {
+    std::function<void(Generator*)> dfs = [this, &dfs, &ans, &used](Generator* u) {
         used << u;
 
         if (u->isDependant()) {
@@ -103,15 +98,15 @@ QJsonObject Geometry::toJson() const {
     json["shift"] = shiftJson;
 
     QHash<Generator*, int> ids;
-    for (int i = 0; i < geomGens.size(); ++i) {
-        ids[geomGens[i]] = i;
+    for (int i = 0; i < gens.size(); ++i) {
+        ids[gens[i]] = i;
     }
 
     QJsonArray gensJson;
-    for (auto* gen : geomGens) {
+    for (auto* gen : gens) {
         gensJson << gen->toJson(ids);
     }
-    json["geomGens"] = gensJson;
+    json["gens"] = gensJson;
 
     return json;
 }
@@ -167,20 +162,13 @@ void Geometry::fromJson(const QJsonObject& json) {
     shift.setX(getOrThrow(shiftJson["x"]).toDouble());
     shift.setY(getOrThrow(shiftJson["y"]).toDouble());
 
-    const auto& jsonGens = getOrThrow(json["geomGens"]).toArray();
+    const auto& jsonGens = getOrThrow(json["gens"]).toArray();
 
-    QList<Generator*> gens(jsonGens.size(), nullptr);
+    gens.resize(jsonGens.size(), nullptr);
     const auto order = getGeneratorLoadOrder(jsonGens);
     for (int i : order) {
         gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
         gens[i]->geom = this;
-    }
-
-    clear();
-    geomGens.reserve(gens.size());
-    // TODO: differ between geometry and real gens
-    for (auto* gen : gens) {
-        geomGens << static_cast<GeometryGenerator*>(gen);
     }
 
     recalcAll();
@@ -195,19 +183,23 @@ void Geometry::load(const QString& fileName) {
         throw IOError("Couldn't open file");
 
     fromJson(QJsonDocument::fromJson(file.readAll()).object());
+
+    emit resetCompleted();
 }
 
 void Geometry::clear() {
     shift = QPointF(0, 0);
-    while (!geomGens.isEmpty()) {
-        removeGenerator(geomGens.first());
+    while (!gens.isEmpty()) {
+        removeGenerator(gens.first());
     }
+
+    emit resetCompleted();
 }
 
 void Geometry::populateScene(QGraphicsScene* scene) {
-    for (auto* gen : geomGens) {
+    for (auto* gen : getGeomeryGenerators()) {
         scene->addItem(
-            static_cast<GeometryGenerator*>(gen)->getGeometryItem()
+            gen->getGeometryItem()
         );
     }
 }
@@ -219,9 +211,11 @@ void Geometry::setChanged(bool v) {
 void Geometry::removeGenerator(Generator* gen) {
     setChanged();
 
-    int i = geomGens.indexOf(gen);
+    emit generatorRemoved(gen);
+
+    int i = gens.indexOf(gen);
     if (i == -1) return;
-    geomGens.remove(i);
+    gens.remove(i);
 
     for (auto* dep : gen->dependant) {
         removeGenerator(dep);
@@ -240,4 +234,112 @@ void Geometry::removeGenerator(Generator* gen) {
     }
 
     delete gen;
+}
+
+QList<RealGenerator*> Geometry::getRealGenerators() const {
+    QList<RealGenerator*> ans;
+
+    for (auto* gen : gens) {
+        if (gen->isReal()) {
+            ans << static_cast<RealGenerator*>(gen);
+        }
+    }
+
+    return ans;
+}
+
+QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
+    QList<GeometryGenerator*> ans;
+
+    for (auto* gen : gens) {
+        if (gen->isGeometry()) {
+            ans << static_cast<GeometryGenerator*>(gen);
+        }
+    }
+
+    return ans;
+}
+
+EditMode Geometry::getEditMode() const {
+    return editMode;
+}
+
+void Geometry::setEditMode(EditMode mode) {
+    editMode = mode;
+}
+
+Function* Geometry::getActiveFunction() const {
+    assert(editMode == EditMode::FUNCTION);
+    return activeFunction;
+}
+
+void Geometry::setActiveFunction(Function* func, QGraphicsScene* scene) {
+    assert(editMode == EditMode::FUNCTION);
+    activeFunction = func;
+    clearFuncArgs(scene);
+}
+
+Type Geometry::getNextFuncArgType() const {
+    return getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType();
+}
+
+void Geometry::selectFuncArg(Generator* gen, QGraphicsScene* scene) {
+    selectedFuncArgs << gen;
+    emit selectedCountChanged(selectedFuncArgs.size());
+
+    checkSelectedFuncArgs(scene);
+}
+
+void Geometry::clearFuncArgs(QGraphicsScene* scene) {
+    selectedFuncArgs.clear();
+    emit selectedCountChanged(selectedFuncArgs.size());
+
+    checkSelectedFuncArgs(scene);
+}
+
+void Geometry::checkSelectedFuncArgs(QGraphicsScene* scene) {
+    if (selectedFuncArgs.size() == getActiveFunction()->countArgs()) {
+        createGeneratorFromSelectedFuncArgs(scene);
+    }
+
+    if (getNextFuncArgType() == Type::Real) {
+        processRealFuncArg(scene);
+    }
+}
+
+void Geometry::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
+    auto* func = getActiveFunction();
+    for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
+        auto* gen = makeGeometryGenerator(
+            func,
+            selectedFuncArgs,
+            funcResNum
+        );
+        auto* item = gen->getGeometryItem();
+        scene->addItem(item);
+    }
+
+    clearFuncArgs(scene);
+}
+
+void Geometry::processRealFuncArg(QGraphicsScene* scene) {
+    if (getRealGenerators().empty()) {
+        QMessageBox::critical(
+            nullptr,
+            tr("Error: No Variables"),
+            tr("This function argument is a variable. "
+                "Please create a variable to use it.")
+        );
+        clearFuncArgs(scene);
+        return;
+    }
+
+
+    auto* var = VariableDialog::getVariable(this);
+    if (!var) {
+        clearFuncArgs(scene);
+        return;
+    }
+
+    selectFuncArg(var, scene);
 }

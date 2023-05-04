@@ -21,6 +21,9 @@ class Generator {
         bool isFree() const;
         bool isDependant() const;
 
+        virtual bool isReal() const = 0;
+        bool isGeometry() const;
+
         void recalc();
 
         QJsonObject toJson(const QHash<Generator*, int>& ids) const;

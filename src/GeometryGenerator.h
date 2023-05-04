@@ -10,6 +10,8 @@ class Geometry;
 
 class GeometryGenerator : public Generator {
     public:
+        bool isReal() const override;
+
         GeometryItem* getGeometryItem() const;
 
         void move(const QPointF& delta);

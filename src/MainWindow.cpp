@@ -9,6 +9,10 @@
 #include "ToolInfoWidget.h"
 #include "Section.h"
 #include "ToolWidget.h"
+#include "VariableModel.h"
+#include "RealGenerator.h"
+#include "Real.h"
+#include "VariableWidget.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -19,10 +23,9 @@
 #include <QCloseEvent>
 #include <QDockWidget>
 #include <QTreeView>
+#include <QTableView>
 
 MainWindow::MainWindow()
-  : QMainWindow(),
-    geom(std::make_unique<Geometry>())
 {
     updateTitle();
 
@@ -33,10 +36,15 @@ MainWindow::MainWindow()
     createToolsMenu();
     createDocks();
 
-    scene = new Scene(geom.get(), this);
+    geom = new Geometry(this);
+
+    scene = new Scene(geom, this);
     view->setScene(scene);
 
     toolInfoWidget->setMode(EditMode::MOVE);
+
+    varModel = new VariableModel(geom, this);
+    varWidget->setModel(varModel);
 
     connect(
         scene,
@@ -46,8 +54,8 @@ MainWindow::MainWindow()
     );
 
     connect(
-        scene,
-        &Scene::selectedCountChanged,
+        geom,
+        &Geometry::selectedCountChanged,
         toolInfoWidget,
         &ToolInfoWidget::updateSelectedCount
     );
@@ -157,17 +165,20 @@ void MainWindow::createToolsMenu() {
 
 void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(this);
-    createDock(toolInfoWidget, tr("Tool Info"));
+    createDock(toolInfoWidget, tr("Tool Info"), Qt::LeftDockWidgetArea);
 
     toolWidget = new ToolWidget(modeToAction, funcToAction, this);
-    createDock(toolWidget, tr("Tools"));
+    createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
+
+    varWidget = new VariableWidget(this);
+    createDock(varWidget, tr("Variables"), Qt::RightDockWidgetArea);
 }
 
-void MainWindow::createDock(QWidget* widget, const QString& name) {
+void MainWindow::createDock(QWidget* widget, const QString& name, Qt::DockWidgetArea area) {
     auto* dock = new QDockWidget(name, this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock->setWidget(widget);
-    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    addDockWidget(area, dock);
 
     static QMenu* viewMenu = menuBar()->addMenu(tr("View"));
     viewMenu->addAction(dock->toggleViewAction());
@@ -177,17 +188,17 @@ void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* func = action->data().value<Function*>();
 
-    scene->setMode(EditMode::FUNCTION);
-    scene->setFunction(func);
-    toolInfoWidget->setMode(EditMode::FUNCTION);
-    toolInfoWidget->setFunction(func);
+    geom->setEditMode(EditMode::FUNCTION);
+    geom->setActiveFunction(func, scene);
+    toolInfoWidget->setMode(EditMode::FUNCTION); // XXX: use Geometry mode ?
+    toolInfoWidget->setFunction(func); // XXX: use Geometry function ?
 }
 
 void MainWindow::onModeActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto mode = action->data().value<EditMode>();
 
-    scene->setMode(mode);
+    geom->setEditMode(mode);
     toolInfoWidget->setMode(mode);
 }
 

@@ -1,29 +1,51 @@
 #pragma once
 
 #include "GeometryGenerator.h"
+#include "EditMode.h"
 
 #include <QRectF>
 #include <QList>
 #include <QPointF>
+#include <memory>
+#include <QObject>
 
 class QJsonObject;
 class QString;
 class QGraphicsScene;
+class RealGenerator;
+enum class Type : unsigned int;
 
-class Geometry {
+class Geometry : public QObject {
+    Q_OBJECT
+
     public:
-        Geometry();
+        Geometry(QObject* parent = nullptr);
         ~Geometry();
 
-        template<typename... Args>
-        GeometryGenerator* makeGeometryGenerator(Args&&... args) {
+        template<typename GenT, typename... Args>
+        std::enable_if_t<std::is_base_of_v<Generator, GenT>, GenT*>
+        makeGenerator(Args&&... args) {
             setChanged();
 
-            auto* gen = new GeometryGenerator(std::forward<Args>(args)...);
-            gen->recalc();
+            auto* gen = new GenT(std::forward<Args>(args)...);
+
+            gens << gen;
             gen->geom = this;
-            geomGens << gen;
+            gen->recalc();
+
+            emit generatorMade(gen);
+
             return gen;
+        }
+
+        template<typename... Args>
+        auto makeGeometryGenerator(Args&&... args) {
+            return makeGenerator<GeometryGenerator>(std::forward<Args>(args)...);
+        }
+
+        template<typename... Args>
+        auto makeRealGenerator(Args&&... args) {
+            return makeGenerator<RealGenerator>(std::forward<Args>(args)...);
         }
 
         const QRectF& getSceneRect() const { return sceneRect; }
@@ -49,18 +71,46 @@ class Geometry {
 
         void removeGenerator(Generator*);
 
-    private:
-        QList<Generator*> getGens();
+        EditMode getEditMode() const;
+        void setEditMode(EditMode);
 
+        Function* getActiveFunction() const;
+        void setActiveFunction(Function*, QGraphicsScene*);
+
+        Type getNextFuncArgType() const;
+        void selectFuncArg(Generator*, QGraphicsScene*);
+        void clearFuncArgs(QGraphicsScene*);
+
+        QList<RealGenerator*> getRealGenerators() const;
+        QList<GeometryGenerator*> getGeomeryGenerators() const;
+
+    private:
         QList<Generator*> getGeneratorRecalcOrder();
 
         void recalcAll();
 
+        void checkSelectedFuncArgs(QGraphicsScene*);
+        void createGeneratorFromSelectedFuncArgs(QGraphicsScene*);
+        void processRealFuncArg(QGraphicsScene*);
+
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 
-        QList<GeometryGenerator*> geomGens;
+        QList<Generator*> gens;
 
         QPointF shift = QPointF(0, 0);
 
         bool changed = false;
+
+        EditMode editMode = EditMode::MOVE;
+
+        Function* activeFunction = nullptr;
+        QList<Generator*> selectedFuncArgs;
+
+    signals:
+        void generatorChanged(Generator*);
+        void generatorMade(Generator*);
+        void generatorRemoved(Generator*);
+        void resetCompleted();
+
+        void selectedCountChanged(int n);
 };

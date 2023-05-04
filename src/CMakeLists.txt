@@ -63,6 +63,10 @@ add_executable(geometry
     Section.cpp
 
     ToolWidget.cpp
+
+    VariableModel.cpp
+    VariableWidget.cpp
+    VariableDialog.cpp
 )
 
 target_link_libraries(geometry

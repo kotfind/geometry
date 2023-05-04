@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Geometry.h"
-
 #include <QMainWindow>
 #include <QString>
 #include <QHash>
@@ -17,6 +15,9 @@ class Section;
 class Function;
 enum class EditMode;
 class ToolWidget;
+class VariableModel;
+class Geometry;
+class VariableWidget;
 
 class MainWindow : public QMainWindow {
     public:
@@ -33,13 +34,13 @@ class MainWindow : public QMainWindow {
 
         void createDocks();
 
-        void createDock(QWidget* widget, const QString& name);
+        void createDock(QWidget* widget, const QString& name, Qt::DockWidgetArea area);
 
         void updateTitle();
 
         void askForSave();
 
-        std::unique_ptr<Geometry> geom;
+        Geometry* geom;
 
         QString openedFileName = "";
 
@@ -51,6 +52,9 @@ class MainWindow : public QMainWindow {
 
         QHash<EditMode, QAction*> modeToAction;
         QHash<Function*, QAction*> funcToAction;
+
+        VariableModel* varModel;
+        VariableWidget* varWidget;
 
     protected:
         void closeEvent(QCloseEvent*) override;
