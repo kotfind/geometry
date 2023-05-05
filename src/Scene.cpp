@@ -37,7 +37,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
-            auto point = std::make_unique<Point>(pos);
+            auto point = std::unique_ptr<Point>(
+                std::make_unique<Point>(pos)->untransformed(
+                    geom->getTransformation()
+                )
+            );
             auto* gen = geom->makeGeometryGenerator(std::move(point));
             auto* item = gen->getGeometryItem();
             addItem(item);
