@@ -78,24 +78,40 @@ void Geometry::recalcAll() {
     }
 }
 
+void Geometry::recalcAllItems() {
+    for (auto* gen : getGeomeryGenerators()) {
+        gen->getGeometryItem()->update();
+    }
+}
+
+void Geometry::scroll(const QPointF& delta) {
+    setChanged();
+
+    transformation.scroll(delta);
+
+    recalcAllItems();
+}
+
 void Geometry::move(const QPointF& delta) {
     setChanged();
 
-    shift += delta;
-    recalcAll();
+    transformation.move(delta);
+
+    recalcAllItems();
 }
 
-QPointF Geometry::transform(const QPointF& pt) {
-    return pt + shift;
+void Geometry::zoom(double v, const QPointF& zoomCenter) {
+    setChanged();
+
+    transformation.zoom(v, zoomCenter);
+
+    recalcAllItems();
 }
 
 QJsonObject Geometry::toJson() const {
     QJsonObject json;
 
-    QJsonObject shiftJson;
-    shiftJson["x"] = shift.x();
-    shiftJson["y"] = shift.y();
-    json["shift"] = shiftJson;
+    json["transformation"] = transformation.toJson();
 
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
@@ -158,14 +174,14 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
-    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
-    shift.setX(getOrThrow(shiftJson["x"]).toDouble());
-    shift.setY(getOrThrow(shiftJson["y"]).toDouble());
+    transformation = Transformation::fromJson(
+        getOrThrow(json["transformation"]).toObject()
+    );
 
     const auto& jsonGens = getOrThrow(json["gens"]).toArray();
+    const auto order = getGeneratorLoadOrder(jsonGens);
 
     gens.resize(jsonGens.size(), nullptr);
-    const auto order = getGeneratorLoadOrder(jsonGens);
     for (int i : order) {
         gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
         gens[i]->geom = this;
@@ -188,7 +204,8 @@ void Geometry::load(const QString& fileName) {
 }
 
 void Geometry::clear() {
-    shift = QPointF(0, 0);
+    transformation.clear();
+
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());
     }
@@ -258,6 +275,10 @@ QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
     }
 
     return ans;
+}
+
+const Transformation& Geometry::getTransformation() const {
+    return transformation;
 }
 
 EditMode Geometry::getEditMode() const {
@@ -343,3 +364,4 @@ void Geometry::processRealFuncArg(QGraphicsScene* scene) {
 
     selectFuncArg(var, scene);
 }
+

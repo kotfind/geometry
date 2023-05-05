@@ -7,6 +7,7 @@
 class QRectF;
 class QPainter;
 class QPainterPath;
+class Transformation;
 
 class GeometryObject : public Object {
     public:
@@ -14,8 +15,7 @@ class GeometryObject : public Object {
         virtual QRectF boundingRect() const = 0;
         virtual QPainterPath shape() const = 0;
 
-        // Throws std::logic_error by default
-        virtual void move(const QPointF& delta);
+        virtual GeometryObject* transformed(const Transformation&) const = 0;
         
     protected:
         GeometryObject() : Object() {}

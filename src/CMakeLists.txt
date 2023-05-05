@@ -30,7 +30,6 @@ add_executable(geometry
     FreeCalculator.cpp
     DependantCalculator.cpp
 
-    GeometryObject.cpp
     Point.cpp
     Line.cpp
     Circle.cpp
@@ -67,6 +66,8 @@ add_executable(geometry
     VariableModel.cpp
     VariableWidget.cpp
     VariableDialog.cpp
+
+    Transformation.cpp
 )
 
 target_link_libraries(geometry

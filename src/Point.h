@@ -20,12 +20,15 @@ class Point : public GeometryObject {
         QPainterPath shape() const override;
 
         void setPos(const QPointF& pos);
-        void move(const QPointF& delta) override;
+        void move(const QPointF& delta);
 
         QPointF getPos() const;
 
         QJsonObject toJson() const;
         static Point* fromJson(const QJsonObject& json);
+
+        GeometryObject* transformed(const Transformation&) const override;
+        Point* untransformed(const Transformation&) const;
 
         double x, y;
 

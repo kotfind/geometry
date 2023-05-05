@@ -2,6 +2,7 @@
 
 #include "GeometryGenerator.h"
 #include "EditMode.h"
+#include "Transformation.h"
 
 #include <QRectF>
 #include <QList>
@@ -50,9 +51,9 @@ class Geometry : public QObject {
 
         const QRectF& getSceneRect() const { return sceneRect; }
 
+        void scroll(const QPointF& delta);
         void move(const QPointF& delta);
-
-        QPointF transform(const QPointF& pt);
+        void zoom(double v, const QPointF& zoomCenter);
 
         QJsonObject toJson() const;
 
@@ -84,10 +85,13 @@ class Geometry : public QObject {
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
+        const Transformation& getTransformation() const;
+
     private:
         QList<Generator*> getGeneratorRecalcOrder();
 
         void recalcAll();
+        void recalcAllItems();
 
         void checkSelectedFuncArgs(QGraphicsScene*);
         void createGeneratorFromSelectedFuncArgs(QGraphicsScene*);
@@ -97,14 +101,14 @@ class Geometry : public QObject {
 
         QList<Generator*> gens;
 
-        QPointF shift = QPointF(0, 0);
-
         bool changed = false;
 
         EditMode editMode = EditMode::MOVE;
 
         Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
+
+        Transformation transformation;
 
     signals:
         void generatorChanged(Generator*);

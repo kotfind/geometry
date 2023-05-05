@@ -37,7 +37,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::CREATE_POINT:
         {
-            auto point = std::make_unique<Point>(pos);
+            auto point = std::unique_ptr<Point>(
+                std::make_unique<Point>(pos)->untransformed(
+                    geom->getTransformation()
+                )
+            );
             auto* gen = geom->makeGeometryGenerator(std::move(point));
             auto* item = gen->getGeometryItem();
             addItem(item);
@@ -170,3 +174,18 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
     emit cursorChanged({});
 }
 
+void Scene::wheelEvent(QGraphicsSceneWheelEvent* e) {
+    double ang = e->delta() / 8.;
+
+    if (e->modifiers() & Qt::ControlModifier) {
+        // Zoom
+        geom->zoom(ang, e->scenePos());
+    } else {
+        // Scroll
+        geom->scroll(
+            e->orientation() == Qt::Horizontal
+                ? QPointF(ang, 0)
+                : QPointF(0, ang)
+        );
+    }
+}

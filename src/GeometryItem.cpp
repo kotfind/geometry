@@ -2,45 +2,27 @@
 
 #include "GeometryObject.h"
 #include "GeometryGenerator.h"
+#include "Geometry.h"
 
 #include <QGraphicsScene>
 
 GeometryItem::GeometryItem(GeometryGenerator* gen)
 : QGraphicsItem(),
   gen(gen)
-{
-}
-
-void GeometryItem::beginResetObject() {
-    updateBoundingRect();
-}
-
-void GeometryItem::endResetObject() {
-    updateBoundingRect();
-}
-
-void GeometryItem::updateBoundingRect() {
-    if (object()) {
-        prepareGeometryChange();
-    }
-}
+{}
 
 void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
-    if (object()) {
-        object()->paint(qp);
+    if (obj) {
+        obj->paint(qp);
     }
 }
 
 QRectF GeometryItem::boundingRect() const {
-    return object() ? object()->boundingRect() : QRectF();
+    return obj ? obj->boundingRect() : QRectF();
 }
 
 QPainterPath GeometryItem::shape() const {
-    return object() ? object()->shape() : QPainterPath();
-}
-
-const GeometryObject* GeometryItem::object() const {
-    return dynamic_cast<const GeometryObject*>(gen->getObject());
+    return obj ? obj->shape() : QPainterPath();
 }
 
 void GeometryItem::remove() {
@@ -48,4 +30,14 @@ void GeometryItem::remove() {
         scene()->removeItem(this);
     }
     delete this;
+}
+
+void GeometryItem::update() {
+    prepareGeometryChange();
+
+    obj.reset(
+        gen->getGeometryObject()->transformed(
+            gen->getGeometry()->getTransformation()
+        )
+    );
 }

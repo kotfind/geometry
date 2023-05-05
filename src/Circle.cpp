@@ -1,10 +1,13 @@
 #include "Circle.h"
 
+#include "Transformation.h"
+
 #include <QRectF>
 #include <QPainterPath>
 #include <QPainter>
 #include <QPen>
 #include <QDebug>
+#include <memory>
 
 Circle::Circle() : Circle(Point(), 1) {}
 Circle::Circle(const Point& o, double r) : GeometryObject(), o(o), r(r) {}
@@ -47,4 +50,11 @@ QPainterPath Circle::shape() const {
         (r - paintWidth) * 2
     ));
     return path;
+}
+
+GeometryObject* Circle::transformed(const Transformation& t) const {
+    return new Circle(
+        *std::unique_ptr<Point>(static_cast<Point*>(o.transformed(t))),
+        r * t.getScale()
+    );
 }

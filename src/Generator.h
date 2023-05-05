@@ -26,6 +26,8 @@ class Generator {
 
         void recalc();
 
+        Geometry* getGeometry() const;
+
         QJsonObject toJson(const QHash<Generator*, int>& ids) const;
         static Generator* fromJson(const QJsonObject& json, const QList<Generator*>& gens);
 
@@ -38,8 +40,7 @@ class Generator {
         // Is called from Geometry::make_gen.
         Generator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
 
-        virtual void beginResetObject() {}
-        virtual void endResetObject() {}
+        virtual void onChanged();
 
         std::unique_ptr<Object> obj;
 

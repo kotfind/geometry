@@ -24,6 +24,8 @@ class Line : public GeometryObject {
 
         QPair<Point, Point> getTwoPoints() const;
 
+        GeometryObject* transformed(const Transformation&) const override;
+
         double a, b, c;
 
         static constexpr double paintWidth = 3e-3;
