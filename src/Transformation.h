@@ -18,4 +18,7 @@ class Transformation {
     private:
         QPointF center{0, 0};
         double scale = 1;
+
+        static constexpr double scrollSpeed = 0.01;
+        static constexpr double zoomSpeed = 0.01;
 };

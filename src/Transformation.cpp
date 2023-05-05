@@ -14,7 +14,7 @@ void Transformation::setCenter(const QPointF& c) {
 }
 
 void Transformation::scroll(const QPointF& delta) {
-    center += delta * 0.01 / scale;
+    center += delta * scrollSpeed / scale;
 }
 
 void Transformation::move(const QPointF& delta) {
@@ -30,5 +30,5 @@ void Transformation::setScale(double s) {
 }
 
 void Transformation::zoom(double v) {
-    scale *= std::pow(2., v * 0.01);
+    scale *= std::pow(2., v * zoomSpeed);
 }
