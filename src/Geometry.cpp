@@ -204,7 +204,7 @@ void Geometry::load(const QString& fileName) {
 }
 
 void Geometry::clear() {
-    // TODO: reset transformation
+    transformation.clear();
 
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());

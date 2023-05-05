@@ -38,6 +38,11 @@ void Transformation::zoom(double v, const QPointF& zoomCenter) {
     scale = s2;
 }
 
+void Transformation::clear() {
+    scale = 1;
+    center = {0, 0};
+}
+
 QJsonObject Transformation::toJson() const {
     QJsonObject json;
 

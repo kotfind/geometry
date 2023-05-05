@@ -16,6 +16,8 @@ class Transformation {
         void setScale(double);
         void zoom(double, const QPointF& zoomCenter);
 
+        void clear();
+
         QJsonObject toJson() const;
         static Transformation fromJson(const QJsonObject& json);
         
