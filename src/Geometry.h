@@ -55,8 +55,6 @@ class Geometry : public QObject {
         void move(const QPointF& delta);
         void zoom(double v, const QPointF& zoomCenter);
 
-        QPointF transform(const QPointF& pt);
-
         QJsonObject toJson() const;
 
         void save(const QString& fileName) const;
@@ -102,8 +100,6 @@ class Geometry : public QObject {
         QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
 
         QList<Generator*> gens;
-
-        QPointF shift = QPointF(0, 0);
 
         bool changed = false;
 

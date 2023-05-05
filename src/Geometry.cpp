@@ -108,17 +108,8 @@ void Geometry::zoom(double v, const QPointF& zoomCenter) {
     recalcAllItems();
 }
 
-QPointF Geometry::transform(const QPointF& pt) {
-    return pt + shift;
-}
-
 QJsonObject Geometry::toJson() const {
     QJsonObject json;
-
-    QJsonObject shiftJson;
-    shiftJson["x"] = shift.x();
-    shiftJson["y"] = shift.y();
-    json["shift"] = shiftJson;
 
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
@@ -181,10 +172,6 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
-    const auto& shiftJson = getOrThrow(json["shift"]).toObject();
-    shift.setX(getOrThrow(shiftJson["x"]).toDouble());
-    shift.setY(getOrThrow(shiftJson["y"]).toDouble());
-
     const auto& jsonGens = getOrThrow(json["gens"]).toArray();
 
     gens.resize(jsonGens.size(), nullptr);
@@ -211,7 +198,8 @@ void Geometry::load(const QString& fileName) {
 }
 
 void Geometry::clear() {
-    shift = QPointF(0, 0);
+    // TODO: reset transformation
+
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());
     }
