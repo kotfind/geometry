@@ -1,5 +1,7 @@
 #include "Transformation.h"
 
+#include "getOrThrow.h"
+
 #include <math.h>
 
 Transformation::Transformation()
@@ -34,4 +36,31 @@ void Transformation::zoom(double v, const QPointF& zoomCenter) {
     double s2 = s1 * std::pow(2., v * zoomSpeed);
     center += zoomCenter * (1 / s2 - 1 / s1);
     scale = s2;
+}
+
+QJsonObject Transformation::toJson() const {
+    QJsonObject json;
+
+    QJsonObject centerJson;
+    centerJson["x"] = center.x();
+    centerJson["y"] = center.y();
+    json["center"] = centerJson;
+
+    json["scale"] = scale;
+
+    return json;
+}
+
+Transformation Transformation::fromJson(const QJsonObject& json) {
+    Transformation t;
+
+    auto centerJson = getOrThrow(json["center"]).toObject();
+    t.center = {
+        getOrThrow(centerJson["x"]).toDouble(),
+        getOrThrow(centerJson["y"]).toDouble()
+    };
+
+    t.scale = getOrThrow(json["scale"]).toDouble();
+
+    return t;
 }

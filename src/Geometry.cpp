@@ -111,6 +111,8 @@ void Geometry::zoom(double v, const QPointF& zoomCenter) {
 QJsonObject Geometry::toJson() const {
     QJsonObject json;
 
+    json["transformation"] = transformation.toJson();
+
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
         ids[gens[i]] = i;
@@ -172,10 +174,14 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
+    transformation = Transformation::fromJson(
+        getOrThrow(json["transformation"]).toObject()
+    );
+
     const auto& jsonGens = getOrThrow(json["gens"]).toArray();
+    const auto order = getGeneratorLoadOrder(jsonGens);
 
     gens.resize(jsonGens.size(), nullptr);
-    const auto order = getGeneratorLoadOrder(jsonGens);
     for (int i : order) {
         gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
         gens[i]->geom = this;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QPointF>
+#include <QJsonObject>
 
 class Transformation {
     public:
@@ -14,6 +15,9 @@ class Transformation {
         double getScale() const;
         void setScale(double);
         void zoom(double, const QPointF& zoomCenter);
+
+        QJsonObject toJson() const;
+        static Transformation fromJson(const QJsonObject& json);
         
     private:
         QPointF center{0, 0};
