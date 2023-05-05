@@ -14,7 +14,7 @@ void Transformation::setCenter(const QPointF& c) {
 }
 
 void Transformation::move(const QPointF& delta) {
-    center += delta;
+    center += delta / scale;
 }
 
 double Transformation::getScale() const {
