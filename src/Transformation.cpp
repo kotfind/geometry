@@ -29,6 +29,9 @@ void Transformation::setScale(double s) {
     scale = s;
 }
 
-void Transformation::zoom(double v) {
-    scale *= std::pow(2., v * zoomSpeed);
+void Transformation::zoom(double v, const QPointF& zoomCenter) {
+    double s1 = scale;
+    double s2 = s1 * std::pow(2., v * zoomSpeed);
+    center += zoomCenter * (1 / s2 - 1 / s1);
+    scale = s2;
 }

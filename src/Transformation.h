@@ -13,7 +13,7 @@ class Transformation {
 
         double getScale() const;
         void setScale(double);
-        void zoom(double);
+        void zoom(double, const QPointF& zoomCenter);
         
     private:
         QPointF center{0, 0};

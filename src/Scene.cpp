@@ -179,7 +179,7 @@ void Scene::wheelEvent(QGraphicsSceneWheelEvent* e) {
 
     if (e->modifiers() & Qt::ControlModifier) {
         // Zoom
-        geom->zoom(ang);
+        geom->zoom(ang, e->scenePos());
     } else {
         // Scroll
         geom->scroll(

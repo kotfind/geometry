@@ -53,7 +53,7 @@ class Geometry : public QObject {
 
         void scroll(const QPointF& delta);
         void move(const QPointF& delta);
-        void zoom(double v);
+        void zoom(double v, const QPointF& zoomCenter);
 
         QPointF transform(const QPointF& pt);
 
