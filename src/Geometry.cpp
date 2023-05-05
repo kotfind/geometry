@@ -81,8 +81,9 @@ void Geometry::recalcAll() {
 void Geometry::move(const QPointF& delta) {
     setChanged();
 
-    shift += delta;
-    recalcAll();
+    transformation.move(delta);
+
+    recalcAll(); // FIXME: recalc transformed objects only
 }
 
 QPointF Geometry::transform(const QPointF& pt) {

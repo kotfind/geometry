@@ -58,13 +58,13 @@ void Generator::recalc() {
     for (auto* dep : dependant) {
         dep->recalc();
     }
-
-    onChanged();
 }
 
 void Generator::recalcSelf() {
     obj.reset(calc->calc(obj.get()));
     if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
+
+    onChanged();
 }
 
 Geometry* Generator::getGeometry() const {

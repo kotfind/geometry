@@ -82,13 +82,13 @@ Point* Point::fromJson(const QJsonObject& json) {
 
 GeometryObject* Point::transformed(const Transformation& t) const {
     return new Point(
-        (getPos() - t.getCenter()) * t.getScale()
+        (getPos() + t.getCenter()) * t.getScale()
     );
 }
 
 Point* Point::untransformed(const Transformation& t) const {
     return new Point(
-        getPos() / t.getScale() + t.getCenter()
+        getPos() / t.getScale() - t.getCenter()
     );
 }
 
