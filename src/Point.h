@@ -27,6 +27,9 @@ class Point : public GeometryObject {
         QJsonObject toJson() const;
         static Point* fromJson(const QJsonObject& json);
 
+        GeometryObject* transformed(const Transformation&) const override;
+        Point* untransformed(const Transformation&) const;
+
         double x, y;
 
         static constexpr double paintRadius = 5e-3;

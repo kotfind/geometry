@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "getOrThrow.h"
+#include "Transformation.h"
 
 #include <QRectF>
 #include <QPainter>
@@ -77,6 +78,18 @@ Point* Point::fromJson(const QJsonObject& json) {
     pt->x = getOrThrow(json["x"]).toDouble();
     pt->y = getOrThrow(json["y"]).toDouble();
     return pt;
+}
+
+GeometryObject* Point::transformed(const Transformation& t) const {
+    return new Point(
+        (getPos() - t.getCenter()) * t.getScale()
+    );
+}
+
+Point* Point::untransformed(const Transformation& t) const {
+    return new Point(
+        getPos() / t.getScale() + t.getCenter()
+    );
 }
 
 Point& operator+=(Point& lhs, const Point& rhs) {
