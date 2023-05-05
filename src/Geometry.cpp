@@ -86,6 +86,14 @@ void Geometry::move(const QPointF& delta) {
     recalcAll(); // FIXME: recalc transformed objects only
 }
 
+void Geometry::zoom(double v) {
+    setChanged();
+
+    transformation.zoom(v);
+
+    recalcAll(); // FIXME: recalc transformed objects only
+}
+
 QPointF Geometry::transform(const QPointF& pt) {
     return pt + shift;
 }

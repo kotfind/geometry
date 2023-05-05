@@ -4,6 +4,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneWheelEvent>
 #include <QList>
 
 class Function;
@@ -34,4 +35,6 @@ class Scene : public QGraphicsScene {
         void mousePressEvent(QGraphicsSceneMouseEvent*) override;
         void mouseMoveEvent(QGraphicsSceneMouseEvent*) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent*) override;
+
+        void wheelEvent(QGraphicsSceneWheelEvent*) override;
 };

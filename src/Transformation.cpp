@@ -1,5 +1,7 @@
 #include "Transformation.h"
 
+#include <math.h>
+
 Transformation::Transformation()
 {}
 
@@ -23,3 +25,6 @@ void Transformation::setScale(double s) {
     scale = s;
 }
 
+void Transformation::zoom(double v) {
+    scale *= std::pow(2., v * 0.01);
+}

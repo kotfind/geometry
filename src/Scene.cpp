@@ -170,3 +170,10 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
     emit cursorChanged({});
 }
 
+void Scene::wheelEvent(QGraphicsSceneWheelEvent* e) {
+    if (!(e->modifiers() & Qt::ControlModifier)) return;
+
+    double ang = e->delta() / 8.;
+
+    geom->zoom(ang);
+}
