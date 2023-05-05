@@ -78,12 +78,18 @@ void Geometry::recalcAll() {
     }
 }
 
+void Geometry::recalcAllItems() {
+    for (auto* gen : getGeomeryGenerators()) {
+        gen->getGeometryItem()->update();
+    }
+}
+
 void Geometry::scroll(const QPointF& delta) {
     setChanged();
 
     transformation.scroll(delta);
 
-    recalcAll(); // FIXME: recalc transformed objects only
+    recalcAllItems();
 }
 
 void Geometry::move(const QPointF& delta) {
@@ -91,7 +97,7 @@ void Geometry::move(const QPointF& delta) {
 
     transformation.move(delta);
 
-    recalcAll(); // FIXME: recalc transformed objects only
+    recalcAllItems();
 }
 
 void Geometry::zoom(double v, const QPointF& zoomCenter) {
@@ -99,7 +105,7 @@ void Geometry::zoom(double v, const QPointF& zoomCenter) {
 
     transformation.zoom(v, zoomCenter);
 
-    recalcAll(); // FIXME: recalc transformed objects only
+    recalcAllItems();
 }
 
 QPointF Geometry::transform(const QPointF& pt) {

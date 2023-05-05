@@ -93,6 +93,7 @@ class Geometry : public QObject {
         QList<Generator*> getGeneratorRecalcOrder();
 
         void recalcAll();
+        void recalcAllItems();
 
         void checkSelectedFuncArgs(QGraphicsScene*);
         void createGeneratorFromSelectedFuncArgs(QGraphicsScene*);
