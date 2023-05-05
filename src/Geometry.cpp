@@ -260,6 +260,10 @@ QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
     return ans;
 }
 
+const Transformation& Geometry::getTransformation() const {
+    return transformation;
+}
+
 EditMode Geometry::getEditMode() const {
     return editMode;
 }
@@ -343,3 +347,4 @@ void Geometry::processRealFuncArg(QGraphicsScene* scene) {
 
     selectFuncArg(var, scene);
 }
+

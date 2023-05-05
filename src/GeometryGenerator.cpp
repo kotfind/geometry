@@ -14,26 +14,24 @@ GeometryItem* GeometryGenerator::getGeometryItem() const {
     return item.get();
 }
 
+const GeometryObject* GeometryGenerator::getGeometryObject() const {
+    return static_cast<const GeometryObject*>(getObject());
+}
+
 bool GeometryGenerator::checkObjectType() const {
     return isFree() && obj->is(Type::Point) ||
         !obj->is(Type::Real);
 }
 
-void GeometryGenerator::beginResetObject() {
-    item->beginResetObject();
-}
-
-void GeometryGenerator::endResetObject() {
-    item->endResetObject();
-}
-
 void GeometryGenerator::move(const QPointF& delta) {
-    beginResetObject();
-
     static_cast<Point*>(obj.get())->move(delta);
 
-    endResetObject();
     geom->setChanged();
 
     recalc();
+}
+
+void GeometryGenerator::onChanged() {
+    Generator::onChanged();
+    item->update();
 }

@@ -2,6 +2,7 @@
 
 #include "GeometryGenerator.h"
 #include "EditMode.h"
+#include "Transformation.h"
 
 #include <QRectF>
 #include <QList>
@@ -84,6 +85,8 @@ class Geometry : public QObject {
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
+        const Transformation& getTransformation() const;
+
     private:
         QList<Generator*> getGeneratorRecalcOrder();
 
@@ -105,6 +108,8 @@ class Geometry : public QObject {
 
         Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
+
+        Transformation transformation;
 
     signals:
         void generatorChanged(Generator*);

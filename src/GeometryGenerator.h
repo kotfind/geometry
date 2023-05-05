@@ -14,6 +14,8 @@ class GeometryGenerator : public Generator {
 
         GeometryItem* getGeometryItem() const;
 
+        const GeometryObject* getGeometryObject() const;
+
         void move(const QPointF& delta);
 
     protected:
@@ -23,8 +25,7 @@ class GeometryGenerator : public Generator {
             item(std::make_unique<GeometryItem>(this))
         {}
 
-        void beginResetObject() override;
-        void endResetObject() override;
+        void onChanged() override;
 
     private:
         bool checkObjectType() const override;

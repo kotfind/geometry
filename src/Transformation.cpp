@@ -1,5 +1,8 @@
 #include "Transformation.h"
 
+Transformation::Transformation()
+{}
+
 QPointF Transformation::getCenter() const {
     return center;
 }

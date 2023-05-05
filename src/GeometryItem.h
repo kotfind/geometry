@@ -1,8 +1,10 @@
 #pragma once
 
-#include <QGraphicsItem>
+#include "GeometryObject.h"
 
-class GeometryObject;
+#include <QGraphicsItem>
+#include <memory>
+
 class QRectF;
 class QPainter;
 class QStyleOptionGraphicsItem;
@@ -15,19 +17,19 @@ class GeometryItem : public QGraphicsItem {
 
         GeometryGenerator* getGeometryGenerator() const { return gen; }
 
-        void beginResetObject();
-        void endResetObject();
-
         void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
         void remove();
 
+        void update();
+
     private:
         void updateBoundingRect();
 
-        const GeometryObject* object() const;
+        GeometryGenerator* gen;
 
-        GeometryGenerator* gen = nullptr;
+        // Transformed object
+        std::unique_ptr<GeometryObject> obj = nullptr;
 };

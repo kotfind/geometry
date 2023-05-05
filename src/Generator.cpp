@@ -53,22 +53,22 @@ bool Generator::isGeometry() const {
 }
 
 void Generator::recalc() {
-    geom->generatorChanged(this);
-
     recalcSelf();
 
     for (auto* dep : dependant) {
         dep->recalc();
     }
+
+    onChanged();
 }
 
 void Generator::recalcSelf() {
-    beginResetObject();
-
     obj.reset(calc->calc(obj.get()));
     if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
+}
 
-    endResetObject();
+Geometry* Generator::getGeometry() const {
+    return geom;
 }
 
 QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
@@ -145,4 +145,8 @@ Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>&
     }
 
     return gen;
+}
+
+void Generator::onChanged() {
+    geom->generatorChanged(this);
 }
