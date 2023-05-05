@@ -20,7 +20,7 @@ class Point : public GeometryObject {
         QPainterPath shape() const override;
 
         void setPos(const QPointF& pos);
-        void move(const QPointF& delta) override;
+        void move(const QPointF& delta);
 
         QPointF getPos() const;
 

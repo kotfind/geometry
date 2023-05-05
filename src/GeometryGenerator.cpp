@@ -4,6 +4,7 @@
 #include "GeometryObject.h"
 #include "Object.h"
 #include "Geometry.h"
+#include "Point.h"
 
 bool GeometryGenerator::isReal() const {
     return false;
@@ -14,7 +15,8 @@ GeometryItem* GeometryGenerator::getGeometryItem() const {
 }
 
 bool GeometryGenerator::checkObjectType() const {
-    return !obj->is(Type::Real);
+    return isFree() && obj->is(Type::Point) ||
+        !obj->is(Type::Real);
 }
 
 void GeometryGenerator::beginResetObject() {
@@ -28,7 +30,7 @@ void GeometryGenerator::endResetObject() {
 void GeometryGenerator::move(const QPointF& delta) {
     beginResetObject();
 
-    static_cast<GeometryObject*>(obj.get())->move(delta);
+    static_cast<Point*>(obj.get())->move(delta);
 
     endResetObject();
     geom->setChanged();

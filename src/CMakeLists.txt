@@ -30,7 +30,6 @@ add_executable(geometry
     FreeCalculator.cpp
     DependantCalculator.cpp
 
-    GeometryObject.cpp
     Point.cpp
     Line.cpp
     Circle.cpp
