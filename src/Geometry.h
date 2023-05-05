@@ -51,6 +51,7 @@ class Geometry : public QObject {
 
         const QRectF& getSceneRect() const { return sceneRect; }
 
+        void scroll(const QPointF& delta);
         void move(const QPointF& delta);
         void zoom(double v);
 

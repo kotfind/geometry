@@ -13,6 +13,10 @@ void Transformation::setCenter(const QPointF& c) {
     center = c;
 }
 
+void Transformation::scroll(const QPointF& delta) {
+    center += delta * 0.01 / scale;
+}
+
 void Transformation::move(const QPointF& delta) {
     center += delta / scale;
 }

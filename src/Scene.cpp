@@ -171,9 +171,17 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
 }
 
 void Scene::wheelEvent(QGraphicsSceneWheelEvent* e) {
-    if (!(e->modifiers() & Qt::ControlModifier)) return;
-
     double ang = e->delta() / 8.;
 
-    geom->zoom(ang);
+    if (e->modifiers() & Qt::ControlModifier) {
+        // Zoom
+        geom->zoom(ang);
+    } else {
+        // Scroll
+        geom->scroll(
+            e->orientation() == Qt::Horizontal
+                ? QPointF(ang, 0)
+                : QPointF(0, ang)
+        );
+    }
 }

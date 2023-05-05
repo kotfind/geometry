@@ -8,6 +8,7 @@ class Transformation {
 
         QPointF getCenter() const;
         void setCenter(const QPointF&);
+        void scroll(const QPointF& delta);
         void move(const QPointF& delta);
 
         double getScale() const;

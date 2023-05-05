@@ -78,6 +78,14 @@ void Geometry::recalcAll() {
     }
 }
 
+void Geometry::scroll(const QPointF& delta) {
+    setChanged();
+
+    transformation.scroll(delta);
+
+    recalcAll(); // FIXME: recalc transformed objects only
+}
+
 void Geometry::move(const QPointF& delta) {
     setChanged();
 
