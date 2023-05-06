@@ -13,7 +13,7 @@ class Section {
         ~Section();
 
         template <typename... Args>
-        const Function* makeFunction(Args&&... args) {
+        Function* makeFunction(Args&&... args) {
             auto* func = new Function(std::forward<Args>(args)...);
             func->parent = this;
             functions << func;
@@ -21,7 +21,7 @@ class Section {
         }
 
         template <typename... Args>
-        const EditMode* makeEditMode(Args&&... args) {
+        EditMode* makeEditMode(Args&&... args) {
             auto* mode = new EditMode(std::forward<Args>(args)...);
             modes << mode;
             return mode;

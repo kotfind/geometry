@@ -1,17 +1,21 @@
 #include "EditMode.h"
 
+EditMode EditMode::functionEditMode(EditMode::Type::FUNCTION, "", QIcon(), "");
+
 EditMode* EditMode::modes[static_cast<int>(EditMode::Type::count)];
 
 EditMode::EditMode(
+    Type type,
     const QString& name,
     const QIcon& icon,
-    const QString& description,
-    Type type
-) : name(name),
+    const QString& description
+) : type(type),
+    name(name),
     icon(icon),
-    description(description),
-    type(type)
-{}
+    description(description)
+{
+    modes[static_cast<int>(type)] = this;
+}
 
 const QString& EditMode::getName() const {
     return name;
