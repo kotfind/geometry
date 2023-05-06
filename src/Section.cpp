@@ -1,7 +1,5 @@
 #include "Section.h"
 
-#include <QDebug>
-
 Section* Section::master = nullptr;
 
 Section::Section(const QString& name) : name(name) {
@@ -11,7 +9,7 @@ void Section::addSection(Section* s) {
     sections << s;
 } 
 
-void Section::addMode(EditMode m) {
+void Section::addMode(EditMode* m) {
     modes << m;
 }
 

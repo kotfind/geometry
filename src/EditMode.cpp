@@ -1,66 +1,34 @@
 #include "EditMode.h"
 
-#include "global.h"
-#include "Section.h"
+EditMode* EditMode::modes[static_cast<int>(EditMode::Type::count)];
 
-#include <QString>
-#include <QIcon>
+EditMode::EditMode(
+    const QString& name,
+    const QIcon& icon,
+    const QString& description,
+    Type type
+) : name(name),
+    icon(icon),
+    description(description),
+    type(type)
+{}
 
-QString modeName(EditMode m) {
-    switch (m) {
-        case EditMode::MOVE:
-            return TR("Move");
-
-        case EditMode::CREATE_POINT:
-            return TR("Create");
-
-        case EditMode::REMOVE:
-            return TR("Remove");
-    }
+const QString& EditMode::getName() const {
+    return name;
 }
 
-QIcon modeIcon(EditMode m) {
-    switch (m) {
-        case EditMode::MOVE:
-            return QIcon(":none.svg");
-
-        case EditMode::CREATE_POINT:
-            return QIcon(":none.svg");
-
-        case EditMode::REMOVE:
-            return QIcon(":none.svg");
-    }
+const QIcon& EditMode::getIcon() const {
+    return icon;
 }
 
-QString modeDescription(EditMode m) {
-    switch (m) {
-        case EditMode::MOVE:
-            return TR(
-                "Drag any free object with mouse to move it. "
-                "Use middle mouse button to move around scene."
-            );
-        case EditMode::CREATE_POINT:
-            return TR("Click on the canvas to create a point.");
-        case EditMode::REMOVE:
-            return TR("Click on any object to delete it.");
-    }
+const QString& EditMode::getDescription() const {
+    return description;
 }
 
-Section* modeSection(EditMode m) {
-    switch (m) {
-        case EditMode::MOVE:
-            return Section::get("Special");
-
-        case EditMode::CREATE_POINT:
-            return Section::get("Point");
-
-        case EditMode::REMOVE:
-            return Section::get("Special");
-    }
+EditMode::Type EditMode::getType() const {
+    return type;
 }
 
-void initEditModes() {
-    for (auto mode : {EditMode::MOVE, EditMode::CREATE_POINT, EditMode::REMOVE}) {
-        modeSection(mode)->addMode(mode);
-    }
+EditMode* EditMode::get(Type t) {
+    return modes[static_cast<int>(t)];
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GeometryGenerator.h"
-#include "EditMode.h"
 #include "Transformation.h"
 
 #include <QRectF>
@@ -14,6 +13,7 @@ class QJsonObject;
 class QString;
 class QGraphicsScene;
 class RealGenerator;
+class EditMode;
 enum class Type : unsigned int;
 
 class Geometry : public QObject {
@@ -72,8 +72,8 @@ class Geometry : public QObject {
 
         void removeGenerator(Generator*);
 
-        EditMode getEditMode() const;
-        void setEditMode(EditMode);
+        EditMode* getEditMode() const;
+        void setEditMode(EditMode*);
 
         Function* getActiveFunction() const;
         void setActiveFunction(Function*, QGraphicsScene*);
@@ -103,8 +103,7 @@ class Geometry : public QObject {
 
         bool changed = false;
 
-        EditMode editMode = EditMode::MOVE;
-
+        EditMode* editMode = nullptr;
         Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
 

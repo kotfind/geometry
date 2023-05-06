@@ -41,8 +41,6 @@ MainWindow::MainWindow()
     scene = new Scene(geom, this);
     view->setScene(scene);
 
-    toolInfoWidget->setMode(EditMode::MOVE);
-
     varModel = new VariableModel(geom, this);
     varWidget->setModel(varModel);
 
@@ -59,14 +57,17 @@ MainWindow::MainWindow()
         toolInfoWidget,
         &ToolInfoWidget::updateSelectedCount
     );
+
+    geom->setEditMode(EditMode::get(EditMode::Type::MOVE));
+    toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
 }
 
 void MainWindow::createModeAndFuncActions() {
     for (auto* section : Section::getMaster()->getSections()) {
         for (auto mode : section->getModes()) {
             auto* action = new QAction(
-                modeIcon(mode),
-                modeName(mode),
+                mode->getIcon(),
+                mode->getName(),
                 this
             );
             action->setData(QVariant::fromValue(mode));
@@ -188,15 +189,15 @@ void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* func = action->data().value<Function*>();
 
-    geom->setEditMode(EditMode::FUNCTION);
+    geom->setEditMode(EditMode::get(EditMode::Type::FUNCTION));
     geom->setActiveFunction(func, scene);
-    toolInfoWidget->setMode(EditMode::FUNCTION); // XXX: use Geometry mode ?
+    toolInfoWidget->setMode(EditMode::get(EditMode::Type::FUNCTION)); // XXX: use Geometry mode ?
     toolInfoWidget->setFunction(func); // XXX: use Geometry function ?
 }
 
 void MainWindow::onModeActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
-    auto mode = action->data().value<EditMode>();
+    auto mode = action->data().value<EditMode*>();
 
     geom->setEditMode(mode);
     toolInfoWidget->setMode(mode);

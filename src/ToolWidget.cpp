@@ -7,7 +7,7 @@
 #include <QToolButton>
 
 ToolWidget::ToolWidget(
-    const QHash<EditMode, QAction*>& modeToAction,
+    const QHash<EditMode*, QAction*>& modeToAction,
     const QHash<Function*, QAction*>& funcToAction,
     QWidget* parent
 ) : QTabWidget(parent)
@@ -16,7 +16,7 @@ ToolWidget::ToolWidget(
 }
 
 void ToolWidget::createUi(
-    const QHash<EditMode, QAction*>& modeToAction,
+    const QHash<EditMode*, QAction*>& modeToAction,
     const QHash<Function*, QAction*>& funcToAction
 ) {
     for (auto* section : Section::getMaster()->getSections()) {
