@@ -12,6 +12,7 @@
 #include "Type.h"
 #include "Function.h"
 #include "VariableDialog.h"
+#include "functionList.h"
 
 #include <QHash>
 #include <cassert>
@@ -30,7 +31,8 @@
 #include <QMessageBox>
 
 Geometry::Geometry(QObject* parent)
-  : QObject(parent)
+  : QObject(parent),
+    sectionMaster(functionList::makeSectionMaster())
 {}
 
 Geometry::~Geometry() {
@@ -183,7 +185,7 @@ void Geometry::fromJson(const QJsonObject& json) {
 
     gens.resize(jsonGens.size(), nullptr);
     for (int i : order) {
-        gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens);
+        gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens, sectionMaster.get());
         gens[i]->geom = this;
     }
 
@@ -365,3 +367,6 @@ void Geometry::processRealFuncArg(QGraphicsScene* scene) {
     selectFuncArg(var, scene);
 }
 
+const SectionMaster* Geometry::getSectionMaster() const {
+    return sectionMaster.get();
+}

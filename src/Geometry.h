@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GeometryGenerator.h"
 #include "Transformation.h"
+#include "SectionMaster.h"
 
 #include <QRectF>
 #include <QList>
@@ -9,10 +9,12 @@
 #include <memory>
 #include <QObject>
 
+class Generator;
 class QJsonObject;
 class QString;
 class QGraphicsScene;
 class RealGenerator;
+class GeometryGenerator;
 class EditMode;
 enum class Type : unsigned int;
 
@@ -87,6 +89,8 @@ class Geometry : public QObject {
 
         const Transformation& getTransformation() const;
 
+        const SectionMaster* getSectionMaster() const;
+
     private:
         QList<Generator*> getGeneratorRecalcOrder();
 
@@ -108,6 +112,8 @@ class Geometry : public QObject {
         QList<Generator*> selectedFuncArgs;
 
         Transformation transformation;
+
+        std::unique_ptr<SectionMaster> sectionMaster;
 
     signals:
         void generatorChanged(Generator*);

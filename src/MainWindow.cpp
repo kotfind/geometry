@@ -27,6 +27,8 @@
 
 MainWindow::MainWindow()
 {
+    geom = new Geometry(this);
+
     updateTitle();
 
     createModeAndFuncActions();
@@ -35,8 +37,6 @@ MainWindow::MainWindow()
     createFileMenu();
     createToolsMenu();
     createDocks();
-
-    geom = new Geometry(this);
 
     scene = new Scene(geom, this);
     view->setScene(scene);
@@ -63,7 +63,7 @@ MainWindow::MainWindow()
 }
 
 void MainWindow::createModeAndFuncActions() {
-    for (auto* section : Section::getMaster()->getSections()) {
+    for (auto* section : geom->getSectionMaster()->getSections()) {
         for (auto mode : section->getModes()) {
             auto* action = new QAction(
                 mode->getIcon(),
@@ -150,7 +150,7 @@ void MainWindow::createFileMenu() {
 void MainWindow::createToolsMenu() {
     menuBar()->addAction(new QAction("|", this)); // Separator
 
-    for (auto* section : Section::getMaster()->getSections()) {
+    for (auto* section : geom->getSectionMaster()->getSections()) {
         auto* menu = menuBar()->addMenu(section->getName());
 
         for (auto mode : section->getModes()) {
@@ -168,7 +168,12 @@ void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(this);
     createDock(toolInfoWidget, tr("Tool Info"), Qt::LeftDockWidgetArea);
 
-    toolWidget = new ToolWidget(modeToAction, funcToAction, this);
+    toolWidget = new ToolWidget(
+        modeToAction,
+        funcToAction,
+        geom->getSectionMaster(),
+        this
+    );
     createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
 
     varWidget = new VariableWidget(this);

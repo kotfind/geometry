@@ -11,6 +11,7 @@
 
 class Function;
 class Geometry;
+class SectionMaster;
 
 class Generator {
     public:
@@ -29,7 +30,11 @@ class Generator {
         Geometry* getGeometry() const;
 
         QJsonObject toJson(const QHash<Generator*, int>& ids) const;
-        static Generator* fromJson(const QJsonObject& json, const QList<Generator*>& gens);
+        static Generator* fromJson(
+            const QJsonObject& json,
+            const QList<Generator*>& gens,
+            const SectionMaster* sectionMaster
+        );
 
     protected:
         // Constructs free Generator.

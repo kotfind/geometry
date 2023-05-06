@@ -19,6 +19,8 @@ add_executable(geometry
     main.cpp
     global.cpp
 
+    SectionMaster.cpp
+    Section.cpp
     Function.cpp
     functionList.cpp
 
@@ -58,8 +60,6 @@ add_executable(geometry
     EditMode.cpp
 
     cramer.cpp
-
-    Section.cpp
 
     ToolWidget.cpp
 
