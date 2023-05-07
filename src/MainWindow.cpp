@@ -235,7 +235,7 @@ void MainWindow::onNewActionTriggered() {
     askForSave();
 
     geom->clear();
-    geom->setChanged(false);
+    openedFileName = "";
     updateTitle();
 }
 

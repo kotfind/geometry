@@ -212,6 +212,8 @@ void Geometry::clear() {
         removeGenerator(gens.first());
     }
 
+    setChanged(false);
+
     emit resetCompleted();
 }
 
