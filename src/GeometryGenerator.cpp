@@ -24,7 +24,9 @@ bool GeometryGenerator::checkObjectType() const {
 }
 
 void GeometryGenerator::move(const QPointF& delta) {
-    static_cast<Point*>(obj.get())->move(delta);
+    static_cast<Point*>(obj.get())->move(
+        delta / geom->getTransformation().getScale()
+    );
 
     geom->setChanged();
 
