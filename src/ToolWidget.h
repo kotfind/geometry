@@ -13,16 +13,16 @@ class ToolWidget : public QTabWidget {
 
     public:
         ToolWidget(
-            const QHash<EditMode*, QAction*>& modeToAction,
-            const QHash<Function*, QAction*>& funcToAction,
+            const QHash<const EditMode*, QAction*>& modeToAction,
+            const QHash<const Function*, QAction*>& funcToAction,
             const SectionMaster* sectionMaster,
             QWidget* parent = nullptr
         );
 
     private:
         void createUi(
-            const QHash<EditMode*, QAction*>& modeToAction,
-            const QHash<Function*, QAction*>& funcToAction,
+            const QHash<const EditMode*, QAction*>& modeToAction,
+            const QHash<const Function*, QAction*>& funcToAction,
             const SectionMaster* sectionMaster
         );
 

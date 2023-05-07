@@ -18,8 +18,8 @@ class ToolInfoWidget : public QWidget {
     private:
         void createUi();
 
-        Function* func = nullptr;
-        EditMode* mode = nullptr;
+        const Function* func = nullptr;
+        const EditMode* mode = nullptr;
 
         QLabel* nameLabel;
         QLabel* descriptionLabel;
@@ -28,7 +28,7 @@ class ToolInfoWidget : public QWidget {
         ArgumentInfoModel* argsModel;
 
     public slots:
-        void setFunction(Function* func = nullptr);
-        void setMode(EditMode*);
+        void setFunction(const Function* func = nullptr);
+        void setMode(const EditMode*);
         void updateSelectedCount(int n);
 };

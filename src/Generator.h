@@ -43,7 +43,11 @@ class Generator {
 
         // Constructs dependant Generator.
         // Is called from Geometry::make_gen.
-        Generator(Function* func, const QList<Generator*>& args, int funcResNum = 0);
+        Generator(
+            const Function* func,
+            const QList<Generator*>& args,
+            int funcResNum = 0
+        );
 
         virtual void onChanged();
 

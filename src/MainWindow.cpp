@@ -192,7 +192,7 @@ void MainWindow::createDock(QWidget* widget, const QString& name, Qt::DockWidget
 
 void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
-    auto* func = action->data().value<Function*>();
+    auto* func = action->data().value<const Function*>();
 
     geom->setEditMode(EditMode::get(EditMode::Type::FUNCTION));
     geom->setActiveFunction(func, scene);
@@ -202,7 +202,7 @@ void MainWindow::onFunctionActionTriggered() {
 
 void MainWindow::onModeActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
-    auto mode = action->data().value<EditMode*>();
+    auto mode = action->data().value<const EditMode*>();
 
     geom->setEditMode(mode);
     toolInfoWidget->setMode(mode);

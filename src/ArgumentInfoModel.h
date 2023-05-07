@@ -17,11 +17,11 @@ class ArgumentInfoModel : public QAbstractListModel {
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     private:
-        Function* func = nullptr;
+        const Function* func = nullptr;
 
         int selectedCount = 0;
 
     public slots:
-        void setFunction(Function*);
+        void setFunction(const Function*);
         void updateSelectedCount(int n);
 };

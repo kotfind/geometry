@@ -50,8 +50,8 @@ class MainWindow : public QMainWindow {
         ToolInfoWidget* toolInfoWidget;
         ToolWidget* toolWidget;
 
-        QHash<EditMode*, QAction*> modeToAction;
-        QHash<Function*, QAction*> funcToAction;
+        QHash<const EditMode*, QAction*> modeToAction;
+        QHash<const Function*, QAction*> funcToAction;
 
         VariableModel* varModel;
         VariableWidget* varWidget;

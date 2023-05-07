@@ -21,7 +21,7 @@ Generator::Generator(std::unique_ptr<Object> obj)
 {}
 
 Generator::Generator(
-    Function* func,
+    const Function* func,
     const QList<Generator*>& args,
     int funcResNum
 ) : calc(
@@ -131,7 +131,7 @@ Generator* Generator::fromJson(
         }
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
-        auto* func = sectionMaster->get(funcName);
+        const auto* func = sectionMaster->get(funcName);
 
         QList<Generator*> args;
         const auto& jsonArgs = getOrThrow(json["args"]).toArray();

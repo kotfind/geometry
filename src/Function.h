@@ -26,6 +26,7 @@ class Function {
 
     private:
         Function(
+            const Section* parent,
             const QString& name,
             const QIcon& icon,
             const QString& description,
@@ -34,13 +35,13 @@ class Function {
             const std::function<QList<Object*>(const QList<const Object*>&)>& func
         );
 
-        Section* parent = nullptr;
-        QString name;
-        QIcon icon;
-        QString description;
-        QList<ArgumentInfo> argInfo;
-        int maxReturnSize;
-        std::function<QList<Object*>(const QList<const Object*>&)> func;
+        const Section* const parent;
+        const QString name;
+        const QIcon icon;
+        const QString description;
+        const QList<ArgumentInfo> argInfo;
+        const int maxReturnSize;
+        const std::function<QList<Object*>(const QList<const Object*>&)> func;
 
     friend Section;
 };

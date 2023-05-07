@@ -17,11 +17,11 @@ class SectionMaster {
             return sec;
         }
 
-        const QList<Section*>& getSections() const;
+        const QList<const Section*>& getSections() const;
 
-        Section* getSection(const QString& name) const;
-        Function* get(const QString& fullName) const;
+        const Section* getSection(const QString& name) const;
+        const Function* get(const QString& fullName) const;
 
     private:
-        QList<Section*> sections;
+        QList<const Section*> sections;
 };

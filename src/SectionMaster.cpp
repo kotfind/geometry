@@ -14,11 +14,11 @@ SectionMaster::~SectionMaster() {
     }
 }
 
-const QList<Section*>& SectionMaster::getSections() const {
+const QList<const Section*>& SectionMaster::getSections() const {
     return sections;
 }
 
-Section* SectionMaster::getSection(const QString& name) const {
+const Section* SectionMaster::getSection(const QString& name) const {
     for (auto* sec : sections) {
         if (sec->getName() == name) {
             return sec;
@@ -27,7 +27,7 @@ Section* SectionMaster::getSection(const QString& name) const {
     throw std::logic_error("This section does not exist.");
 }
 
-Function* SectionMaster::get(const QString& fullName) const {
+const Function* SectionMaster::get(const QString& fullName) const {
     auto parts = fullName.split('/');
     assert(parts.size() == 2);
 

@@ -19,15 +19,15 @@ const QString& Section::getName() const {
     return name;
 }
 
-const QList<Function*>& Section::getFunctions() const {
+const QList<const Function*>& Section::getFunctions() const {
     return functions;
 }
 
-const QList<EditMode*>& Section::getModes() const {
+const QList<const EditMode*>& Section::getModes() const {
     return modes;
 }
 
-Function* Section::get(const QString& name) const {
+const Function* Section::get(const QString& name) const {
     for (auto* func : functions) {
         if (func->getSelfName() == name) {
             return func;

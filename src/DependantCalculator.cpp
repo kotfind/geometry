@@ -4,7 +4,7 @@
 #include "Function.h"
 
 DependantCalculator::DependantCalculator(
-    Function* func,
+    const Function* func,
     const QList<Generator*>& args,
     int funcResNum
 ) : func(func),
@@ -42,7 +42,7 @@ const QList<Generator*> DependantCalculator::getArgs() const {
     return args;
 }
 
-Function* DependantCalculator::getFunc() const {
+const Function* DependantCalculator::getFunc() const {
     return func;
 }
 

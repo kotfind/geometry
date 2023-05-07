@@ -48,7 +48,7 @@ QVariant ArgumentInfoModel::headerData(int section, Qt::Orientation orientation,
     }
 }
 
-void ArgumentInfoModel::setFunction(Function* f) {
+void ArgumentInfoModel::setFunction(const Function* f) {
     beginResetModel();
     func = f;
     endResetModel();

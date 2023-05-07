@@ -13,32 +13,31 @@ class Section {
         ~Section();
 
         template <typename... Args>
-        Function* makeFunction(Args&&... args) {
-            auto* func = new Function(std::forward<Args>(args)...);
-            func->parent = this;
+        const Function* makeFunction(Args&&... args) {
+            auto* func = new Function(this, std::forward<Args>(args)...);
             functions << func;
             return func;
         }
 
         template <typename... Args>
-        EditMode* makeEditMode(Args&&... args) {
+        const EditMode* makeEditMode(Args&&... args) {
             auto* mode = new EditMode(std::forward<Args>(args)...);
             modes << mode;
             return mode;
         }
 
         const QString& getName() const;
-        const QList<Function*>& getFunctions() const;
-        const QList<EditMode*>& getModes() const;
+        const QList<const Function*>& getFunctions() const;
+        const QList<const EditMode*>& getModes() const;
 
-        Function* get(const QString& name) const;
+        const Function* get(const QString& name) const;
 
     private:
         Section(const QString& name);
 
-        QString name;
-        QList<Function*> functions;
-        QList<EditMode*> modes;
+        const QString name;
+        QList<const Function*> functions;
+        QList<const EditMode*> modes;
 
     friend SectionMaster;
 };

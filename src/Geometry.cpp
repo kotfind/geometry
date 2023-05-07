@@ -283,20 +283,20 @@ const Transformation& Geometry::getTransformation() const {
     return transformation;
 }
 
-EditMode* Geometry::getEditMode() const {
+const EditMode* Geometry::getEditMode() const {
     return editMode;
 }
 
-void Geometry::setEditMode(EditMode* mode) {
+void Geometry::setEditMode(const EditMode* mode) {
     editMode = mode;
 }
 
-Function* Geometry::getActiveFunction() const {
+const Function* Geometry::getActiveFunction() const {
     assert(editMode->getType() == EditMode::Type::FUNCTION);
     return activeFunction;
 }
 
-void Geometry::setActiveFunction(Function* func, QGraphicsScene* scene) {
+void Geometry::setActiveFunction(const Function* func, QGraphicsScene* scene) {
     assert(editMode->getType() == EditMode::Type::FUNCTION);
     activeFunction = func;
     clearFuncArgs(scene);

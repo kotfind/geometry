@@ -43,7 +43,7 @@ void ToolInfoWidget::createUi() {
     vbox->addStretch(1);
 }
 
-void ToolInfoWidget::setFunction(Function* f) {
+void ToolInfoWidget::setFunction(const Function* f) {
     assert(mode->getType() == EditMode::Type::FUNCTION);
     func = f;
     argsModel->setFunction(func);
@@ -58,7 +58,7 @@ void ToolInfoWidget::setFunction(Function* f) {
     }
 }
 
-void ToolInfoWidget::setMode(EditMode* m) {
+void ToolInfoWidget::setMode(const EditMode* m) {
     mode = m;
     if (mode->getType() == EditMode::Type::FUNCTION) {
         setFunction();

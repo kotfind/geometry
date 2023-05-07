@@ -74,11 +74,11 @@ class Geometry : public QObject {
 
         void removeGenerator(Generator*);
 
-        EditMode* getEditMode() const;
-        void setEditMode(EditMode*);
+        const EditMode* getEditMode() const;
+        void setEditMode(const EditMode*);
 
-        Function* getActiveFunction() const;
-        void setActiveFunction(Function*, QGraphicsScene*);
+        const Function* getActiveFunction() const;
+        void setActiveFunction(const Function*, QGraphicsScene*);
 
         Type getNextFuncArgType() const;
         void selectFuncArg(Generator*, QGraphicsScene*);
@@ -107,8 +107,8 @@ class Geometry : public QObject {
 
         bool changed = false;
 
-        EditMode* editMode = nullptr;
-        Function* activeFunction = nullptr;
+        const EditMode* editMode = nullptr;
+        const Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
 
         Transformation transformation;

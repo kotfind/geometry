@@ -6,13 +6,15 @@
 #include <exception>
 
 Function::Function(
+    const Section* parent,
     const QString& name,
     const QIcon& icon,
     const QString& description,
     const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
-) : name(name),
+) : parent(parent),
+    name(name),
     icon(icon),
     description(description),
     argInfo(argsInfo),

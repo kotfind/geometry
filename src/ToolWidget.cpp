@@ -8,8 +8,8 @@
 #include <QToolButton>
 
 ToolWidget::ToolWidget(
-    const QHash<EditMode*, QAction*>& modeToAction,
-    const QHash<Function*, QAction*>& funcToAction,
+    const QHash<const EditMode*, QAction*>& modeToAction,
+    const QHash<const Function*, QAction*>& funcToAction,
     const SectionMaster* sectionMaster,
     QWidget* parent
 ) : QTabWidget(parent)
@@ -18,8 +18,8 @@ ToolWidget::ToolWidget(
 }
 
 void ToolWidget::createUi(
-    const QHash<EditMode*, QAction*>& modeToAction,
-    const QHash<Function*, QAction*>& funcToAction,
+    const QHash<const EditMode*, QAction*>& modeToAction,
+    const QHash<const Function*, QAction*>& funcToAction,
     const SectionMaster* sectionMaster
 ) {
     for (auto* section : sectionMaster->getSections()) {
