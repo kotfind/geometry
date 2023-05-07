@@ -2,6 +2,7 @@
 
 #include "ArgumentInfoModel.h"
 #include "Function.h"
+#include "EditMode.h"
 
 #include <QVBoxLayout>
 #include <QTreeView>
@@ -42,8 +43,8 @@ void ToolInfoWidget::createUi() {
     vbox->addStretch(1);
 }
 
-void ToolInfoWidget::setFunction(Function* f) {
-    assert(mode == EditMode::FUNCTION);
+void ToolInfoWidget::setFunction(const Function* f) {
+    assert(mode->getType() == EditMode::Type::FUNCTION);
     func = f;
     argsModel->setFunction(func);
     if (func) {
@@ -57,14 +58,14 @@ void ToolInfoWidget::setFunction(Function* f) {
     }
 }
 
-void ToolInfoWidget::setMode(EditMode m) {
+void ToolInfoWidget::setMode(const EditMode* m) {
     mode = m;
-    if (mode == EditMode::FUNCTION) {
+    if (mode->getType() == EditMode::Type::FUNCTION) {
         setFunction();
         argsView->setVisible(true);
     } else {
-        nameLabel->setText(modeName(m));
-        descriptionLabel->setText(modeDescription(m));
+        nameLabel->setText(m->getName());
+        descriptionLabel->setText(m->getDescription());
         argsView->setVisible(false);
         setEnabled(true);
     }

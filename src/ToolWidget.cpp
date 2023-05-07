@@ -1,5 +1,6 @@
 #include "ToolWidget.h"
 
+#include "SectionMaster.h"
 #include "Section.h"
 
 #include <QList>
@@ -7,19 +8,21 @@
 #include <QToolButton>
 
 ToolWidget::ToolWidget(
-    const QHash<EditMode, QAction*>& modeToAction,
-    const QHash<Function*, QAction*>& funcToAction,
+    const QHash<const EditMode*, QAction*>& modeToAction,
+    const QHash<const Function*, QAction*>& funcToAction,
+    const SectionMaster* sectionMaster,
     QWidget* parent
 ) : QTabWidget(parent)
 {
-    createUi(modeToAction, funcToAction);
+    createUi(modeToAction, funcToAction, sectionMaster);
 }
 
 void ToolWidget::createUi(
-    const QHash<EditMode, QAction*>& modeToAction,
-    const QHash<Function*, QAction*>& funcToAction
+    const QHash<const EditMode*, QAction*>& modeToAction,
+    const QHash<const Function*, QAction*>& funcToAction,
+    const SectionMaster* sectionMaster
 ) {
-    for (auto* section : Section::getMaster()->getSections()) {
+    for (auto* section : sectionMaster->getSections()) {
         QList<QAction*> actions;
         for (auto mode : section->getModes()) {
             actions << modeToAction[mode];

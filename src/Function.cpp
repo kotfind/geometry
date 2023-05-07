@@ -1,35 +1,26 @@
 #include "Function.h"
 
 #include "Object.h"
+#include "Section.h"
 
 #include <exception>
-#include <QIcon>
-
-QHash<QString, Function*> Function::funcs;
 
 Function::Function(
-    const QString& fullName,
-    const QString& iconName,
+    const Section* parent,
+    const QString& name,
+    const QIcon& icon,
     const QString& description,
     const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
-) : fullName(fullName),
+) : parent(parent),
+    name(name),
+    icon(icon),
     description(description),
-    argsInfo(argsInfo),
+    argInfo(argsInfo),
     maxReturnSize(maxReturnSize),
     func(func)
-{
-    Q_INIT_RESOURCE(imgs);
-
-    icon = QIcon(iconName);
-
-    funcs[fullName] = this;
-
-    selfName = fullName.section('/', -1);
-    auto path = fullName.section('/', 0, -2);
-    (section = Section::get(path))->addFunction(this);
-}
+{}
 
 QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
     if (objs.size() != countArgs())
@@ -43,3 +34,32 @@ QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
 
     return func(objs);
 }
+
+const QString& Function::getSelfName() const {
+    return name;
+}
+
+QString Function::getFullName() const {
+    return parent->getName() + "/" + getSelfName();
+}
+
+const QIcon& Function::getIcon() const {
+    return icon;
+}
+
+const QString& Function::getDescription() const {
+    return description;
+}
+
+int Function::countArgs() const {
+    return argInfo.size();
+}
+
+const ArgumentInfo& Function::getArgInfo(int i) const {
+    return argInfo[i];
+}
+
+int Function::getMaxReturnSize() const {
+    return maxReturnSize;
+}
+

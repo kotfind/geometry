@@ -10,6 +10,7 @@
 #include "GeometryGenerator.h"
 #include "RealGenerator.h"
 #include "Real.h"
+#include "SectionMaster.h"
 
 #include <stdexcept>
 #include <QJsonArray>
@@ -20,7 +21,7 @@ Generator::Generator(std::unique_ptr<Object> obj)
 {}
 
 Generator::Generator(
-    Function* func,
+    const Function* func,
     const QList<Generator*>& args,
     int funcResNum
 ) : calc(
@@ -100,7 +101,11 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     return json;
 }
 
-Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>& gens) {
+Generator* Generator::fromJson(
+    const QJsonObject& json,
+    const QList<Generator*>& gens,
+    const SectionMaster* sectionMaster
+) {
     auto isFree = getOrThrow(json["isFree"]).toBool();
     auto isReal = getOrThrow(json["isReal"]).toBool();
 
@@ -126,7 +131,7 @@ Generator* Generator::fromJson(const QJsonObject& json, const QList<Generator*>&
         }
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
-        auto* func = Function::get(funcName);
+        const auto* func = sectionMaster->get(funcName);
 
         QList<Generator*> args;
         const auto& jsonArgs = getOrThrow(json["args"]).toArray();

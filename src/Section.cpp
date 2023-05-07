@@ -1,45 +1,37 @@
 #include "Section.h"
 
-#include <QDebug>
+#include <stdexcept>
 
-Section* Section::master = nullptr;
+Section::Section(const QString& name)
+  : name(name)
+{}
 
-Section::Section(const QString& name) : name(name) {
-}
-
-void Section::addSection(Section* s) {
-    sections << s;
-} 
-
-void Section::addMode(EditMode m) {
-    modes << m;
-}
-
-void Section::addFunction(Function* f) {
-    functions << f;
-}
-
-Section* Section::getMaster() {
-    if (!master) {
-        master = new Section("");
+Section::~Section() {
+    for (auto* func : functions) {
+        delete func;
     }
-    return master;
+    for (auto* mode : modes) {
+        delete mode;
+    }
 }
 
-Section* Section::get(const QString& name) {
-    auto path = name.split('/');
-    auto* sec = getMaster();
-    for (int i = 0; i < path.size(); ++i) {
-        const auto& ss = sec->getSections();
-        int j = 0;
-        while (j < ss.size() && ss[j]->getName() != path[i]) {
-            ++j;
+const QString& Section::getName() const {
+    return name;
+}
+
+const QList<const Function*>& Section::getFunctions() const {
+    return functions;
+}
+
+const QList<const EditMode*>& Section::getModes() const {
+    return modes;
+}
+
+const Function* Section::get(const QString& name) const {
+    for (auto* func : functions) {
+        if (func->getSelfName() == name) {
+            return func;
         }
-        if (j == ss.size()) {
-            sec->addSection(new Section(path[i]));
-            j = ss.size() - 1;
-        }
-        sec = ss[j];
     }
-    return sec;
+    throw std::logic_error("This function does not exist.");
 }

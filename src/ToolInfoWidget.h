@@ -1,7 +1,5 @@
 #pragma once
 
-#include "EditMode.h"
-
 #include <QWidget>
 
 class Function;
@@ -9,6 +7,7 @@ class QLabel;
 class QTreeView;
 class ArgumentInfoModel;
 class QSize;
+class EditMode;
 
 class ToolInfoWidget : public QWidget {
     Q_OBJECT
@@ -19,8 +18,8 @@ class ToolInfoWidget : public QWidget {
     private:
         void createUi();
 
-        Function* func = nullptr;
-        EditMode mode = EditMode::MOVE;
+        const Function* func = nullptr;
+        const EditMode* mode = nullptr;
 
         QLabel* nameLabel;
         QLabel* descriptionLabel;
@@ -29,7 +28,7 @@ class ToolInfoWidget : public QWidget {
         ArgumentInfoModel* argsModel;
 
     public slots:
-        void setFunction(Function* func = nullptr);
-        void setMode(EditMode);
+        void setFunction(const Function* func = nullptr);
+        void setMode(const EditMode*);
         void updateSelectedCount(int n);
 };

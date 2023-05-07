@@ -13,7 +13,7 @@ class QCloseEvent;
 class ToolInfoWidget;
 class Section;
 class Function;
-enum class EditMode;
+class EditMode;
 class ToolWidget;
 class VariableModel;
 class Geometry;
@@ -50,8 +50,8 @@ class MainWindow : public QMainWindow {
         ToolInfoWidget* toolInfoWidget;
         ToolWidget* toolWidget;
 
-        QHash<EditMode, QAction*> modeToAction;
-        QHash<Function*, QAction*> funcToAction;
+        QHash<const EditMode*, QAction*> modeToAction;
+        QHash<const Function*, QAction*> funcToAction;
 
         VariableModel* varModel;
         VariableWidget* varWidget;

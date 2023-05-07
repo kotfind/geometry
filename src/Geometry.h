@@ -1,8 +1,7 @@
 #pragma once
 
-#include "GeometryGenerator.h"
-#include "EditMode.h"
 #include "Transformation.h"
+#include "SectionMaster.h"
 
 #include <QRectF>
 #include <QList>
@@ -10,10 +9,13 @@
 #include <memory>
 #include <QObject>
 
+class Generator;
 class QJsonObject;
 class QString;
 class QGraphicsScene;
 class RealGenerator;
+class GeometryGenerator;
+class EditMode;
 enum class Type : unsigned int;
 
 class Geometry : public QObject {
@@ -72,11 +74,11 @@ class Geometry : public QObject {
 
         void removeGenerator(Generator*);
 
-        EditMode getEditMode() const;
-        void setEditMode(EditMode);
+        const EditMode* getEditMode() const;
+        void setEditMode(const EditMode*);
 
-        Function* getActiveFunction() const;
-        void setActiveFunction(Function*, QGraphicsScene*);
+        const Function* getActiveFunction() const;
+        void setActiveFunction(const Function*, QGraphicsScene*);
 
         Type getNextFuncArgType() const;
         void selectFuncArg(Generator*, QGraphicsScene*);
@@ -86,6 +88,8 @@ class Geometry : public QObject {
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
         const Transformation& getTransformation() const;
+
+        const SectionMaster* getSectionMaster() const;
 
     private:
         QList<Generator*> getGeneratorRecalcOrder();
@@ -103,12 +107,13 @@ class Geometry : public QObject {
 
         bool changed = false;
 
-        EditMode editMode = EditMode::MOVE;
-
-        Function* activeFunction = nullptr;
+        const EditMode* editMode = nullptr;
+        const Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
 
         Transformation transformation;
+
+        std::unique_ptr<SectionMaster> sectionMaster;
 
     signals:
         void generatorChanged(Generator*);

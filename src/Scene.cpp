@@ -28,14 +28,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (geom->getEditMode()) {
-        case EditMode::MOVE:
+    switch (geom->getEditMode()->getType()) {
+        case EditMode::Type::MOVE:
         {
             currentFreeGenerator = getFreeGeneratorAt(pos);
         }
         break;
 
-        case EditMode::CREATE_POINT:
+        case EditMode::Type::CREATE_POINT:
         {
             auto point = std::unique_ptr<Point>(
                 std::make_unique<Point>(pos)->untransformed(
@@ -48,7 +48,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
 
-        case EditMode::FUNCTION:
+        case EditMode::Type::FUNCTION:
         {
             auto* gen = getGeneratorAt(
                 pos,
@@ -60,7 +60,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         }
         break;
 
-        case EditMode::REMOVE:
+        case EditMode::Type::REMOVE:
         {
             auto* gen = getGeneratorAt(pos);
             if (gen) {
@@ -84,8 +84,8 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (geom->getEditMode()) {
-        case EditMode::MOVE:
+    switch (geom->getEditMode()->getType()) {
+        case EditMode::Type::MOVE:
         {
             if (!currentFreeGenerator) break;
             currentFreeGenerator->move(delta);
@@ -99,8 +99,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (geom->getEditMode()) {
-        case EditMode::MOVE:
+    switch (geom->getEditMode()->getType()) {
+        case EditMode::Type::MOVE:
         {
             currentFreeGenerator = nullptr;
         }
@@ -135,8 +135,8 @@ GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
 void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
-    switch (geom->getEditMode()) {
-        case EditMode::MOVE:
+    switch (geom->getEditMode()->getType()) {
+        case EditMode::Type::MOVE:
             if (currentFreeGenerator && (e->buttons() & Qt::LeftButton)) {
                 // Moving item
                 emit cursorChanged(Qt::ClosedHandCursor);
@@ -149,11 +149,11 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             }
             break;
 
-        case EditMode::CREATE_POINT:
+        case EditMode::Type::CREATE_POINT:
             emit cursorChanged(Qt::CrossCursor);
             return;
 
-        case EditMode::FUNCTION:
+        case EditMode::Type::FUNCTION:
             if (getGeneratorAt(
                 pos,
                 geom->getNextFuncArgType()
@@ -163,7 +163,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             }
             break;
 
-        case EditMode::REMOVE:
+        case EditMode::Type::REMOVE:
             if (getGeneratorAt(pos)) {
                 emit cursorChanged(Qt::ForbiddenCursor);
                 return;
