@@ -236,8 +236,8 @@ void Geometry::removeGenerator(Generator* gen) {
     if (i == -1) return;
     gens.remove(i);
 
-    for (auto* dep : gen->dependant) {
-        removeGenerator(dep);
+    while (!gen->dependant.empty()) {
+        removeGenerator(gen->dependant.first());
     }
 
     if (gen->isDependant()) {
