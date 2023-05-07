@@ -18,6 +18,7 @@ class ToolWidget;
 class VariableModel;
 class Geometry;
 class VariableWidget;
+class QActionGroup;
 
 class MainWindow : public QMainWindow {
     public:
@@ -50,6 +51,7 @@ class MainWindow : public QMainWindow {
         ToolInfoWidget* toolInfoWidget;
         ToolWidget* toolWidget;
 
+        QActionGroup* toolActionGroup;
         QHash<const EditMode*, QAction*> modeToAction;
         QHash<const Function*, QAction*> funcToAction;
 

@@ -24,6 +24,7 @@
 #include <QDockWidget>
 #include <QTreeView>
 #include <QTableView>
+#include <QActionGroup>
 
 MainWindow::MainWindow()
 {
@@ -58,11 +59,16 @@ MainWindow::MainWindow()
         &ToolInfoWidget::updateSelectedCount
     );
 
+    modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
     geom->setEditMode(EditMode::get(EditMode::Type::MOVE));
     toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
 }
 
 void MainWindow::createModeAndFuncActions() {
+    toolActionGroup = new QActionGroup(this);
+    toolActionGroup->setExclusive(true);
+    toolActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
+
     for (auto* section : geom->getSectionMaster()->getSections()) {
         for (auto mode : section->getModes()) {
             auto* action = new QAction(
@@ -71,6 +77,8 @@ void MainWindow::createModeAndFuncActions() {
                 this
             );
             action->setData(QVariant::fromValue(mode));
+            toolActionGroup->addAction(action);
+            action->setCheckable(true);
             connect(
                 action,
                 &QAction::triggered,
@@ -86,6 +94,8 @@ void MainWindow::createModeAndFuncActions() {
                 this
             );
             action->setData(QVariant::fromValue(func));
+            toolActionGroup->addAction(action);
+            action->setCheckable(true);
             connect(
                 action,
                 &QAction::triggered,
