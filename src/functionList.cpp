@@ -13,7 +13,7 @@
 #include <QDebug>
 #include <QIcon>
 
-#define DO [&](const QList<const Object*>& objs) -> QList<Object*>
+#define DO [=](const QList<const Object*>& objs) -> QList<Object*>
 #define ARGS QList<ArgumentInfo>
 
 SectionMaster* functionList::makeSectionMaster() {
