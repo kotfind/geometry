@@ -10,7 +10,6 @@
 
 class Section;
 class Object;
-enum class Type : unsigned int;
 
 class Function {
     public:

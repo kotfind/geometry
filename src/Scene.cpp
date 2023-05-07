@@ -120,7 +120,7 @@ GeometryGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
     return nullptr;
 }
 
-GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Type type) const {
+GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Object::Type type) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);

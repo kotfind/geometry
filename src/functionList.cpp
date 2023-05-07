@@ -16,6 +16,8 @@
 #define DO [=](const QList<const Object*>& objs) -> QList<Object*>
 #define ARGS QList<ArgumentInfo>
 
+using Type = Object::Type;
+
 SectionMaster* functionList::makeSectionMaster() {
     auto* master = new SectionMaster;
 

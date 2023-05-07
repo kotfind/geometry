@@ -2,6 +2,7 @@
 
 #include "Transformation.h"
 #include "SectionMaster.h"
+#include "Object.h"
 
 #include <QRectF>
 #include <QList>
@@ -16,7 +17,6 @@ class QGraphicsScene;
 class RealGenerator;
 class GeometryGenerator;
 class EditMode;
-enum class Type : unsigned int;
 
 class Geometry : public QObject {
     Q_OBJECT
@@ -80,7 +80,7 @@ class Geometry : public QObject {
         const Function* getActiveFunction() const;
         void setActiveFunction(const Function*, QGraphicsScene*);
 
-        Type getNextFuncArgType() const;
+        Object::Type getNextFuncArgType() const;
         void selectFuncArg(Generator*, QGraphicsScene*);
         void clearFuncArgs(QGraphicsScene*);
 

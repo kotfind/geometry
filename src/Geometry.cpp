@@ -1,5 +1,6 @@
 #include "Geometry.h"
 
+#include "Object.h"
 #include "Generator.h"
 #include "GeometryItem.h"
 #include "getOrThrow.h"
@@ -9,7 +10,6 @@
 #include "RealGenerator.h"
 #include "Real.h"
 #include "EditMode.h"
-#include "Type.h"
 #include "Function.h"
 #include "VariableDialog.h"
 #include "functionList.h"
@@ -302,7 +302,7 @@ void Geometry::setActiveFunction(const Function* func, QGraphicsScene* scene) {
     clearFuncArgs(scene);
 }
 
-Type Geometry::getNextFuncArgType() const {
+Object::Type Geometry::getNextFuncArgType() const {
     return getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType();
 }
 
@@ -325,7 +325,7 @@ void Geometry::checkSelectedFuncArgs(QGraphicsScene* scene) {
         createGeneratorFromSelectedFuncArgs(scene);
     }
 
-    if (getNextFuncArgType() == Type::Real) {
+    if (getNextFuncArgType() == Object::Type::Real) {
         processRealFuncArg(scene);
     }
 }

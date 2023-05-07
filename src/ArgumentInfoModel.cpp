@@ -2,7 +2,6 @@
 
 #include "Function.h"
 #include "ArgumentInfo.h"
-#include "Type.h"
 
 #include <QColor>
 #include <QStringList>

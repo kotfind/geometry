@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Type.h"
+#include "Object.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -20,7 +20,7 @@ class Scene : public QGraphicsScene {
 
     private:
         GeometryGenerator* getFreeGeneratorAt(const QPointF& pos) const;
-        GeometryGenerator* getGeneratorAt(const QPointF& pos, Type type = Type::Any) const;
+        GeometryGenerator* getGeneratorAt(const QPointF& pos, Object::Type type = Object::Type::Any) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 

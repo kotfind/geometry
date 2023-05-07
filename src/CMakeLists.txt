@@ -50,8 +50,6 @@ add_executable(geometry
 
     Object.cpp
 
-    Type.cpp
-
     ToolInfoWidget.cpp
 
     ArgumentInfo.cpp

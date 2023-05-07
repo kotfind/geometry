@@ -7,7 +7,7 @@ bool RealGenerator::isReal() const {
 }
 
 bool RealGenerator::checkObjectType() const {
-    return obj->is(Type::Real);
+    return obj->is(Object::Type::Real);
 }
 
 QString RealGenerator::getName() const {

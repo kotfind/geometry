@@ -19,8 +19,8 @@ const GeometryObject* GeometryGenerator::getGeometryObject() const {
 }
 
 bool GeometryGenerator::checkObjectType() const {
-    return isFree() && obj->is(Type::Point) ||
-        !obj->is(Type::Real);
+    return isFree() && obj->is(Object::Type::Point) ||
+        !obj->is(Object::Type::Real);
 }
 
 void GeometryGenerator::move(const QPointF& delta) {
