@@ -35,9 +35,12 @@ void GeometryItem::remove() {
 void GeometryItem::update() {
     prepareGeometryChange();
 
+    auto* object = gen->getGeometryObject();
     obj.reset(
-        gen->getGeometryObject()->transformed(
-            gen->getGeometry()->getTransformation()
-        )
+        object
+        ? object->transformed(
+                gen->getGeometry()->getTransformation()
+            )
+        : nullptr
     );
 }
