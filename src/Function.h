@@ -27,7 +27,7 @@ class Function {
     private:
         Function(
             const QString& name,
-            const QString& icon,
+            const QIcon& icon,
             const QString& description,
             const QList<ArgumentInfo>& argsInfo,
             int maxReturnSize,

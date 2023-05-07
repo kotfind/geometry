@@ -4,24 +4,21 @@
 #include "Section.h"
 
 #include <exception>
-#include <QIcon>
 
 Function::Function(
     const QString& name,
-    const QString& iconName,
+    const QIcon& icon,
     const QString& description,
     const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
 ) : name(name),
+    icon(icon),
     description(description),
     argInfo(argsInfo),
     maxReturnSize(maxReturnSize),
     func(func)
-{
-    Q_INIT_RESOURCE(imgs);
-    icon = QIcon(iconName);
-}
+{}
 
 QList<Object*> Function::operator()(const QList<const Object*>& objs) const {
     if (objs.size() != countArgs())

@@ -30,7 +30,7 @@ SectionMaster* functionList::makeSectionMaster() {
     specialSection->makeEditMode(
         EditMode::Type::MOVE,
         TR("Move"),
-        QIcon(":none.svg"),
+        QIcon(QIcon(":none.svg")),
         TR(
             "Drag any free object with mouse to move it. "
             "Use middle mouse button to move around scene."
@@ -40,7 +40,7 @@ SectionMaster* functionList::makeSectionMaster() {
     specialSection->makeEditMode(
         EditMode::Type::REMOVE,
         TR("Remove"),
-        QIcon(":none.svg"),
+        QIcon(QIcon(":none.svg")),
         TR("Click on any object to delete it.")
     );
 
@@ -49,13 +49,13 @@ SectionMaster* functionList::makeSectionMaster() {
     pointSection->makeEditMode(
         EditMode::Type::CREATE_POINT,
         TR("Create"),
-        QIcon(":none.svg"),
+        QIcon(QIcon(":none.svg")),
         TR("Click on the canvas to create a point.")
     );
 
     pointSection->makeFunction(
         "Intersect",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Intersects two objects."),
         ARGS {
             {Type::Line | Type::Circle, TR("First object")},
@@ -149,7 +149,7 @@ SectionMaster* functionList::makeSectionMaster() {
     
     pointSection->makeFunction(
         "Middle",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates point between two current."),
         ARGS {
             {Type::Point, TR("First point")},
@@ -168,7 +168,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     lineSection->makeFunction(
         "By Two Points",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates line by two points."),
         ARGS {
             {Type::Point, TR("First point")},
@@ -188,7 +188,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     lineSection->makeFunction(
         "Perpendicular",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
             {Type::Point, TR("Point")},
@@ -205,7 +205,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     lineSection->makeFunction(
         "Parallel",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates line parallel to current line through current point."),
         ARGS {
             {Type::Point, TR("Point")},
@@ -222,7 +222,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     auto* tangents = lineSection->makeFunction(
         "Tangents",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates tangents to circle from point."),
         ARGS {
             {Type::Point, TR("Point")},
@@ -259,7 +259,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     lineSection->makeFunction(
         "Common Tangent",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates common tangents for two circle."),
         ARGS {
             {Type::Circle, TR("Fistt circle")},
@@ -321,7 +321,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     lineSection->makeFunction(
         "Bisector",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates bisector line of angle formed by three points."),
         ARGS {
             {Type::Point, TR("First point")},
@@ -353,7 +353,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     circleSection->makeFunction(
         "By Center And Point",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates circle by center and point on it."),
         ARGS {
             {Type::Point, TR("Center")},
@@ -375,7 +375,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     circleSection->makeFunction(
         "By Center And Radius",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates circle by its center and radius."),
         ARGS {
             {Type::Point, TR("Center")},
@@ -395,7 +395,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     circleSection->makeFunction(
         "By Three Points",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Creates circle by three points on it."),
         ARGS {
             {Type::Point, TR("First point")},
@@ -434,7 +434,7 @@ SectionMaster* functionList::makeSectionMaster() {
 
     circleSection->makeFunction(
         "Incircle",
-        ":none.svg",
+        QIcon(":none.svg"),
         TR("Incircle by three vertexes of triangle."),
         ARGS {
             {Type::Point, TR("First point")},
