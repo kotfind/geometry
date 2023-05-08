@@ -18,6 +18,8 @@ class Circle : public GeometryObject {
 
         GeometryObject* transformed(const Transformation&) const override;
 
+        QPointF calcNearestPoint(const QPointF& pos) const override;
+
         static constexpr double paintWidth = 3e-3;
         
         Point o;

@@ -87,6 +87,10 @@ Point* Point::untransformed(const Transformation& t) const {
     );
 }
 
+QPointF Point::calcNearestPoint(const QPointF& pos) const {
+    throw std::logic_error("Cannot call calcNearestPoint for Point.");
+}
+
 Point& operator+=(Point& lhs, const Point& rhs) {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
@@ -165,3 +169,4 @@ Point norm(const Point& v) {
 Point perp(const Point& v) {
     return {-v.y, v.x};
 }
+

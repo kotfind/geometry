@@ -29,6 +29,8 @@ class Point : public GeometryObject {
         GeometryObject* transformed(const Transformation&) const override;
         Point* untransformed(const Transformation&) const;
 
+        QPointF calcNearestPoint(const QPointF& pos) const override;
+
         double x, y;
 
         static constexpr double paintRadius = 5e-3;
