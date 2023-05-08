@@ -88,7 +88,13 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::Type::MOVE:
         {
             if (!currentFreeGenerator) break;
-            currentFreeGenerator->move(delta);
+            currentFreeGenerator->setPos(
+                std::unique_ptr<Point>(
+                    std::make_unique<Point>(pos)->untransformed(
+                        geom->getTransformation()
+                    )
+                )->getPos()
+            );
         }
         break;
     }

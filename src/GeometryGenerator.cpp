@@ -23,10 +23,10 @@ bool GeometryGenerator::checkObjectType() const {
         !obj->is(Object::Type::Real);
 }
 
-void GeometryGenerator::move(const QPointF& delta) {
-    static_cast<Point*>(obj.get())->move(
-        delta / geom->getTransformation().getScale()
-    );
+void GeometryGenerator::setPos(const QPointF& pos) {
+    assert(isFree());
+
+    static_cast<Point*>(obj.get())->setPos(pos);
 
     geom->setChanged();
 

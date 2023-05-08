@@ -53,11 +53,6 @@ void Point::setPos(const QPointF& pos) {
     y = pos.y();
 }
 
-void Point::move(const QPointF& delta) {
-    x += delta.x();
-    y += delta.y();
-}
-
 bool operator==(const Point& p1, const Point& p2) {
     return eq(p1.x, p2.x) && eq(p1.y, p2.y);
 }
