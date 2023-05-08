@@ -15,7 +15,7 @@ class DependantCalculator : public Calculator {
             int funcResNum = 0
         );
 
-        Object* calc(const Object*) const override;
+        Object* calc() const override;
         bool isFree() const override;
 
         const QList<Generator*> getArgs() const;

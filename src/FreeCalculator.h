@@ -2,13 +2,20 @@
 
 #include "Calculator.h"
 #include "Object.h"
+#include "Point.h"
 
 #include <memory>
+#include <QPointF>
 
 class FreeCalculator : public Calculator {
     public:
-        FreeCalculator();
+        FreeCalculator(std::unique_ptr<Point> pt);
 
-        Object* calc(const Object*) const override;
+        Object* calc() const override;
         bool isFree() const override;
+
+        void setPos(const QPointF& pos);
+
+    private:
+        std::unique_ptr<Point> pt;
 };

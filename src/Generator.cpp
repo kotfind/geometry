@@ -16,8 +16,14 @@
 #include <QJsonArray>
 
 Generator::Generator(std::unique_ptr<Object> obj)
-  : calc(std::make_unique<FreeCalculator>()),
-    obj(std::move(obj))
+  : calc(
+        std::make_unique<FreeCalculator>(
+            std::unique_ptr<Point>(
+                static_cast<Point*>(obj->clone())
+            )
+        )
+    ),
+    obj(std::unique_ptr<Object>(obj->clone()))
 {}
 
 Generator::Generator(
@@ -62,7 +68,7 @@ void Generator::recalc() {
 }
 
 void Generator::recalcSelf() {
-    obj.reset(calc->calc(obj.get()));
+    obj.reset(calc->calc());
     if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
 
     onChanged();
