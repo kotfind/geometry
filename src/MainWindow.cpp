@@ -231,6 +231,10 @@ void MainWindow::askForSave() {
     }
 }
 
+QString MainWindow::getFileNameFilter() const {
+    return tr("Geometry file (*%1)").arg(fileExtension);
+}
+
 void MainWindow::onNewActionTriggered() {
     askForSave();
 
@@ -261,10 +265,16 @@ void MainWindow::onSaveActionTriggered() {
 void MainWindow::onSaveAsActionTriggered() {
     auto fileName = QFileDialog::getSaveFileName(
         this,
-        tr("Save file")
+        tr("Save file"),
+        "",
+        getFileNameFilter()
     );
 
     if (fileName.isEmpty()) return;
+
+    if (!fileName.endsWith(fileExtension)) {
+        fileName += fileExtension;
+    }
 
     try {
         geom->save(fileName);
@@ -285,7 +295,9 @@ void MainWindow::onOpenActionTriggered() {
 
     auto fileName = QFileDialog::getOpenFileName(
         this,
-        tr("Open file")
+        tr("Open file"),
+        "",
+        getFileNameFilter()
     );
 
     if (fileName.isEmpty()) return;

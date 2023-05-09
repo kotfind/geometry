@@ -41,6 +41,8 @@ class MainWindow : public QMainWindow {
 
         void askForSave();
 
+        QString getFileNameFilter() const;
+
         Geometry* geom;
 
         QString openedFileName = "";
@@ -57,6 +59,8 @@ class MainWindow : public QMainWindow {
 
         VariableModel* varModel;
         VariableWidget* varWidget;
+
+        static constexpr auto fileExtension = ".geom";
 
     protected:
         void closeEvent(QCloseEvent*) override;
