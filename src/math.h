@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QObject>
+#include <QList>
 
 constexpr double eps = 1e-9;
 
@@ -12,4 +12,5 @@ bool geq(double a, double b);
 
 double sq(double x);
 
-#define TR(text) QObject::tr(text)
+QList<double> cramer(const QList<QList<double>>&, const QList<double>&);
+QList<double> cramer(const QList<QList<double>>&);

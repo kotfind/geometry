@@ -1,6 +1,6 @@
 #include "Line.h"
 
-#include "global.h"
+#include "math.h"
 #include "Point.h"
 #include "Transformation.h"
 

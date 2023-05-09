@@ -7,8 +7,9 @@
 #include "Line.h"
 #include "Point.h"
 #include "Circle.h"
-#include "global.h"
 #include "cramer.h"
+#include "TR.h"
+#include "math.h"
 
 #include <QDebug>
 #include <QIcon>

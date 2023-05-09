@@ -17,7 +17,7 @@ qt_standard_project_setup()
 
 add_executable(geometry
     main.cpp
-    global.cpp
+    math.cpp
 
     SectionMaster.cpp
     Section.cpp

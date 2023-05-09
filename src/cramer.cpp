@@ -1,6 +1,6 @@
 #include "cramer.h"
 
-#include "global.h"
+#include "math.h"
 
 using matrix = QList<QList<double>>;
 

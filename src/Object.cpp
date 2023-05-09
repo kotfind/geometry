@@ -1,6 +1,6 @@
 #include "Object.h"
 
-#include "global.h"
+#include "TR.h"
 
 #include <QString>
 #include <type_traits>
