@@ -19,9 +19,7 @@
 Generator::Generator(std::unique_ptr<Object> obj)
   : calc(
         std::make_unique<FreeCalculator>(
-            std::unique_ptr<Point>(
-                static_cast<Point*>(obj->clone())
-            )
+            std::unique_ptr<Object>(obj->clone())
         )
     ),
     obj(std::unique_ptr<Object>(obj->clone()))

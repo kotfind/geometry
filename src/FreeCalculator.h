@@ -9,7 +9,7 @@
 
 class FreeCalculator : public Calculator {
     public:
-        FreeCalculator(std::unique_ptr<Point> pt);
+        FreeCalculator(std::unique_ptr<Object> pt);
 
         Object* calc() const override;
 
@@ -17,6 +17,8 @@ class FreeCalculator : public Calculator {
 
         void setPos(const QPointF& pos) override;
 
+        void setValue(double);
+
     private:
-        std::unique_ptr<Point> pt;
+        std::unique_ptr<Object> obj;
 };

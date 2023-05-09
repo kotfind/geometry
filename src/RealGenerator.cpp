@@ -1,6 +1,7 @@
 #include "RealGenerator.h"
 
 #include "Real.h"
+#include "FreeCalculator.h"
 
 bool RealGenerator::isReal() const {
     return true;
@@ -19,7 +20,8 @@ void RealGenerator::setName(const QString& n) {
 }
 
 void RealGenerator::setValue(double v) {
-    obj = std::make_unique<Real>(v);
+    assert(isFree());
+    static_cast<FreeCalculator*>(calc.get())->setValue(v);
     recalc();
 }
 
