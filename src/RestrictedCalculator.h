@@ -20,6 +20,7 @@ class RestrictedCalculator : public Calculator {
         void setPos(const QPointF& pos) override;
 
         GeometryGenerator* getRestrictor() const;
+        QPointF getMousePos() const;
 
     private:
         GeometryGenerator* restrictor;

@@ -28,3 +28,7 @@ void RestrictedCalculator::setPos(const QPointF& pos) {
 GeometryGenerator* RestrictedCalculator::getRestrictor() const {
     return restrictor;
 }
+
+QPointF RestrictedCalculator::getMousePos() const {
+    return mousePos;
+}

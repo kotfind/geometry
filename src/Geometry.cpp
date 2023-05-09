@@ -134,8 +134,6 @@ void Geometry::save(const QString& fileName) const {
 
 // Topsort algorithm.
 static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
-    // FIXME
-    /*
     int n = jsonGens.size();
 
     QList<int> used(n, 0);
@@ -147,15 +145,26 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
         used[u] = 1;
 
         const auto& json = jsonGens[u];
-        auto isFree = getOrThrow(json["isFree"]).toBool();
 
-        if (!isFree) {
-            const auto& jsonArgs = getOrThrow(json["args"]).toArray();
-            for (const auto& jsonArg : jsonArgs) {
-                int v = jsonArg.toInt();
-                if (!used[v]) {
-                    dfs(v);
-                }
+        auto type = getOrThrow(json["type"]).toString();
+        bool isFree         = type == "free";
+        bool isDependant    = type == "dependant";
+        bool isRestricted   = type == "restrictor";
+
+        QJsonArray jsonArgs;
+
+        if (isDependant) {
+            jsonArgs = getOrThrow(json["args"]).toArray();
+        } else if (isRestricted) {
+            jsonArgs = { getOrThrow(json["restrictor"]) };
+        } else /* isFree */ {
+            jsonArgs = {};
+        }
+
+        for (const auto& jsonArg : jsonArgs) {
+            int v = jsonArg.toInt();
+            if (!used[v]) {
+                dfs(v);
             }
         }
 
@@ -169,7 +178,6 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
     }
 
     return ans;
-    */
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
