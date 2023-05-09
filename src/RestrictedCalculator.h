@@ -9,7 +9,7 @@ class GeometryGenerator;
 class RestrictedCalculator : public Calculator {
     public:
         RestrictedCalculator(
-            GeometryGenerator* restrictorGen,
+            GeometryGenerator* restrictor,
             const QPointF& mousePos
         );
 
@@ -19,7 +19,9 @@ class RestrictedCalculator : public Calculator {
 
         void setPos(const QPointF& pos);
 
+        GeometryGenerator* getRestrictor() const;
+
     private:
-        GeometryGenerator* restrictorGen;
+        GeometryGenerator* restrictor;
         QPointF mousePos;
 };

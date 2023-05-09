@@ -4,15 +4,15 @@
 #include "Point.h"
 
 RestrictedCalculator::RestrictedCalculator(
-    GeometryGenerator* restrictorGen,
+    GeometryGenerator* restrictor,
     const QPointF& mousePos
-) : restrictorGen(restrictorGen),
+) : restrictor(restrictor),
     mousePos(mousePos)
 {}
 
 Object* RestrictedCalculator::calc() const {
     return new Point(
-        restrictorGen->getGeometryObject()->calcNearestPoint(mousePos)
+        restrictor->getGeometryObject()->calcNearestPoint(mousePos)
     );
 }
 
@@ -22,4 +22,8 @@ Calculator::Type RestrictedCalculator::getType() const {
 
 void RestrictedCalculator::setPos(const QPointF& pos) {
     mousePos = pos;
+}
+
+GeometryGenerator* RestrictedCalculator::getRestrictor() const {
+    return restrictor;
 }

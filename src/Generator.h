@@ -26,6 +26,11 @@ class Generator {
         virtual bool isReal() const = 0;
         bool isGeometry() const;
 
+        // Returns args for Dependant,
+        // restrictor for Restricted
+        // and nothing for Free
+        QList<Generator*> getArgs() const;
+
         void recalc();
 
         Geometry* getGeometry() const;

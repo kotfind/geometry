@@ -2,6 +2,7 @@
 
 #include "FreeCalculator.h"
 #include "DependantCalculator.h"
+#include "RestrictedCalculator.h"
 #include "Object.h"
 #include "Geometry.h"
 #include "Point.h"
@@ -76,6 +77,16 @@ void Generator::recalcSelf() {
     if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
 
     onChanged();
+}
+
+QList<Generator*> Generator::getArgs() const {
+    if (isRestricted()) {
+        return { static_cast<RestrictedCalculator*>(calc.get())->getRestrictor() };
+    } else if (isDependant()) {
+        return static_cast<DependantCalculator*>(calc.get())->getArgs();
+    } else /* isFree() */ {
+        return {};
+    }
 }
 
 Geometry* Generator::getGeometry() const {
