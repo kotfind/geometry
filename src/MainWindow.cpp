@@ -16,7 +16,6 @@
 
 #include <QAction>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
 #include <QFileInfo>
@@ -218,17 +217,21 @@ void MainWindow::onModeActionTriggered() {
     toolInfoWidget->setMode(mode);
 }
 
-void MainWindow::askForSave() {
-    if (geom->isChanged()) {
-        auto reply = QMessageBox::question(
-            this,
-            tr("Save file?"),
-            tr("Would you like to save oppened file?")
-        );
-        if (reply == QMessageBox::Yes) {
-            onSaveActionTriggered();
-        }
+QMessageBox::StandardButton MainWindow::askForSave(bool addCancelButton) {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Save changes?"));
+    msgBox.setText(tr(
+        "You have unsaved changes."
+        "Would you like to save them?"
+    ));
+    auto buttons = QMessageBox::Save | QMessageBox::Discard;
+    if (addCancelButton) {
+        buttons |= QMessageBox::Cancel;
     }
+    msgBox.setStandardButtons(buttons);
+    msgBox.setIcon(QMessageBox::Question);
+
+    return static_cast<QMessageBox::StandardButton>(msgBox.exec());
 }
 
 QString MainWindow::getFileNameFilter() const {
@@ -236,7 +239,9 @@ QString MainWindow::getFileNameFilter() const {
 }
 
 void MainWindow::onNewActionTriggered() {
-    askForSave();
+    if (geom->isChanged() && askForSave(false) == QMessageBox::Save) {
+        onSaveActionTriggered();
+    }
 
     geom->clear();
     openedFileName = "";
@@ -326,6 +331,21 @@ void MainWindow::updateTitle() {
 }
 
 void MainWindow::closeEvent(QCloseEvent* e) {
-    askForSave();
-    e->accept();
+    if (!geom->isChanged()) {
+        e->accept();
+        return;
+    }
+
+    switch (askForSave(true)) {
+        case QMessageBox::Save:
+            onSaveActionTriggered();
+
+        case QMessageBox::Discard:
+            e->accept();
+            break;
+
+        case QMessageBox::Cancel:
+            e->ignore();
+            break;
+    }
 }

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QHash>
 #include <memory>
+#include <QMessageBox>
 
 class QGraphicsView;
 class Scene;
@@ -39,7 +40,7 @@ class MainWindow : public QMainWindow {
 
         void updateTitle();
 
-        void askForSave();
+        QMessageBox::StandardButton askForSave(bool addCancelButton);
 
         QString getFileNameFilter() const;
 
