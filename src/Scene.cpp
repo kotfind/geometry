@@ -175,7 +175,10 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             break;
 
         case EditMode::Type::CREATE_POINT:
-            emit cursorChanged(Qt::CrossCursor);
+            emit cursorChanged(getDependantGeneratorAt(pos)
+                ? Qt::PointingHandCursor
+                : Qt::CrossCursor
+            );
             return;
 
         case EditMode::Type::FUNCTION:
