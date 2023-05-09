@@ -43,10 +43,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
                 gen = geom->makeGeometryGenerator(restrictor, pos);
             } else {
                 // Make Free Generator
-                auto point = std::unique_ptr<Point>(
-                    std::make_unique<Point>(pos)->untransformed(
-                        geom->getTransformation()
-                    )
+                auto point = std::make_unique<Point>(
+                    geom->getTransformation().untransform(pos)
                 );
                 gen = geom->makeGeometryGenerator(std::move(point));
             }
@@ -96,11 +94,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         {
             if (!currentFreeGenerator) break;
             currentFreeGenerator->setPos(
-                std::unique_ptr<Point>(
-                    std::make_unique<Point>(pos)->untransformed(
-                        geom->getTransformation()
-                    )
-                )->getPos()
+                geom->getTransformation().untransform(pos)
             );
         }
         break;

@@ -54,7 +54,7 @@ QPainterPath Circle::shape() const {
 
 GeometryObject* Circle::transformed(const Transformation& t) const {
     return new Circle(
-        *std::unique_ptr<Point>(static_cast<Point*>(o.transformed(t))),
+        Point(t.transform(o.getPos())),
         r * t.getScale()
     );
 }

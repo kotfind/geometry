@@ -18,6 +18,9 @@ class Transformation {
 
         void clear();
 
+        QPointF transform(const QPointF&) const;
+        QPointF untransform(const QPointF&) const;
+
         QJsonObject toJson() const;
         static Transformation fromJson(const QJsonObject& json);
         

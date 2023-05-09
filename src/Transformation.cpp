@@ -69,3 +69,11 @@ Transformation Transformation::fromJson(const QJsonObject& json) {
 
     return t;
 }
+
+QPointF Transformation::transform(const QPointF& p) const {
+    return (p + center) * scale;
+}
+
+QPointF Transformation::untransform(const QPointF& p) const {
+    return p / scale - center;
+}

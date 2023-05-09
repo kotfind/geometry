@@ -76,15 +76,11 @@ Point* Point::fromJson(const QJsonObject& json) {
 }
 
 GeometryObject* Point::transformed(const Transformation& t) const {
-    return new Point(
-        (getPos() + t.getCenter()) * t.getScale()
-    );
+    return new Point(t.transform(getPos()));
 }
 
 Point* Point::untransformed(const Transformation& t) const {
-    return new Point(
-        getPos() / t.getScale() - t.getCenter()
-    );
+    return new Point(t.untransform(getPos()));
 }
 
 QPointF Point::calcNearestPoint(const QPointF& pos) const {

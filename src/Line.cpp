@@ -88,10 +88,10 @@ QPointF Line::getNorm() const {
 }
 
 GeometryObject* Line::transformed(const Transformation& t) const {
-    auto [p1, p2] = getTwoPoints();
+    auto [p1, p2] = getTwoQPointFs();
     return new Line(
-        *std::unique_ptr<Point>(static_cast<Point*>(p1.transformed(t))),
-        *std::unique_ptr<Point>(static_cast<Point*>(p2.transformed(t)))
+        Point(t.transform(p1)),
+        Point(t.transform(p2))
     );
 }
 
