@@ -44,6 +44,17 @@ Generator::Generator(
     }
 }
 
+Generator::Generator(GeometryGenerator* restrictor, const QPointF& mousePos)
+  : calc(
+        std::make_unique<RestrictedCalculator>(
+            restrictor,
+            mousePos
+        )
+    )
+{
+    restrictor->dependant << this;
+}
+
 const Object* Generator::getObject() const {
     return obj.get();
 }

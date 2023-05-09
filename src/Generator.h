@@ -12,6 +12,7 @@
 class Function;
 class Geometry;
 class SectionMaster;
+class GeometryGenerator;
 
 class Generator {
     public:
@@ -43,17 +44,21 @@ class Generator {
         );
 
     protected:
-        // Constructs free Generator.
-        // Is called from Geometry::make_gen.
+        // Constructs Free Generator.
+        // Is called from Geometry::makeGenerator.
         Generator(std::unique_ptr<Object> obj);
 
-        // Constructs dependant Generator.
-        // Is called from Geometry::make_gen.
+        // Constructs Dependant Generator.
+        // Is called from Geometry::makeGenerator.
         Generator(
             const Function* func,
             const QList<Generator*>& args,
             int funcResNum = 0
         );
+
+        // Constructs Restricted Generator.
+        // Is called from Geometry::makeGenerator.
+        Generator(GeometryGenerator* restrictor, const QPointF& mousePos = QPointF());
 
         virtual void onChanged();
 
