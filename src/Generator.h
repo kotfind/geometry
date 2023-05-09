@@ -21,6 +21,7 @@ class Generator {
 
         bool isFree() const;
         bool isDependant() const;
+        bool isRestricted() const;
 
         virtual bool isReal() const = 0;
         bool isGeometry() const;

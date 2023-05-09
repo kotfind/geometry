@@ -19,7 +19,7 @@ class Scene : public QGraphicsScene {
         Scene(Geometry* geom, QObject* parent = nullptr);
 
     private:
-        GeometryGenerator* getFreeGeneratorAt(const QPointF& pos) const;
+        GeometryGenerator* getFreeOrRestrictedGeneratorAt(const QPointF& pos) const;
         GeometryGenerator* getGeneratorAt(const QPointF& pos, Object::Type type = Object::Type::Any) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);

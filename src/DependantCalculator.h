@@ -16,7 +16,8 @@ class DependantCalculator : public Calculator {
         );
 
         Object* calc() const override;
-        bool isFree() const override;
+
+        Type getType() const override;
 
         const QList<Generator*> getArgs() const;
         const Function* getFunc() const;

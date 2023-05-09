@@ -20,12 +20,14 @@ const GeometryObject* GeometryGenerator::getGeometryObject() const {
 }
 
 bool GeometryGenerator::checkObjectType() const {
-    return isFree() && obj->is(Object::Type::Point) ||
-        !obj->is(Object::Type::Real);
+    if (obj->is(Object::Type::Real)) return false;
+    if ((isFree() || isRestricted()) &&
+            !obj->is(Object::Type::Point)) return false;
+    return true;
 }
 
 void GeometryGenerator::setPos(const QPointF& pos) {
-    assert(isFree());
+    assert(isFree() || isRestricted());
 
     static_cast<FreeCalculator*>(calc.get())->setPos(pos);
 

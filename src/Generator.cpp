@@ -48,11 +48,15 @@ const Object* Generator::getObject() const {
 }
 
 bool Generator::isFree() const {
-    return calc->isFree();
+    return calc->getType() == Calculator::Type::FREE;
 }
 
 bool Generator::isDependant() const {
-    return !isFree();
+    return calc->getType() == Calculator::Type::DEPENDANT;
+}
+
+bool Generator::isRestricted() const {
+    return calc->getType() == Calculator::Type::RESTRICTED;
 }
 
 bool Generator::isGeometry() const {
@@ -79,6 +83,8 @@ Geometry* Generator::getGeometry() const {
 }
 
 QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
+    // FIXME
+    /*
     QJsonObject json;
 
     json["isFree"] = isFree();
@@ -105,6 +111,7 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     }
 
     return json;
+    */
 }
 
 Generator* Generator::fromJson(
@@ -112,6 +119,8 @@ Generator* Generator::fromJson(
     const QList<Generator*>& gens,
     const SectionMaster* sectionMaster
 ) {
+    // FIXME
+    /*
     auto isFree = getOrThrow(json["isFree"]).toBool();
     auto isReal = getOrThrow(json["isReal"]).toBool();
 
@@ -156,6 +165,7 @@ Generator* Generator::fromJson(
     }
 
     return gen;
+    */
 }
 
 void Generator::onChanged() {

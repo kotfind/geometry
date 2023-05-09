@@ -12,7 +12,8 @@ class FreeCalculator : public Calculator {
         FreeCalculator(std::unique_ptr<Point> pt);
 
         Object* calc() const override;
-        bool isFree() const override;
+
+        Type getType() const override;
 
         void setPos(const QPointF& pos);
 

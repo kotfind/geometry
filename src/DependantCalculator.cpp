@@ -34,8 +34,8 @@ Object* DependantCalculator::calc() const {
         : nullptr;
 }
 
-bool DependantCalculator::isFree() const {
-    return false;
+Calculator::Type DependantCalculator::getType() const {
+    return Type::DEPENDANT;
 }
 
 const QList<Generator*> DependantCalculator::getArgs() const {

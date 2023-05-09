@@ -8,8 +8,8 @@ Object* FreeCalculator::calc() const {
     return pt->clone();
 }
 
-bool FreeCalculator::isFree() const {
-    return true;
+Calculator::Type FreeCalculator::getType() const {
+    return Type::FREE;
 }
 
 void FreeCalculator::setPos(const QPointF& pos) {

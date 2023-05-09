@@ -41,6 +41,8 @@ Geometry::~Geometry() {
 
 // Topsort algorithm.
 QList<Generator*> Geometry::getGeneratorRecalcOrder() {
+    // FIXME
+    /*
     QSet<Generator*> used;
 
     QList<Generator*> ans;
@@ -72,6 +74,7 @@ QList<Generator*> Geometry::getGeneratorRecalcOrder() {
     }
 
     return ans;
+    */
 }
 
 void Geometry::recalcAll() {
@@ -140,6 +143,8 @@ void Geometry::save(const QString& fileName) const {
 
 // Topsort algorithm.
 static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
+    // FIXME
+    /*
     int n = jsonGens.size();
 
     QList<int> used(n, 0);
@@ -173,6 +178,7 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
     }
 
     return ans;
+    */
 }
 
 void Geometry::fromJson(const QJsonObject& json) {
@@ -230,6 +236,8 @@ void Geometry::setChanged(bool v) {
 }
 
 void Geometry::removeGenerator(Generator* gen) {
+    // FIXME
+    /*
     setChanged();
 
     emit generatorRemoved(gen);
@@ -255,6 +263,7 @@ void Geometry::removeGenerator(Generator* gen) {
     }
 
     delete gen;
+    */
 }
 
 QList<RealGenerator*> Geometry::getRealGenerators() const {
