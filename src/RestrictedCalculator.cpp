@@ -11,9 +11,10 @@ RestrictedCalculator::RestrictedCalculator(
 {}
 
 Object* RestrictedCalculator::calc() const {
-    return new Point(
-        restrictor->getGeometryObject()->calcNearestPoint(mousePos)
-    );
+    auto* obj = restrictor->getGeometryObject();
+    return obj
+        ? new Point(obj->calcNearestPoint(mousePos))
+        : nullptr;
 }
 
 Calculator::Type RestrictedCalculator::getType() const {
