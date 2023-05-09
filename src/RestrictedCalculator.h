@@ -17,7 +17,7 @@ class RestrictedCalculator : public Calculator {
 
         Type getType() const override;
 
-        void setPos(const QPointF& pos);
+        void setPos(const QPointF& pos) override;
 
         GeometryGenerator* getRestrictor() const;
 

@@ -15,7 +15,7 @@ class FreeCalculator : public Calculator {
 
         Type getType() const override;
 
-        void setPos(const QPointF& pos);
+        void setPos(const QPointF& pos) override;
 
     private:
         std::unique_ptr<Point> pt;

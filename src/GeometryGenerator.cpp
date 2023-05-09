@@ -29,7 +29,7 @@ bool GeometryGenerator::checkObjectType() const {
 void GeometryGenerator::setPos(const QPointF& pos) {
     assert(isFree() || isRestricted());
 
-    static_cast<FreeCalculator*>(calc.get())->setPos(pos);
+    calc->setPos(pos);
 
     geom->setChanged();
 
