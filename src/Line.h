@@ -26,6 +26,8 @@ class Line : public GeometryObject {
 
         GeometryObject* transformed(const Transformation&) const override;
 
+        QPointF calcNearestPoint(const QPointF& pos) const override;
+
         double a, b, c;
 
         static constexpr double paintWidth = 3e-3;

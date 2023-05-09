@@ -12,7 +12,7 @@ DependantCalculator::DependantCalculator(
     funcResNum(funcResNum)
 {}
 
-Object* DependantCalculator::calc(const Object*) const {
+Object* DependantCalculator::calc() const {
     QList<const Object*> objs;
     objs.reserve(args.size());
 
@@ -34,8 +34,8 @@ Object* DependantCalculator::calc(const Object*) const {
         : nullptr;
 }
 
-bool DependantCalculator::isFree() const {
-    return false;
+Calculator::Type DependantCalculator::getType() const {
+    return Type::DEPENDANT;
 }
 
 const QList<Generator*> DependantCalculator::getArgs() const {

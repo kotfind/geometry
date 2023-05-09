@@ -20,7 +20,6 @@ class Point : public GeometryObject {
         QPainterPath shape() const override;
 
         void setPos(const QPointF& pos);
-        void move(const QPointF& delta);
 
         QPointF getPos() const;
 
@@ -29,6 +28,8 @@ class Point : public GeometryObject {
 
         GeometryObject* transformed(const Transformation&) const override;
         Point* untransformed(const Transformation&) const;
+
+        QPointF calcNearestPoint(const QPointF& pos) const override;
 
         double x, y;
 

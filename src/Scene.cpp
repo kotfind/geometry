@@ -31,18 +31,25 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
     switch (geom->getEditMode()->getType()) {
         case EditMode::Type::MOVE:
         {
-            currentFreeGenerator = getFreeGeneratorAt(pos);
+            currentFreeGenerator = getFreeOrRestrictedGeneratorAt(pos);
         }
         break;
 
         case EditMode::Type::CREATE_POINT:
         {
-            auto point = std::unique_ptr<Point>(
-                std::make_unique<Point>(pos)->untransformed(
-                    geom->getTransformation()
-                )
-            );
-            auto* gen = geom->makeGeometryGenerator(std::move(point));
+            GeometryGenerator* gen;
+            if (auto* restrictor = getDependantGeneratorAt(pos)) {
+                // Make Restrcted Generator
+                gen = geom->makeGeometryGenerator(restrictor, pos);
+            } else {
+                // Make Free Generator
+                auto point = std::unique_ptr<Point>(
+                    std::make_unique<Point>(pos)->untransformed(
+                        geom->getTransformation()
+                    )
+                );
+                gen = geom->makeGeometryGenerator(std::move(point));
+            }
             auto* item = gen->getGeometryItem();
             addItem(item);
         }
@@ -88,7 +95,13 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::Type::MOVE:
         {
             if (!currentFreeGenerator) break;
-            currentFreeGenerator->move(delta);
+            currentFreeGenerator->setPos(
+                std::unique_ptr<Point>(
+                    std::make_unique<Point>(pos)->untransformed(
+                        geom->getTransformation()
+                    )
+                )->getPos()
+            );
         }
         break;
     }
@@ -108,12 +121,24 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
     }
 }
 
-GeometryGenerator* Scene::getFreeGeneratorAt(const QPointF& pos) const {
+GeometryGenerator* Scene::getFreeOrRestrictedGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
         auto* gen = item->getGeometryGenerator();
-        if (gen->isFree()) {
+        if (gen->isFree() || gen->isRestricted()) {
+            return gen;
+        }
+    }
+    return nullptr;
+}
+
+GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
+    auto itemList = items(pos);
+    for (auto* item_ : itemList) {
+        auto* item = static_cast<GeometryItem*>(item_);
+        auto* gen = item->getGeometryGenerator();
+        if (gen->isDependant()) {
             return gen;
         }
     }
@@ -142,7 +167,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
                 emit cursorChanged(Qt::ClosedHandCursor);
                 return;
             }
-            if (getFreeGeneratorAt(pos)) {
+            if (getFreeOrRestrictedGeneratorAt(pos)) {
                 // Can move item
                 emit cursorChanged(Qt::OpenHandCursor);
                 return;
@@ -150,7 +175,10 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             break;
 
         case EditMode::Type::CREATE_POINT:
-            emit cursorChanged(Qt::CrossCursor);
+            emit cursorChanged(getDependantGeneratorAt(pos)
+                ? Qt::PointingHandCursor
+                : Qt::CrossCursor
+            );
             return;
 
         case EditMode::Type::FUNCTION:

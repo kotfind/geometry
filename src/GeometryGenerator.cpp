@@ -5,6 +5,7 @@
 #include "Object.h"
 #include "Geometry.h"
 #include "Point.h"
+#include "FreeCalculator.h"
 
 bool GeometryGenerator::isReal() const {
     return false;
@@ -19,14 +20,16 @@ const GeometryObject* GeometryGenerator::getGeometryObject() const {
 }
 
 bool GeometryGenerator::checkObjectType() const {
-    return isFree() && obj->is(Object::Type::Point) ||
-        !obj->is(Object::Type::Real);
+    if (obj->is(Object::Type::Real)) return false;
+    if ((isFree() || isRestricted()) &&
+            !obj->is(Object::Type::Point)) return false;
+    return true;
 }
 
-void GeometryGenerator::move(const QPointF& delta) {
-    static_cast<Point*>(obj.get())->move(
-        delta / geom->getTransformation().getScale()
-    );
+void GeometryGenerator::setPos(const QPointF& pos) {
+    assert(isFree() || isRestricted());
+
+    calc->setPos(pos);
 
     geom->setChanged();
 

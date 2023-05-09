@@ -1,5 +1,7 @@
 #include "Calculator.h"
 
-bool Calculator::isDependant() const {
-    return !isFree();
+#include <stdexcept>
+
+void Calculator::setPos(const QPointF& pos) {
+    throw std::logic_error("This type of Calculator cannot be moved");
 }

@@ -2,6 +2,7 @@
 
 #include "FreeCalculator.h"
 #include "DependantCalculator.h"
+#include "RestrictedCalculator.h"
 #include "Object.h"
 #include "Geometry.h"
 #include "Point.h"
@@ -16,8 +17,12 @@
 #include <QJsonArray>
 
 Generator::Generator(std::unique_ptr<Object> obj)
-  : calc(std::make_unique<FreeCalculator>()),
-    obj(std::move(obj))
+  : calc(
+        std::make_unique<FreeCalculator>(
+            std::unique_ptr<Object>(obj->clone())
+        )
+    ),
+    obj(std::unique_ptr<Object>(obj->clone()))
 {}
 
 Generator::Generator(
@@ -37,16 +42,31 @@ Generator::Generator(
     }
 }
 
+Generator::Generator(GeometryGenerator* restrictor, const QPointF& mousePos)
+  : calc(
+        std::make_unique<RestrictedCalculator>(
+            restrictor,
+            mousePos
+        )
+    )
+{
+    restrictor->dependant << this;
+}
+
 const Object* Generator::getObject() const {
     return obj.get();
 }
 
 bool Generator::isFree() const {
-    return calc->isFree();
+    return calc->getType() == Calculator::Type::FREE;
 }
 
 bool Generator::isDependant() const {
-    return !isFree();
+    return calc->getType() == Calculator::Type::DEPENDANT;
+}
+
+bool Generator::isRestricted() const {
+    return calc->getType() == Calculator::Type::RESTRICTED;
 }
 
 bool Generator::isGeometry() const {
@@ -62,10 +82,20 @@ void Generator::recalc() {
 }
 
 void Generator::recalcSelf() {
-    obj.reset(calc->calc(obj.get()));
+    obj.reset(calc->calc());
     if (obj && !checkObjectType()) throw std::runtime_error("Wrong object type");
 
     onChanged();
+}
+
+QList<Generator*> Generator::getArgs() const {
+    if (isRestricted()) {
+        return { static_cast<RestrictedCalculator*>(calc.get())->getRestrictor() };
+    } else if (isDependant()) {
+        return static_cast<DependantCalculator*>(calc.get())->getArgs();
+    } else /* isFree() */ {
+        return {};
+    }
 }
 
 Geometry* Generator::getGeometry() const {
@@ -75,8 +105,13 @@ Geometry* Generator::getGeometry() const {
 QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
     QJsonObject json;
 
-    json["isFree"] = isFree();
     json["isReal"] = isReal();
+
+    QString type;
+    if (isFree())       type = "FREE";
+    if (isDependant())  type = "DEPENDANT";
+    if (isRestricted()) type = "RESTRICTED";
+    json["type"] = type;
 
     if (isReal()) {
         json["name"] = static_cast<const RealGenerator*>(this)->getName();
@@ -86,6 +121,16 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
         json["object"] = isReal()
             ? static_cast<Real*>(obj.get())->toJson()
             : static_cast<Point*>(obj.get())->toJson();
+    } else if (isRestricted()) {
+        auto* restCalc = static_cast<RestrictedCalculator*>(calc.get());
+
+        json["restrictor"] = ids[restCalc->getRestrictor()];
+
+        auto mousePos = restCalc->getMousePos();
+        QJsonObject mousePosJson;
+        mousePosJson["x"] = mousePos.x();
+        mousePosJson["y"] = mousePos.y();
+        json["mousePos"] = mousePosJson;
     } else {
         auto* depCalc = static_cast<DependantCalculator*>(calc.get());
 
@@ -106,8 +151,12 @@ Generator* Generator::fromJson(
     const QList<Generator*>& gens,
     const SectionMaster* sectionMaster
 ) {
-    auto isFree = getOrThrow(json["isFree"]).toBool();
     auto isReal = getOrThrow(json["isReal"]).toBool();
+
+    auto type = getOrThrow(json["type"]).toString();
+    bool isFree         = type == "FREE";
+    bool isDependant    = type == "DEPENDANT";
+    bool isRestricted   = type == "RESTRICTED";
 
     Generator* gen;
 
@@ -129,6 +178,20 @@ Generator* Generator::fromJson(
             );
             gen = new GeometryGenerator(std::move(obj));
         }
+    } else if (isRestricted) {
+        auto* restrictor = gens[getOrThrow(json["restrictor"]).toInt()];
+
+        auto mousePosJson = getOrThrow(json["mousePos"]).toObject();
+        auto mousePos = QPointF(
+            getOrThrow(mousePosJson["x"]).toDouble(),
+            getOrThrow(mousePosJson["y"]).toDouble()
+        );
+
+        assert(restrictor->isGeometry());
+        gen = new GeometryGenerator(
+            static_cast<GeometryGenerator*>(restrictor),
+            mousePos
+        );
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
         const auto* func = sectionMaster->get(funcName);

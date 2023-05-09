@@ -53,11 +53,6 @@ void Point::setPos(const QPointF& pos) {
     y = pos.y();
 }
 
-void Point::move(const QPointF& delta) {
-    x += delta.x();
-    y += delta.y();
-}
-
 bool operator==(const Point& p1, const Point& p2) {
     return eq(p1.x, p2.x) && eq(p1.y, p2.y);
 }
@@ -90,6 +85,10 @@ Point* Point::untransformed(const Transformation& t) const {
     return new Point(
         getPos() / t.getScale() - t.getCenter()
     );
+}
+
+QPointF Point::calcNearestPoint(const QPointF& pos) const {
+    throw std::logic_error("Cannot call calcNearestPoint for Point.");
 }
 
 Point& operator+=(Point& lhs, const Point& rhs) {
@@ -170,3 +169,4 @@ Point norm(const Point& v) {
 Point perp(const Point& v) {
     return {-v.y, v.x};
 }
+

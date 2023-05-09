@@ -31,6 +31,7 @@ add_executable(geometry
     Calculator.cpp
     FreeCalculator.cpp
     DependantCalculator.cpp
+    RestrictedCalculator.cpp
 
     Point.cpp
     Line.cpp

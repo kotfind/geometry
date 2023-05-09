@@ -95,6 +95,16 @@ GeometryObject* Line::transformed(const Transformation& t) const {
     );
 }
 
+QPointF Line::calcNearestPoint(const QPointF& pos) const {
+    auto p = Point(pos);
+    auto n = norm(*this) * dist(p, *this);
+    auto ans = p + n;
+    if (!eq(dist(ans, *this), 0)) {
+        ans = p - n;
+    }
+    return ans.getPos();
+}
+
 double dist(const Line& l, const Point& p) {
     return abs(l.a * p.x + l.b * p.y + l.c) / hypot(l.a, l.b);
 }

@@ -50,15 +50,9 @@ QList<Generator*> Geometry::getGeneratorRecalcOrder() {
     std::function<void(Generator*)> dfs = [this, &dfs, &ans, &used](Generator* u) {
         used << u;
 
-        if (u->isDependant()) {
-            const auto& args = static_cast<DependantCalculator*>(
-                u->calc.get()
-            )->getArgs();
-
-            for (auto* v : args) {
-                if (!used.contains(v)) {
-                    dfs(v);
-                }
+        for (auto* v : u->getArgs()) {
+            if (!used.contains(v)) {
+                dfs(v);
             }
         }
 
@@ -151,15 +145,26 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
         used[u] = 1;
 
         const auto& json = jsonGens[u];
-        auto isFree = getOrThrow(json["isFree"]).toBool();
 
-        if (!isFree) {
-            const auto& jsonArgs = getOrThrow(json["args"]).toArray();
-            for (const auto& jsonArg : jsonArgs) {
-                int v = jsonArg.toInt();
-                if (!used[v]) {
-                    dfs(v);
-                }
+        auto type = getOrThrow(json["type"]).toString();
+        bool isFree         = type == "free";
+        bool isDependant    = type == "dependant";
+        bool isRestricted   = type == "restrictor";
+
+        QJsonArray jsonArgs;
+
+        if (isDependant) {
+            jsonArgs = getOrThrow(json["args"]).toArray();
+        } else if (isRestricted) {
+            jsonArgs = { getOrThrow(json["restrictor"]) };
+        } else /* isFree */ {
+            jsonArgs = {};
+        }
+
+        for (const auto& jsonArg : jsonArgs) {
+            int v = jsonArg.toInt();
+            if (!used[v]) {
+                dfs(v);
             }
         }
 
@@ -242,16 +247,10 @@ void Geometry::removeGenerator(Generator* gen) {
         removeGenerator(gen->dependant.first());
     }
 
-    if (gen->isDependant()) {
-        const auto& args = static_cast<DependantCalculator*>(
-            gen->calc.get()
-        )->getArgs();
-
-        for (auto* arg : args) {
-            int i = arg->dependant.indexOf(gen);
-            assert(i != -1);
-            arg->dependant.remove(i);
-        }
+    for (auto* arg : gen->getArgs()) {
+        int i = arg->dependant.indexOf(gen);
+        assert(i != -1);
+        arg->dependant.remove(i);
     }
 
     delete gen;
