@@ -13,6 +13,7 @@ class Object {
             Point   = 1<<1,
             Line    = 1<<2,
             Circle  = 1<<3,
+            Segment = 1<<4,
         };
 
         virtual ~Object() {}
