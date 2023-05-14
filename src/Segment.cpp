@@ -95,9 +95,31 @@ QPointF Segment::calcNearestPoint(const QPointF& p) const {
     return ans;
 }
 
+double Segment::getDist(const QPointF& p) const {
+    auto [a, b, c] = getABC();
+    return abs(a * p.x() + b * p.y() + c) / hypot(a, b);
+}
+
 QPointF Segment::getNorm() const {
     auto [a, b, c] = getABC();
     QPointF res(a, b);
     res /= std::hypot(res.x(), res.y());
     return res;
+}
+
+double dist(const Segment& s, const Point& p) {
+    return s.getDist(p.getPos());
+}
+
+double dist(const Point& p, const Segment& s) {
+    return dist(s, p);
+}
+
+Point norm(const Segment& s) {
+    return s.getNorm();
+}
+
+Point dir(const Segment& s) {
+    auto ans = s.getNorm();
+    return Point(-ans.y(), ans.x());
 }

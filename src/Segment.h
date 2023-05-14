@@ -32,9 +32,17 @@ class Segment : public GeometryObject {
 
         QPointF getNorm() const;
 
+        double getDist(const QPointF&) const;
+
     private:
         QPointF p1;
         QPointF p2;
 
         static constexpr double paintWidth = 3e-3;
 };
+
+double dist(const Segment& s, const Point& p);
+double dist(const Point& p, const Segment& s);
+
+Point norm(const Segment& s);
+Point dir(const Segment& s);
