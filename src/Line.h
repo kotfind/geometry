@@ -1,11 +1,12 @@
 #pragma once
 
 #include "GeometryObject.h"
+#include "Segment.h"
 
-#include <QPair>
+#include <tuple>
+#include <QPointF>
 
 class Point;
-class QPointF;
 
 // Line with equation a*x + b*y + c = 0
 class Line : public GeometryObject {
@@ -13,7 +14,7 @@ class Line : public GeometryObject {
         Type getType() const { return Type::Line; }
 
         Line();
-        Line(double a, double b, double c);
+        Line(const QPointF& p1, const QPointF& p2);
         Line(const Point& p1, const Point& p2);
 
         Object* clone() const override;
@@ -22,20 +23,25 @@ class Line : public GeometryObject {
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
-        QPair<Point, Point> getTwoPoints() const;
-
         GeometryObject* transformed(const Transformation&) const override;
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
-        double a, b, c;
+        std::pair<QPointF, QPointF> getTwoPoints() const;
 
-        static constexpr double paintWidth = 3e-3;
-
-    private:
-        QPair<QPointF, QPointF> getTwoQPointFs() const;
+        // Returns (A, B, C) for line equation: Ax + By + C = 0
+        std::tuple<double, double, double> getABC() const;
 
         QPointF getNorm() const;
+
+        double getDist(const QPointF&) const;
+
+    private:
+        std::pair<QPointF, QPointF> getTwoBoundingPoints() const;
+
+        Segment segment;
+
+        static constexpr double paintWidth = 3e-3;
 };
 
 double dist(const Line& l, const Point& p);

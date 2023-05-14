@@ -70,9 +70,12 @@ SectionMaster* functionList::makeSectionMaster() {
                 const auto& l1 = *static_cast<const Line*>(objs[0]);
                 const auto& l2 = *static_cast<const Line*>(objs[1]);
 
+                auto [a1, b1, c1] = l1.getABC();
+                auto [a2, b2, c2] = l2.getABC();
+
                 auto cramerAns = cramer({
-                    {l1.a, l1.b, -l1.c},
-                    {l2.a, l2.b, -l2.c},
+                    {a1, b1, -c1},
+                    {a2, b2, -c2},
                 });
 
                 if (cramerAns.isEmpty())

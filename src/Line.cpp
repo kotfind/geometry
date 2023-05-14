@@ -12,19 +12,13 @@
 #include <QPointF>
 #include <memory>
 
-Line::Line() : Line(0, 1, 0) {}
-Line::Line(double a, double b, double c) : GeometryObject(), a(a), b(b), c(c) {}
-Line::Line(const Point& p1, const Point& p2) : GeometryObject() {
-    if (eq(p1.x, p2.x)) {
-        a = 1;
-        b = 0;
-        c = -p1.x;
-    } else {
-        a = p2.y - p1.y;
-        b = p1.x - p2.x;
-        c = -(a * p1.x + b * p1.y);
-    }
-}
+Line::Line() {}
+Line::Line(const QPointF& p1, const QPointF& p2)
+  : segment(p1, p2)
+{}
+Line::Line(const Point& p1, const Point& p2)
+  : Line(p1.getPos(), p2.getPos())
+{}
 
 Object* Line::clone() const {
     return new Line(*this);
@@ -35,12 +29,12 @@ void Line::paint(QPainter* qp) const {
     pen.setWidthF(paintWidth);
     qp->setPen(pen);
 
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoBoundingPoints();
     qp->drawLine(p1, p2);
 }
 
 QRectF Line::boundingRect() const {
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoBoundingPoints();
     auto [x1, y1] = p1;
     auto [x2, y2] = p2;
     return QRectF(
@@ -53,7 +47,7 @@ QRectF Line::boundingRect() const {
 
 QPainterPath Line::shape() const {
     auto d = getNorm() * paintWidth;
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoPoints();
 
     QPainterPath path;
     path.moveTo(p1 - d);
@@ -63,7 +57,16 @@ QPainterPath Line::shape() const {
     return path;
 }
 
-QPair<Point, Point> Line::getTwoPoints() const {
+std::tuple<double, double, double> Line::getABC() const {
+    return segment.getABC();
+}
+
+std::pair<QPointF, QPointF> Line::getTwoPoints() const {
+    return segment.getTwoPoints();
+}
+
+std::pair<QPointF, QPointF> Line::getTwoBoundingPoints() const {
+    auto [a, b, c] = getABC();
     if (eq(b, 0)) {
         double x = -c / a;
         return {{x, -10}, {x, 10}};
@@ -76,48 +79,45 @@ QPair<Point, Point> Line::getTwoPoints() const {
     }
 }
 
-QPair<QPointF, QPointF> Line::getTwoQPointFs() const {
-    auto [p1, p2] = getTwoPoints();
-    return {p1.getPos(), p2.getPos()};
+QPointF Line::getNorm() const {
+    return segment.getNorm();
 }
 
-QPointF Line::getNorm() const {
-    QPointF res(a, b);
-    res /= std::hypot(res.x(), res.y());
-    return res;
+double Line::getDist(const QPointF& p) const {
+    auto [a, b, c] = getABC();
+    return abs(a * p.x() + b * p.y() + c) / hypot(a, b);
 }
 
 GeometryObject* Line::transformed(const Transformation& t) const {
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoPoints();
     return new Line(
-        Point(t.transform(p1)),
-        Point(t.transform(p2))
+        t.transform(p1),
+        t.transform(p2)
     );
 }
 
-QPointF Line::calcNearestPoint(const QPointF& pos) const {
-    auto p = Point(pos);
-    auto n = norm(*this) * dist(p, *this);
+QPointF Line::calcNearestPoint(const QPointF& p) const {
+    auto n = getNorm() * getDist(p);
     auto ans = p + n;
-    if (!eq(dist(ans, *this), 0)) {
+    if (!eq(getDist(ans), 0)) {
         ans = p - n;
     }
-    return ans.getPos();
+    return ans;
 }
 
 double dist(const Line& l, const Point& p) {
-    return abs(l.a * p.x + l.b * p.y + l.c) / hypot(l.a, l.b);
+    return l.getDist(p.getPos());
 }
 
 double dist(const Point& p, const Line& l) {
-    return dist(l, p);
+    return l.getDist(p.getPos());
 }
 
 Point norm(const Line& l) {
-    return norm(Point(l.a, l.b));
+    return l.getNorm();
 }
 
 Point dir(const Line& l) {
-    auto ans = norm(l);
-    return Point(-ans.y, ans.x);
+    auto ans = l.getNorm();
+    return Point(-ans.y(), ans.x());
 }

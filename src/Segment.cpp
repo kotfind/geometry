@@ -2,6 +2,7 @@
 
 #include "math.h"
 #include "Transformation.h"
+#include "Point.h"
 
 #include <QPen>
 #include <math.h>
@@ -15,11 +16,15 @@ Segment::Segment(const QPointF& p1, const QPointF& p2)
     p2(p2)
 {}
 
+Segment::Segment(const Point& p1, const Point& p2)
+  : Segment(p1.getPos(), p2.getPos())
+{}
+
 Object* Segment::clone() const {
     return new Segment(*this);
 }
 
-std::pair<QPointF, QPointF> Segment::getTwoQPointFs() const {
+std::pair<QPointF, QPointF> Segment::getTwoPoints() const {
     return {p1, p2};
 }
 
@@ -42,12 +47,12 @@ void Segment::paint(QPainter* qp) const {
     pen.setWidthF(paintWidth);
     qp->setPen(pen);
 
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoPoints();
     qp->drawLine(p1, p2);
 }
 
 QRectF Segment::boundingRect() const {
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoPoints();
     auto [x1, y1] = p1;
     auto [x2, y2] = p2;
     return QRectF(
@@ -60,7 +65,7 @@ QRectF Segment::boundingRect() const {
 
 QPainterPath Segment::shape() const {
     auto d = getNorm() * paintWidth;
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoPoints();
 
     QPainterPath path;
     path.moveTo(p1 - d);
@@ -71,7 +76,7 @@ QPainterPath Segment::shape() const {
 }
 
 GeometryObject* Segment::transformed(const Transformation& t) const {
-    auto [p1, p2] = getTwoQPointFs();
+    auto [p1, p2] = getTwoPoints();
     return new Segment(
         t.transform(p1),
         t.transform(p2)
