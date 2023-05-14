@@ -12,9 +12,18 @@
 #include <QPointF>
 #include <QJsonObject>
 
-Point::Point() : Point(0, 0) {}
-Point::Point(const QPointF& pos) : Point(pos.x(), pos.y()) {}
-Point::Point(double x, double y) : GeometryObject(), x(x), y(y) {}
+Point::Point()
+  : Point(0, 0)
+{}
+
+Point::Point(const QPointF& pos)
+  : Point(pos.x(), pos.y())
+{}
+
+Point::Point(double x, double y)
+  : x(x),
+    y(y)
+{}
 
 Object* Point::clone() const {
     return new Point(*this);
@@ -48,19 +57,6 @@ QPainterPath Point::shape() const {
     return path;
 }
 
-void Point::setPos(const QPointF& pos) {
-    x = pos.x();
-    y = pos.y();
-}
-
-bool operator==(const Point& p1, const Point& p2) {
-    return eq(p1.x, p2.x) && eq(p1.y, p2.y);
-}
-
-QPointF Point::getPos() const {
-    return QPointF(x, y);
-}
-
 QJsonObject Point::toJson() const {
     QJsonObject json;
     json["x"] = x;
@@ -85,6 +81,19 @@ Point* Point::untransformed(const Transformation& t) const {
 
 QPointF Point::calcNearestPoint(const QPointF& pos) const {
     throw std::logic_error("Cannot call calcNearestPoint for Point.");
+}
+
+void Point::setPos(const QPointF& pos) {
+    x = pos.x();
+    y = pos.y();
+}
+
+QPointF Point::getPos() const {
+    return QPointF(x, y);
+}
+
+bool operator==(const Point& p1, const Point& p2) {
+    return eq(p1.x, p2.x) && eq(p1.y, p2.y);
 }
 
 Point& operator+=(Point& lhs, const Point& rhs) {
