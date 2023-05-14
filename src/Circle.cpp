@@ -29,7 +29,7 @@ void Circle::paint(QPainter* qp) const {
     pen.setColor(Qt::black);
     qp->setPen(pen);
 
-    qp->drawEllipse(boundingRect());
+    qp->drawEllipse(getRect(o, r));
 }
 
 QRectF Circle::boundingRect() const {
