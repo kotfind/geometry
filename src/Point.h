@@ -10,8 +10,8 @@ class Point : public GeometryObject {
         Type getType() const { return Type::Point; }
 
         Point();
-        Point(const QPointF& pos);
         Point(double x, double y);
+        explicit Point(const QPointF& pos);
 
         Object* clone() const override;
 

@@ -24,24 +24,6 @@ Object* Segment::clone() const {
     return new Segment(*this);
 }
 
-std::pair<QPointF, QPointF> Segment::getTwoPoints() const {
-    return {p1, p2};
-}
-
-std::tuple<double, double, double> Segment::getABC() const {
-    double a, b, c;
-    if (eq(p1.x(), p2.x())) {
-        a = 1;
-        b = 0;
-        c = -p1.x();
-    } else {
-        a = p2.y() - p1.y();
-        b = p1.x() - p2.x();
-        c = -(a * p1.x() + b * p1.y());
-    }
-    return {a, b, c};
-}
-
 void Segment::paint(QPainter* qp) const {
     auto pen = qp->pen();
     pen.setWidthF(paintWidth);
@@ -95,6 +77,28 @@ QPointF Segment::calcNearestPoint(const QPointF& p) const {
     return ans;
 }
 
+std::pair<QPointF, QPointF> Segment::getTwoPoints() const {
+    return {p1, p2};
+}
+
+std::pair<Point, Point> Segment::getTwoPoints_() const {
+    return {Point(p1), Point(p2)};
+}
+
+std::tuple<double, double, double> Segment::getABC() const {
+    double a, b, c;
+    if (eq(p1.x(), p2.x())) {
+        a = 1;
+        b = 0;
+        c = -p1.x();
+    } else {
+        a = p2.y() - p1.y();
+        b = p1.x() - p2.x();
+        c = -(a * p1.x() + b * p1.y());
+    }
+    return {a, b, c};
+}
+
 double Segment::getDist(const QPointF& p) const {
     auto [a, b, c] = getABC();
     return abs(a * p.x() + b * p.y() + c) / hypot(a, b);
@@ -116,7 +120,7 @@ double dist(const Point& p, const Segment& s) {
 }
 
 Point norm(const Segment& s) {
-    return s.getNorm();
+    return Point(s.getNorm());
 }
 
 Point dir(const Segment& s) {

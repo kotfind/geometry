@@ -65,6 +65,10 @@ std::pair<QPointF, QPointF> Line::getTwoPoints() const {
     return segment.getTwoPoints();
 }
 
+std::pair<Point, Point> Line::getTwoPoints_() const {
+    return segment.getTwoPoints_();
+}
+
 std::pair<QPointF, QPointF> Line::getTwoBoundingPoints() const {
     auto [a, b, c] = getABC();
     if (eq(b, 0)) {
@@ -114,7 +118,7 @@ double dist(const Point& p, const Line& l) {
 }
 
 Point norm(const Line& l) {
-    return l.getNorm();
+    return Point(l.getNorm());
 }
 
 Point dir(const Line& l) {

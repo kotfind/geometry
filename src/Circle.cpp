@@ -52,8 +52,9 @@ GeometryObject* Circle::transformed(const Transformation& t) const {
 
 QPointF Circle::calcNearestPoint(const QPointF& pos) const {
     auto p = Point(pos);
-    auto op = p - o;
-    return (o + norm(op) * r).getPos();
+    auto o_ = Point(o);
+    auto op = p - o_;
+    return (o_ + norm(op) * r).getPos();
 }
 
 Point Circle::getO() const {

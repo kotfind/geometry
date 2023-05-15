@@ -16,13 +16,13 @@ Point::Point()
   : Point(0, 0)
 {}
 
-Point::Point(const QPointF& pos)
-  : Point(pos.x(), pos.y())
-{}
-
 Point::Point(double x, double y)
   : x(x),
     y(y)
+{}
+
+Point::Point(const QPointF& pos)
+  : Point(pos.x(), pos.y())
 {}
 
 Object* Point::clone() const {
