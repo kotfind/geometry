@@ -17,40 +17,41 @@
 #include <QJsonArray>
 
 Generator::Generator(std::unique_ptr<Object> obj)
-  : calc(
+  : Generator(
         std::make_unique<FreeCalculator>(
-            std::unique_ptr<Object>(obj->clone())
+            std::move(obj)
         )
-    ),
-    obj(std::unique_ptr<Object>(obj->clone()))
+    )
 {}
 
 Generator::Generator(
     const Function* func,
     const QList<Generator*>& args,
     int funcResNum
-) : calc(
+) : Generator(
         std::make_unique<DependantCalculator>(
             func,
             args,
             funcResNum
         )
     )
-{
-    for (auto* gen : args) {
-        gen->dependant << this;
-    }
-}
+{}
 
 Generator::Generator(GeometryGenerator* restrictor, double posValue)
-  : calc(
+  : Generator(
         std::make_unique<RestrictedCalculator>(
             restrictor,
             posValue
         )
     )
+{}
+
+Generator::Generator(std::unique_ptr<Calculator> calc)
+  : calc(std::move(calc))
 {
-    restrictor->dependant << this;
+    for (auto* gen : getArgs()) {
+        gen->dependant << this;
+    }
 }
 
 const Object* Generator::getObject() const {
