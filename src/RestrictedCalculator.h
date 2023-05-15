@@ -10,11 +10,6 @@ class RestrictedCalculator : public Calculator {
     public:
         RestrictedCalculator(
             GeometryGenerator* restrictor,
-            const QPointF& mousePos
-        );
-
-        RestrictedCalculator(
-            GeometryGenerator* restrictor,
             double posValue
         );
 

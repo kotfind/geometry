@@ -5,14 +5,6 @@
 
 RestrictedCalculator::RestrictedCalculator(
     GeometryGenerator* restrictor,
-    const QPointF& mousePos
-) : restrictor(restrictor)
-{
-    setPos(mousePos);
-}
-
-RestrictedCalculator::RestrictedCalculator(
-    GeometryGenerator* restrictor,
     double posValue
 ) : restrictor(restrictor),
     posValue(posValue)

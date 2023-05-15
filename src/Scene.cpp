@@ -40,7 +40,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             GeometryGenerator* gen;
             if (auto* restrictor = getDependantGeneratorAt(pos)) {
                 // Make Restrcted Generator
-                gen = geom->makeGeometryGenerator(restrictor, pos);
+                gen = geom->makeGeometryGenerator(restrictor);
+                gen->setPos(pos);
             } else {
                 // Make Free Generator
                 auto point = std::make_unique<Point>(
