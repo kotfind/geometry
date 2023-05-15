@@ -13,7 +13,7 @@ GeometryItem::GeometryItem(GeometryGenerator* gen)
 
 void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
     if (obj) {
-        obj->paint(qp);
+        obj->paint(qp, Qt::black);
     }
 }
 

@@ -29,13 +29,14 @@ Object* Point::clone() const {
     return new Point(*this);
 }
 
-void Point::paint(QPainter* qp) const {
+void Point::paint(QPainter* qp, const QColor& color) const {
     auto pen = qp->pen();
     pen.setWidth(0);
+    pen.setColor(color);
     qp->setPen(pen);
 
     auto brush = qp->brush();
-    brush.setColor(Qt::black);
+    brush.setColor(color);
     brush.setStyle(Qt::SolidPattern);
     qp->setBrush(brush);
 

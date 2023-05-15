@@ -3,6 +3,7 @@
 #include "Object.h"
 
 #include <QPointF>
+#include <QColor>
 
 class QRectF;
 class QPainter;
@@ -11,7 +12,7 @@ class Transformation;
 
 class GeometryObject : public Object {
     public:
-        virtual void paint(QPainter* painter) const = 0;
+        virtual void paint(QPainter* painter, const QColor& color) const = 0;
         virtual QRectF boundingRect() const = 0;
         virtual QPainterPath shape() const = 0;
 
