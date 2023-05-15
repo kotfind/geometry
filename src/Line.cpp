@@ -13,9 +13,12 @@
 #include <memory>
 
 Line::Line() {}
+
 Line::Line(const QPointF& p1, const QPointF& p2)
-  : segment(p1, p2)
+  : p1(p1),
+    p2(p2)
 {}
+
 Line::Line(const Point& p1, const Point& p2)
   : Line(p1.getPos(), p2.getPos())
 {}
@@ -47,7 +50,6 @@ QRectF Line::boundingRect() const {
 
 QPainterPath Line::shape() const {
     auto d = getNorm() * paintWidth;
-    auto [p1, p2] = getTwoPoints();
 
     QPainterPath path;
     path.moveTo(p1 - d);
@@ -58,15 +60,21 @@ QPainterPath Line::shape() const {
 }
 
 std::tuple<double, double, double> Line::getABC() const {
-    return segment.getABC();
+    double a, b, c;
+    if (eq(p1.x(), p2.x())) {
+        a = 1;
+        b = 0;
+        c = -p1.x();
+    } else {
+        a = p2.y() - p1.y();
+        b = p1.x() - p2.x();
+        c = -(a * p1.x() + b * p1.y());
+    }
+    return {a, b, c};
 }
 
-std::pair<QPointF, QPointF> Line::getTwoPoints() const {
-    return segment.getTwoPoints();
-}
-
-std::pair<Point, Point> Line::getTwoPoints_() const {
-    return segment.getTwoPoints_();
+std::pair<Point, Point> Line::getTwoPoints() const {
+    return {Point(p1), Point(p2)};
 }
 
 std::pair<QPointF, QPointF> Line::getTwoBoundingPoints() const {
@@ -83,8 +91,15 @@ std::pair<QPointF, QPointF> Line::getTwoBoundingPoints() const {
     }
 }
 
+QPointF Line::getDir() const {
+    auto res = p2 - p1;
+    res /= std::hypot(res.x(), res.y());
+    return res;
+}
+
 QPointF Line::getNorm() const {
-    return segment.getNorm();
+    auto dir = getDir();
+    return QPointF(dir.y(), -dir.x());
 }
 
 double Line::getDist(const QPointF& p) const {
@@ -93,7 +108,6 @@ double Line::getDist(const QPointF& p) const {
 }
 
 GeometryObject* Line::transformed(const Transformation& t) const {
-    auto [p1, p2] = getTwoPoints();
     return new Line(
         t.transform(p1),
         t.transform(p2)
@@ -122,6 +136,5 @@ Point norm(const Line& l) {
 }
 
 Point dir(const Line& l) {
-    auto ans = l.getNorm();
-    return Point(-ans.y(), ans.x());
+    return Point(l.getDir());
 }

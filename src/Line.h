@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GeometryObject.h"
-#include "Segment.h"
 
 #include <tuple>
 #include <QPointF>
@@ -27,11 +26,12 @@ class Line : public GeometryObject {
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
-        std::pair<QPointF, QPointF> getTwoPoints() const;
-        std::pair<Point, Point> getTwoPoints_() const;
+        std::pair<Point, Point> getTwoPoints() const;
 
         // Returns (A, B, C) for line equation: Ax + By + C = 0
         std::tuple<double, double, double> getABC() const;
+
+        QPointF getDir() const;
 
         QPointF getNorm() const;
 
@@ -40,7 +40,8 @@ class Line : public GeometryObject {
     private:
         std::pair<QPointF, QPointF> getTwoBoundingPoints() const;
 
-        Segment segment;
+        QPointF p1;
+        QPointF p2;
 
         static constexpr double paintWidth = 3e-3;
 };

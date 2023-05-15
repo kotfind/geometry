@@ -315,7 +315,7 @@ SectionMaster* functionList::makeSectionMaster() {
             for (int i = 0; i < 2; ++i) {
                 const auto* lPtr = static_cast<const Line*>(tangs[i]);
                 const auto& l = *lPtr;
-                auto [p1, p2] = l.getTwoPoints_();
+                auto [p1, p2] = l.getTwoPoints();
 
                 auto d = norm(l) * r1;
                 auto L = Line(p1 + d, p2 + d);

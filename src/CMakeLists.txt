@@ -37,7 +37,6 @@ add_executable(geometry
     Line.cpp
     Circle.cpp
     Real.cpp
-    Segment.cpp
 
     MainWindow.cpp
 
