@@ -157,11 +157,11 @@ Point operator/(const Point& lhs, double rhs) {
 }
 
 double dist(const Point& p1, const Point& p2) {
-    return std::hypot(p1.x - p2.x, p1.y - p2.y);
+    return len(p1 - p2);
 }
 
 double len(const Point& v) {
-    return std::hypot(v.x, v.y);
+    return len(v.getPos());
 }
 
 Point rot(const Point& v, double sin_a, double cos_a) {

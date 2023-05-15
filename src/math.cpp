@@ -25,3 +25,7 @@ bool geq(double a, double b) {
 double sq(double x) {
     return x*x;
 }
+
+double len(const QPointF& p) {
+    return hypot(p.x(), p.y());
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <QPointF>
 
 constexpr double eps = 1e-9;
 
@@ -12,5 +13,4 @@ bool geq(double a, double b);
 
 double sq(double x);
 
-QList<double> cramer(const QList<QList<double>>&, const QList<double>&);
-QList<double> cramer(const QList<QList<double>>&);
+double len(const QPointF& p);

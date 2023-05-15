@@ -79,12 +79,12 @@ QPointF Line::calcNearestPoint(const QPointF& p) const {
 double Line::pointToPosValue(const QPointF& p) const {
     auto p1p = p - p1;
     auto p1p2 = p2 - p1;
-    return QPointF::dotProduct(p1p, getDir()) / hypot(p1p2.x(), p1p2.y());
+    return QPointF::dotProduct(p1p, getDir()) / len(p1p2);
 }
 
 QPointF Line::posValueToPoint(double val) const {
     auto p1p2 = p2 - p1;
-    return p1 + val * hypot(p1p2.x(), p1p2.y()) * getDir();
+    return p1 + val * len(p1p2) * getDir();
 }
 
 std::tuple<double, double, double> Line::getABC() const {
@@ -121,7 +121,7 @@ std::pair<QPointF, QPointF> Line::getTwoBoundingPoints() const {
 
 QPointF Line::getDir() const {
     auto res = p2 - p1;
-    res /= std::hypot(res.x(), res.y());
+    res /= len(res);
     return res;
 }
 
