@@ -42,11 +42,11 @@ Generator::Generator(
     }
 }
 
-Generator::Generator(GeometryGenerator* restrictor, const QPointF& mousePos)
+Generator::Generator(GeometryGenerator* restrictor, double posValue)
   : calc(
         std::make_unique<RestrictedCalculator>(
             restrictor,
-            mousePos
+            posValue
         )
     )
 {
@@ -125,12 +125,7 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
         auto* restCalc = static_cast<RestrictedCalculator*>(calc.get());
 
         json["restrictor"] = ids[restCalc->getRestrictor()];
-
-        auto mousePos = restCalc->getMousePos();
-        QJsonObject mousePosJson;
-        mousePosJson["x"] = mousePos.x();
-        mousePosJson["y"] = mousePos.y();
-        json["mousePos"] = mousePosJson;
+        json["posValue"] = restCalc->getPosValue();
     } else {
         auto* depCalc = static_cast<DependantCalculator*>(calc.get());
 
@@ -180,17 +175,12 @@ Generator* Generator::fromJson(
         }
     } else if (isRestricted) {
         auto* restrictor = gens[getOrThrow(json["restrictor"]).toInt()];
-
-        auto mousePosJson = getOrThrow(json["mousePos"]).toObject();
-        auto mousePos = QPointF(
-            getOrThrow(mousePosJson["x"]).toDouble(),
-            getOrThrow(mousePosJson["y"]).toDouble()
-        );
+        auto posValue = getOrThrow(json["posValue"]).toDouble();
 
         assert(restrictor->isGeometry());
         gen = new GeometryGenerator(
             static_cast<GeometryGenerator*>(restrictor),
-            mousePos
+            posValue
         );
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();

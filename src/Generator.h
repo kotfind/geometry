@@ -58,7 +58,7 @@ class Generator {
 
         // Constructs Restricted Generator.
         // Is called from Geometry::makeGenerator.
-        Generator(GeometryGenerator* restrictor, const QPointF& mousePos = QPointF());
+        Generator(GeometryGenerator* restrictor, double posValue = 0);
 
         virtual void onChanged();
 

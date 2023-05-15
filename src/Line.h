@@ -26,6 +26,9 @@ class Line : public GeometryObject {
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
+        double pointToPosValue(const QPointF& pos) const override;
+        QPointF posValueToPoint(double val) const override;
+
         std::pair<Point, Point> getTwoPoints() const;
 
         // Returns (A, B, C) for line equation: Ax + By + C = 0

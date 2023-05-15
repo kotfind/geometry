@@ -59,6 +59,33 @@ QPainterPath Line::shape() const {
     return path;
 }
 
+GeometryObject* Line::transformed(const Transformation& t) const {
+    return new Line(
+        t.transform(p1),
+        t.transform(p2)
+    );
+}
+
+QPointF Line::calcNearestPoint(const QPointF& p) const {
+    auto n = getNorm() * getDist(p);
+    auto ans = p + n;
+    if (!eq(getDist(ans), 0)) {
+        ans = p - n;
+    }
+    return ans;
+}
+
+double Line::pointToPosValue(const QPointF& p) const {
+    auto p1p = p - p1;
+    auto p1p2 = p2 - p1;
+    return QPointF::dotProduct(p1p, getDir()) / hypot(p1p2.x(), p1p2.y());
+}
+
+QPointF Line::posValueToPoint(double val) const {
+    auto p1p2 = p2 - p1;
+    return p1 + val * hypot(p1p2.x(), p1p2.y()) * getDir();
+}
+
 std::tuple<double, double, double> Line::getABC() const {
     double a, b, c;
     if (eq(p1.x(), p2.x())) {
@@ -105,22 +132,6 @@ QPointF Line::getNorm() const {
 double Line::getDist(const QPointF& p) const {
     auto [a, b, c] = getABC();
     return abs(a * p.x() + b * p.y() + c) / hypot(a, b);
-}
-
-GeometryObject* Line::transformed(const Transformation& t) const {
-    return new Line(
-        t.transform(p1),
-        t.transform(p2)
-    );
-}
-
-QPointF Line::calcNearestPoint(const QPointF& p) const {
-    auto n = getNorm() * getDist(p);
-    auto ans = p + n;
-    if (!eq(getDist(ans), 0)) {
-        ans = p - n;
-    }
-    return ans;
 }
 
 double dist(const Line& l, const Point& p) {
