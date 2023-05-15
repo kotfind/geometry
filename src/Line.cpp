@@ -50,6 +50,7 @@ QRectF Line::boundingRect() const {
 
 QPainterPath Line::shape() const {
     auto d = getNorm() * paintWidth;
+    auto [p1, p2] = getTwoBoundingPoints();
 
     QPainterPath path;
     path.moveTo(p1 - d);
