@@ -53,10 +53,10 @@ bool GeometryItem::isHidden() const {
 
 void GeometryItem::setHidden(bool v) {
     hidden = v;
-    update();
+    QGraphicsItem::update();
 }
 
 void GeometryItem::toggleHidden() {
     hidden = !hidden;
-    update();
+    QGraphicsItem::update();
 }
