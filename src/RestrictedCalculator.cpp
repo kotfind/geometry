@@ -6,14 +6,22 @@
 RestrictedCalculator::RestrictedCalculator(
     GeometryGenerator* restrictor,
     const QPointF& mousePos
+) : restrictor(restrictor)
+{
+    setPos(mousePos);
+}
+
+RestrictedCalculator::RestrictedCalculator(
+    GeometryGenerator* restrictor,
+    double posValue
 ) : restrictor(restrictor),
-    mousePos(mousePos)
+    posValue(posValue)
 {}
 
 Object* RestrictedCalculator::calc() const {
     auto* obj = restrictor->getGeometryObject();
     return obj
-        ? new Point(obj->calcNearestPoint(mousePos))
+        ? new Point(obj->posValueToPoint(posValue))
         : nullptr;
 }
 
@@ -22,13 +30,17 @@ Calculator::Type RestrictedCalculator::getType() const {
 }
 
 void RestrictedCalculator::setPos(const QPointF& pos) {
-    mousePos = pos;
+    auto* obj = restrictor->getGeometryObject();
+    if (!obj) return;
+
+    auto nearest = obj->calcNearestPoint(pos);
+    posValue = obj->pointToPosValue(nearest);
 }
 
 GeometryGenerator* RestrictedCalculator::getRestrictor() const {
     return restrictor;
 }
 
-QPointF RestrictedCalculator::getMousePos() const {
-    return mousePos;
+double RestrictedCalculator::getPosValue() const {
+    return posValue;
 }

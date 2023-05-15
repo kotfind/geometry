@@ -122,6 +122,8 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
             ? static_cast<Real*>(obj.get())->toJson()
             : static_cast<Point*>(obj.get())->toJson();
     } else if (isRestricted()) {
+        // FIXME
+        /*
         auto* restCalc = static_cast<RestrictedCalculator*>(calc.get());
 
         json["restrictor"] = ids[restCalc->getRestrictor()];
@@ -131,6 +133,7 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
         mousePosJson["x"] = mousePos.x();
         mousePosJson["y"] = mousePos.y();
         json["mousePos"] = mousePosJson;
+        */
     } else {
         auto* depCalc = static_cast<DependantCalculator*>(calc.get());
 
@@ -179,6 +182,8 @@ Generator* Generator::fromJson(
             gen = new GeometryGenerator(std::move(obj));
         }
     } else if (isRestricted) {
+        // FIXME
+        /*
         auto* restrictor = gens[getOrThrow(json["restrictor"]).toInt()];
 
         auto mousePosJson = getOrThrow(json["mousePos"]).toObject();
@@ -192,6 +197,7 @@ Generator* Generator::fromJson(
             static_cast<GeometryGenerator*>(restrictor),
             mousePos
         );
+        */
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
         const auto* func = sectionMaster->get(funcName);
