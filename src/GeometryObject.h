@@ -18,6 +18,9 @@ class GeometryObject : public Object {
         virtual GeometryObject* transformed(const Transformation&) const = 0;
 
         virtual QPointF calcNearestPoint(const QPointF& pos) const = 0;
+
+        virtual double pointToPosValue(const QPointF& pos) const = 0;
+        virtual QPointF posValueToPoint(double val) const = 0;
         
     protected:
         GeometryObject() : Object() {}

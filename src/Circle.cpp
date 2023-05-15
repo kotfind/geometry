@@ -8,6 +8,7 @@
 #include <QPen>
 #include <QDebug>
 #include <memory>
+#include <math.h>
 
 Circle::Circle() : Circle(Point(), 1) {}
 Circle::Circle(const QPointF& o, double r)
@@ -55,6 +56,15 @@ QPointF Circle::calcNearestPoint(const QPointF& pos) const {
     auto o_ = Point(o);
     auto op = p - o_;
     return (o_ + norm(op) * r).getPos();
+}
+
+double Circle::pointToPosValue(const QPointF& p) const {
+    auto op = p - o;
+    return atan2(op.y(), op.x());
+}
+
+QPointF Circle::posValueToPoint(double val) const {
+    return o + r * QPointF(cos(val), sin(val));
 }
 
 Point Circle::getO() const {

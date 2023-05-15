@@ -21,6 +21,10 @@ class Circle : public GeometryObject {
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
+        // posValue for Circle is angle
+        double pointToPosValue(const QPointF& pos) const override;
+        QPointF posValueToPoint(double val) const override;
+
         Point getO() const;
         double getR() const;
         

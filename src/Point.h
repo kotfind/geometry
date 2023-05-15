@@ -27,6 +27,9 @@ class Point : public GeometryObject {
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
+        double pointToPosValue(const QPointF& pos) const override;
+        QPointF posValueToPoint(double val) const override;
+
         void setPos(const QPointF& pos);
 
         QPointF getPos() const;

@@ -83,6 +83,14 @@ QPointF Point::calcNearestPoint(const QPointF& pos) const {
     throw std::logic_error("Cannot call calcNearestPoint for Point.");
 }
 
+double Point::pointToPosValue(const QPointF& pos) const {
+    throw std::logic_error("Cannot call pointToPosValue for Point.");
+}
+
+QPointF Point::posValueToPoint(double val) const {
+    throw std::logic_error("Cannot call posValueToPoint for Point.");
+}
+
 void Point::setPos(const QPointF& pos) {
     x = pos.x();
     y = pos.y();
