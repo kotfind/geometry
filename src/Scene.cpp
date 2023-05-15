@@ -74,6 +74,16 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             }
         }
         break;
+
+        case EditMode::Type::HIDE:
+        {
+            auto* gen = getGeneratorAt(pos);
+
+            if (gen) {
+                gen->getGeometryItem()->toggleHidden();
+            }
+        }
+        break;
     }
 }
 
