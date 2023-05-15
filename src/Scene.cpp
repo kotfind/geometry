@@ -74,6 +74,16 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             }
         }
         break;
+
+        case EditMode::Type::HIDE:
+        {
+            auto* gen = getGeneratorAt(pos);
+
+            if (gen) {
+                gen->getGeometryItem()->toggleHidden();
+            }
+        }
+        break;
     }
 }
 
@@ -120,6 +130,8 @@ GeometryGenerator* Scene::getFreeOrRestrictedGeneratorAt(const QPointF& pos) con
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
+        if (item->isHidden()) continue;
+
         auto* gen = item->getGeometryGenerator();
         if (gen->isFree() || gen->isRestricted()) {
             return gen;
@@ -132,6 +144,8 @@ GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
+        if (item->isHidden()) continue;
+
         auto* gen = item->getGeometryGenerator();
         if (gen->isDependant()) {
             return gen;
@@ -140,10 +154,12 @@ GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
     return nullptr;
 }
 
-GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Object::Type type) const {
+GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Object::Type type, bool allowHidden) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
+        if (item->isHidden() && !allowHidden) continue;
+
         auto* gen = item->getGeometryGenerator();
         if (gen->getObject()->is(type)) {
             return gen;
@@ -189,6 +205,13 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
         case EditMode::Type::REMOVE:
             if (getGeneratorAt(pos)) {
                 emit cursorChanged(Qt::ForbiddenCursor);
+                return;
+            }
+            break;
+
+        case EditMode::Type::HIDE:
+            if (getGeneratorAt(pos)) {
+                emit cursorChanged(Qt::PointingHandCursor);
                 return;
             }
             break;

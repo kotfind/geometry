@@ -25,6 +25,10 @@ class GeometryItem : public QGraphicsItem {
 
         void update();
 
+        bool isHidden() const;
+        void setHidden(bool v = true);
+        void toggleHidden();
+
     private:
         void updateBoundingRect();
 
@@ -32,4 +36,6 @@ class GeometryItem : public QGraphicsItem {
 
         // Transformed object
         std::unique_ptr<GeometryObject> obj = nullptr;
+
+        bool hidden = false;
 };

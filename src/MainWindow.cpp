@@ -203,6 +203,10 @@ void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* func = action->data().value<const Function*>();
 
+    if (geom->getEditMode()->getType() == EditMode::Type::HIDE) {
+        scene->update();
+    }
+
     geom->setEditMode(EditMode::get(EditMode::Type::FUNCTION));
     geom->setActiveFunction(func, scene);
     toolInfoWidget->setMode(EditMode::get(EditMode::Type::FUNCTION)); // XXX: use Geometry mode ?
@@ -212,6 +216,11 @@ void MainWindow::onFunctionActionTriggered() {
 void MainWindow::onModeActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto mode = action->data().value<const EditMode*>();
+
+    if (geom->getEditMode()->getType() == EditMode::Type::HIDE ||
+            mode->getType() == EditMode::Type::HIDE) {
+        scene->update();
+    }
 
     geom->setEditMode(mode);
     toolInfoWidget->setMode(mode);

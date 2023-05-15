@@ -3,6 +3,7 @@
 #include "GeometryObject.h"
 #include "GeometryGenerator.h"
 #include "Geometry.h"
+#include "EditMode.h"
 
 #include <QGraphicsScene>
 
@@ -12,8 +13,9 @@ GeometryItem::GeometryItem(GeometryGenerator* gen)
 {}
 
 void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
-    if (obj) {
-        obj->paint(qp);
+    bool showHidden = gen->getGeometry()->getEditMode()->getType() == EditMode::Type::HIDE;
+    if (obj && (!hidden || showHidden)) {
+        obj->paint(qp, QColor(0, 0, 0, hidden ? 127 : 255));
     }
 }
 
@@ -43,4 +45,18 @@ void GeometryItem::update() {
             )
         : nullptr
     );
+}
+
+bool GeometryItem::isHidden() const {
+    return hidden;
+}
+
+void GeometryItem::setHidden(bool v) {
+    hidden = v;
+    QGraphicsItem::update();
+}
+
+void GeometryItem::toggleHidden() {
+    hidden = !hidden;
+    QGraphicsItem::update();
 }

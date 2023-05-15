@@ -23,11 +23,11 @@ Object* Circle::clone() const {
     return new Circle(*this);
 }
 
-void Circle::paint(QPainter* qp) const {
+void Circle::paint(QPainter* qp, const QColor& color) const {
     auto pen = qp->pen();
     pen.setWidthF(paintWidth);
     pen.setStyle(Qt::SolidLine);
-    pen.setColor(Qt::black);
+    pen.setColor(color);
     qp->setPen(pen);
 
     qp->drawEllipse(getRect(o, r));

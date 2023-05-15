@@ -13,6 +13,7 @@ class EditMode {
             CREATE_POINT,
             REMOVE,
             FUNCTION,
+            HIDE,
             count
         };
 

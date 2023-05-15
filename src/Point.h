@@ -15,7 +15,7 @@ class Point : public GeometryObject {
 
         Object* clone() const override;
 
-        void paint(QPainter* painter) const override;
+        void paint(QPainter* painter, const QColor& color) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 

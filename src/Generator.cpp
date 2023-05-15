@@ -115,6 +115,8 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
 
     if (isReal()) {
         json["name"] = static_cast<const RealGenerator*>(this)->getName();
+    } else {
+        json["isHidden"] = static_cast<const GeometryGenerator*>(this)->getGeometryItem()->isHidden();
     }
 
     if (isFree()) {
@@ -156,8 +158,11 @@ Generator* Generator::fromJson(
     Generator* gen;
 
     QString name;
+    bool isHidden;
     if (isReal) {
         name = getOrThrow(json["name"]).toString();
+    } else {
+        isHidden = getOrThrow(json["isHidden"]).toBool();
     }
 
     if (isFree) {
@@ -171,17 +176,21 @@ Generator* Generator::fromJson(
             auto obj = std::unique_ptr<Point>(
                 Point::fromJson(jsonObject)
             );
-            gen = new GeometryGenerator(std::move(obj));
+            auto* geomGen = new GeometryGenerator(std::move(obj));
+            geomGen->getGeometryItem()->setHidden(isHidden);
+            gen = geomGen;
         }
     } else if (isRestricted) {
         auto* restrictor = gens[getOrThrow(json["restrictor"]).toInt()];
         auto posValue = getOrThrow(json["posValue"]).toDouble();
 
         assert(restrictor->isGeometry());
-        gen = new GeometryGenerator(
+        auto* geomGen = new GeometryGenerator(
             static_cast<GeometryGenerator*>(restrictor),
             posValue
         );
+        geomGen->getGeometryItem()->setHidden(isHidden);
+        gen = geomGen;
     } else {
         const auto& funcName = getOrThrow(json["funcName"]).toString();
         const auto* func = sectionMaster->get(funcName);
@@ -198,7 +207,9 @@ Generator* Generator::fromJson(
         if (isReal) {
             gen = new RealGenerator(name, func, args, funcResNum);
         } else {
-            gen = new GeometryGenerator(func, args, funcResNum);
+            auto* geomGen = new GeometryGenerator(func, args, funcResNum);
+            geomGen->getGeometryItem()->setHidden(isHidden);
+            gen = geomGen;
         }
     }
 

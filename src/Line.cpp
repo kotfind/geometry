@@ -27,9 +27,10 @@ Object* Line::clone() const {
     return new Line(*this);
 }
 
-void Line::paint(QPainter* qp) const {
+void Line::paint(QPainter* qp, const QColor& color) const {
     auto pen = qp->pen();
     pen.setWidthF(paintWidth);
+    pen.setColor(color);
     qp->setPen(pen);
 
     auto [p1, p2] = getTwoBoundingPoints();

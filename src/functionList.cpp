@@ -41,6 +41,13 @@ SectionMaster* functionList::makeSectionMaster() {
     );
 
     specialSection->makeEditMode(
+        EditMode::Type::HIDE,
+        TR("Hide/Show"),
+        QIcon(QIcon(":none.svg")),
+        TR("Click on any object to toggle it's visibility.")
+    );
+
+    specialSection->makeEditMode(
         EditMode::Type::REMOVE,
         TR("Remove"),
         QIcon(QIcon(":none.svg")),
