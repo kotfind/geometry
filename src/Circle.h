@@ -8,6 +8,7 @@ class Circle : public GeometryObject {
         Type getType() const { return Type::Circle; }
 
         Circle();
+        Circle(const QPointF& o, double r);
         Circle(const Point& o, double r);
 
         Object* clone() const override;
@@ -20,8 +21,14 @@ class Circle : public GeometryObject {
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
-        static constexpr double paintWidth = 3e-3;
+        Point getO() const;
+        double getR() const;
         
-        Point o;
+    private:
+        static QRectF getRect(const QPointF& center, double radius);
+
+        QPointF o;
         double r;
+
+        static constexpr double paintWidth = 3e-3;
 };

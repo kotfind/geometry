@@ -10,18 +10,14 @@ class Point : public GeometryObject {
         Type getType() const { return Type::Point; }
 
         Point();
-        Point(const QPointF& pos);
         Point(double x, double y);
+        explicit Point(const QPointF& pos);
 
         Object* clone() const override;
 
         void paint(QPainter* painter) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
-
-        void setPos(const QPointF& pos);
-
-        QPointF getPos() const;
 
         QJsonObject toJson() const;
         static Point* fromJson(const QJsonObject& json);
@@ -31,8 +27,13 @@ class Point : public GeometryObject {
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 
+        void setPos(const QPointF& pos);
+
+        QPointF getPos() const;
+
         double x, y;
 
+    private:
         static constexpr double paintRadius = 5e-3;
 };
 

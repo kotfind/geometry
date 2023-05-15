@@ -70,9 +70,12 @@ SectionMaster* functionList::makeSectionMaster() {
                 const auto& l1 = *static_cast<const Line*>(objs[0]);
                 const auto& l2 = *static_cast<const Line*>(objs[1]);
 
+                auto [a1, b1, c1] = l1.getABC();
+                auto [a2, b2, c2] = l2.getABC();
+
                 auto cramerAns = cramer({
-                    {l1.a, l1.b, -l1.c},
-                    {l2.a, l2.b, -l2.c},
+                    {a1, b1, -c1},
+                    {a2, b2, -c2},
                 });
 
                 if (cramerAns.isEmpty())
@@ -89,10 +92,10 @@ SectionMaster* functionList::makeSectionMaster() {
                 //  ---------
                 //      d
 
-                auto r1 = w1.r;
-                auto r2 = w2.r;
-                auto o1 = w1.o;
-                auto o2 = w2.o;
+                auto r1 = w1.getR();
+                auto r2 = w2.getR();
+                auto o1 = w1.getO();
+                auto o2 = w2.getO();
                 auto d = dist(o1, o2);
 
                 if (gr(abs(r1 - r2), d) || gr(d, r1 + r2))
@@ -108,11 +111,11 @@ SectionMaster* functionList::makeSectionMaster() {
 
                 auto sin_a = sqrt(1 - cos_a*cos_a);
 
-                auto v = norm(w2.o - w1.o) * r1;
+                auto v = norm(o2 - o1) * r1;
 
                 return {
-                    new Point(rot(v, +sin_a, cos_a) + w1.o),
-                    new Point(rot(v, -sin_a, cos_a) + w1.o),
+                    new Point(rot(v, +sin_a, cos_a) + o1),
+                    new Point(rot(v, -sin_a, cos_a) + o1),
                 };
 
             } else {
@@ -129,18 +132,21 @@ SectionMaster* functionList::makeSectionMaster() {
                 const auto& l = *lPtr;
                 const auto& w = *wPtr;
 
-                double d = dist(w.o, l);
-                if (gr(d, w.r))
+                auto o = w.getO();
+                auto r = w.getR();
+
+                double d = dist(o, l);
+                if (gr(d, r))
                     return {};
 
-                auto h = w.o + norm(l) * d;
+                auto h = o + norm(l) * d;
                 if (!eq(dist(h, l), 0)) {
-                    h = w.o - norm(l) * d;
+                    h = o - norm(l) * d;
                 }
-                if (eq(d, w.r))
+                if (eq(d, r))
                     return {new Point(h)};
 
-                auto x = sqrt(sq(w.r) - sq(d)) * dir(l);
+                auto x = sqrt(sq(r) - sq(d)) * dir(l);
 
                 return {
                     new Point(h + x),
@@ -236,8 +242,8 @@ SectionMaster* functionList::makeSectionMaster() {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& w = *static_cast<const Circle*>(objs[1]);
 
-            const auto& o = w.o;
-            const auto& r = w.r;
+            auto o = w.getO();
+            auto r = w.getR();
             auto d = dist(p, o);
 
             if (le(d, r))
@@ -273,13 +279,15 @@ SectionMaster* functionList::makeSectionMaster() {
             auto w1 = *static_cast<const Circle*>(objs[0]);
             auto w2 = *static_cast<const Circle*>(objs[1]);
 
-            if (gr(w1.r, w2.r)) {
+            if (gr(w1.getR(), w2.getR())) {
                 std::swap(w1, w2);
             }
 
             // r2 > r1
-            const auto& [o1, r1] = w1;
-            const auto& [o2, r2] = w2;
+            auto o1 = w1.getO();
+            auto o2 = w2.getO();
+            auto r1 = w1.getR();
+            auto r2 = w2.getR();
 
             if (gr(r2 - r1, dist(o1, o2))) {
                 return {};
