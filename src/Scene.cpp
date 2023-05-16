@@ -77,7 +77,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::Type::HIDE:
         {
-            auto* gen = getGeneratorAt(pos);
+            auto* gen = getGeneratorAt(pos, Object::Type::Any, true);
 
             if (gen) {
                 gen->getGeometryItem()->toggleHidden();
@@ -210,7 +210,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             break;
 
         case EditMode::Type::HIDE:
-            if (getGeneratorAt(pos)) {
+            if (getGeneratorAt(pos), Object::Type::Any, true) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;
             }
