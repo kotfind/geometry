@@ -22,20 +22,16 @@ Calculator::Type RestrictedCalculator::getType() const {
     return Type::RESTRICTED;
 }
 
+QList<Generator*> RestrictedCalculator::getArgs() const {
+    return { restrictor };
+}
+
 void RestrictedCalculator::setPos(const QPointF& pos) {
     auto* obj = restrictor->getGeometryObject();
     if (!obj) return;
 
     auto nearest = obj->calcNearestPoint(pos);
     posValue = obj->pointToPosValue(nearest);
-}
-
-GeometryGenerator* RestrictedCalculator::getRestrictor() const {
-    return restrictor;
-}
-
-double RestrictedCalculator::getPosValue() const {
-    return posValue;
 }
 
 QJsonObject RestrictedCalculator::toJson(const QHash<Generator*, int>& ids, bool isReal) const {

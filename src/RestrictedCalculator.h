@@ -17,10 +17,9 @@ class RestrictedCalculator : public Calculator {
 
         Type getType() const override;
 
-        void setPos(const QPointF& pos) override;
+        QList<Generator*> getArgs() const override;
 
-        GeometryGenerator* getRestrictor() const;
-        double getPosValue() const;
+        void setPos(const QPointF& pos) override;
 
         QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const override;
 

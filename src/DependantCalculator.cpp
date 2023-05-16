@@ -42,16 +42,8 @@ Calculator::Type DependantCalculator::getType() const {
     return Type::DEPENDANT;
 }
 
-const QList<Generator*> DependantCalculator::getArgs() const {
+QList<Generator*> DependantCalculator::getArgs() const {
     return args;
-}
-
-const Function* DependantCalculator::getFunc() const {
-    return func;
-}
-
-int DependantCalculator::getFuncResNum() const {
-    return funcResNum;
 }
 
 QJsonObject DependantCalculator::toJson(const QHash<Generator*, int>& ids, bool isReal) const {

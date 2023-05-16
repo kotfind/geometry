@@ -16,11 +16,11 @@ class FreeCalculator : public Calculator {
 
         Type getType() const override;
 
+        QList<Generator*> getArgs() const override;
+
         void setPos(const QPointF& pos) override;
 
         void setValue(double);
-
-        Object* getObject() const; // TODO: delete me
 
         QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const override;
 

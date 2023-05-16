@@ -90,13 +90,7 @@ void Generator::recalcSelf() {
 }
 
 QList<Generator*> Generator::getArgs() const {
-    if (isRestricted()) {
-        return { static_cast<RestrictedCalculator*>(calc.get())->getRestrictor() };
-    } else if (isDependant()) {
-        return static_cast<DependantCalculator*>(calc.get())->getArgs();
-    } else /* isFree() */ {
-        return {};
-    }
+    return calc->getArgs();
 }
 
 Geometry* Generator::getGeometry() const {

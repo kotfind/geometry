@@ -23,6 +23,8 @@ class Calculator {
 
         virtual Type getType() const = 0;
 
+        virtual QList<Generator*> getArgs() const = 0;
+
         virtual void setPos(const QPointF& pos);
 
         virtual QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const = 0;

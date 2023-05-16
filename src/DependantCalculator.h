@@ -19,9 +19,7 @@ class DependantCalculator : public Calculator {
 
         Type getType() const override;
 
-        const QList<Generator*> getArgs() const;
-        const Function* getFunc() const;
-        int getFuncResNum() const;
+        QList<Generator*> getArgs() const override;
 
         QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const override;
 

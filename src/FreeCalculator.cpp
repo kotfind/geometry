@@ -15,6 +15,10 @@ Calculator::Type FreeCalculator::getType() const {
     return Type::FREE;
 }
 
+QList<Generator*> FreeCalculator::getArgs() const {
+    return {};
+}
+
 void FreeCalculator::setPos(const QPointF& pos) {
     assert(obj->is(Object::Type::Point));
     static_cast<Point*>(obj.get())->setPos(pos);
@@ -23,10 +27,6 @@ void FreeCalculator::setPos(const QPointF& pos) {
 void FreeCalculator::setValue(double v) {
     assert(obj->is(Object::Type::Real));
     static_cast<Real*>(obj.get())->value = v;
-}
-
-Object* FreeCalculator::getObject() const {
-    return obj.get();
 }
 
 QJsonObject FreeCalculator::toJson(const QHash<Generator*, int>& ids, bool isReal) const {
