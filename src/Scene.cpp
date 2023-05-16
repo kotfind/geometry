@@ -210,7 +210,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             break;
 
         case EditMode::Type::HIDE:
-            if (getGeneratorAt(pos), Object::Type::Any, true) {
+            if (getGeneratorAt(pos, Object::Type::Any, true)) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;
             }
