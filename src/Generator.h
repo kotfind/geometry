@@ -70,7 +70,7 @@ class Generator {
 
         std::unique_ptr<Calculator> calc;
 
-        Geometry* geom;
+        Geometry* geom = nullptr;
 
     private:
         void recalcSelf();

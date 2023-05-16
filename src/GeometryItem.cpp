@@ -54,9 +54,15 @@ bool GeometryItem::isHidden() const {
 void GeometryItem::setHidden(bool v) {
     hidden = v;
     QGraphicsItem::update();
+    if (auto geom = gen->getGeometry(); geom) {
+        geom->setChanged();
+    }
 }
 
 void GeometryItem::toggleHidden() {
     hidden = !hidden;
     QGraphicsItem::update();
+    if (auto geom = gen->getGeometry(); geom) {
+        geom->setChanged();
+    }
 }
