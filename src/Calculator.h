@@ -1,8 +1,13 @@
 #pragma once
 
 #include <QPointF>
+#include <QJsonObject>
+#include <QHash>
+#include <QList>
 
 class Object;
+class Generator;
+class SectionMaster;
 
 class Calculator {
     public:
@@ -19,4 +24,12 @@ class Calculator {
         virtual Type getType() const = 0;
 
         virtual void setPos(const QPointF& pos);
+
+        QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const;
+        static Calculator* fromJson(
+            const QJsonObject& json,
+            const QList<Generator*>& gens,
+            const SectionMaster* sectionMaster,
+            bool isReal
+        );
 };

@@ -19,6 +19,8 @@ class FreeCalculator : public Calculator {
 
         void setValue(double);
 
+        Object* getObject() const; // TODO: delete me
+
     private:
         std::unique_ptr<Object> obj;
 };

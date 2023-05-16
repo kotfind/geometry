@@ -60,6 +60,10 @@ class Generator {
         // Is called from Geometry::makeGenerator.
         Generator(GeometryGenerator* restrictor, double posValue = 0);
 
+        // Basic Generator c'tor.
+        // Is used by other c'tors and fromJson function
+        Generator(std::unique_ptr<Calculator> calc);
+
         virtual void onChanged();
 
         std::unique_ptr<Object> obj;
@@ -69,10 +73,6 @@ class Generator {
         Geometry* geom;
 
     private:
-        // Basic Generator c'tor.
-        // Is used by other c'tors and fromJson function
-        Generator(std::unique_ptr<Calculator> calc);
-
         void recalcSelf();
 
         virtual bool checkObjectType() const = 0;

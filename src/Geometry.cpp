@@ -145,18 +145,20 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
         used[u] = 1;
 
         const auto& json = jsonGens[u];
+        const auto& jsonCalc = json["calc"];
 
-        auto type = getOrThrow(json["type"]).toString();
-        bool isFree         = type == "free";
-        bool isDependant    = type == "dependant";
-        bool isRestricted   = type == "restrictor";
+        auto type = getOrThrow(jsonCalc["type"]).toString();
+        bool isFree         = type == "FREE";
+        bool isDependant    = type == "DEPENDANT";
+        bool isRestricted   = type == "RESTRICTED";
+        assert(isFree || isDependant || isRestricted);
 
         QJsonArray jsonArgs;
 
         if (isDependant) {
-            jsonArgs = getOrThrow(json["args"]).toArray();
+            jsonArgs = getOrThrow(jsonCalc["args"]).toArray();
         } else if (isRestricted) {
-            jsonArgs = { getOrThrow(json["restrictor"]) };
+            jsonArgs = { getOrThrow(jsonCalc["restrictor"]) };
         } else /* isFree */ {
             jsonArgs = {};
         }

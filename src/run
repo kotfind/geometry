@@ -9,5 +9,5 @@ cmake \
     -DCMAKE_EXPORT_COMPILE_COMMANDS=true \
     -DCMAKE_BUILD_TYPE=Debug \
     ../src
-cmake --build . -- -j
+cmake --build . -- -j3
 ./geometry

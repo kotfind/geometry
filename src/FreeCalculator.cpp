@@ -23,3 +23,7 @@ void FreeCalculator::setValue(double v) {
     assert(obj->is(Object::Type::Real));
     static_cast<Real*>(obj.get())->value = v;
 }
+
+Object* FreeCalculator::getObject() const {
+    return obj.get();
+}

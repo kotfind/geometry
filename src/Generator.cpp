@@ -108,37 +108,14 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
 
     json["isReal"] = isReal();
 
-    QString type;
-    if (isFree())       type = "FREE";
-    if (isDependant())  type = "DEPENDANT";
-    if (isRestricted()) type = "RESTRICTED";
-    json["type"] = type;
+    json["calc"] = calc->toJson(ids, isReal());
 
     if (isReal()) {
+        // TODO: Move to RealGenerator::toJson ?
         json["name"] = static_cast<const RealGenerator*>(this)->getName();
     } else {
+        // TODO: Move to GeometryGenerator::toJson
         json["isHidden"] = static_cast<const GeometryGenerator*>(this)->getGeometryItem()->isHidden();
-    }
-
-    if (isFree()) {
-        json["object"] = isReal()
-            ? static_cast<Real*>(obj.get())->toJson()
-            : static_cast<Point*>(obj.get())->toJson();
-    } else if (isRestricted()) {
-        auto* restCalc = static_cast<RestrictedCalculator*>(calc.get());
-
-        json["restrictor"] = ids[restCalc->getRestrictor()];
-        json["posValue"] = restCalc->getPosValue();
-    } else {
-        auto* depCalc = static_cast<DependantCalculator*>(calc.get());
-
-        json["funcName"] = depCalc->getFunc()->getFullName();
-        json["funcResNum"] = depCalc->getFuncResNum();
-        QJsonArray jsonArgs;
-        for (auto arg : depCalc->getArgs()) {
-            jsonArgs << ids[arg];
-        }
-        json["args"] = jsonArgs;
     }
 
     return json;
@@ -151,70 +128,28 @@ Generator* Generator::fromJson(
 ) {
     auto isReal = getOrThrow(json["isReal"]).toBool();
 
-    auto type = getOrThrow(json["type"]).toString();
-    bool isFree         = type == "FREE";
-    bool isDependant    = type == "DEPENDANT";
-    bool isRestricted   = type == "RESTRICTED";
+    auto calc = std::unique_ptr<Calculator>(
+        Calculator::fromJson(
+            getOrThrow(json["calc"]).toObject(),
+            gens,
+            sectionMaster,
+            isReal
+        )
+    );
 
-    Generator* gen;
-
-    QString name;
-    bool isHidden;
     if (isReal) {
-        name = getOrThrow(json["name"]).toString();
+        // TODO: Move to RealGenerator::fromJson
+        auto name = getOrThrow(json["name"]).toString();
+        return new RealGenerator(name, std::move(calc));
     } else {
-        isHidden = getOrThrow(json["isHidden"]).toBool();
+        // TODO: Move to GeometryGenerator::fromJson
+        auto isHidden = getOrThrow(json["isHidden"]).toBool();
+
+        auto* gen = new GeometryGenerator(std::move(calc));
+        gen->getGeometryItem()->setHidden(isHidden);
+
+        return gen;
     }
-
-    if (isFree) {
-        auto jsonObject = getOrThrow(json["object"]).toObject();
-        if (isReal) {
-            auto obj = std::unique_ptr<Real>(
-                Real::fromJson(jsonObject)
-            );
-            gen = new RealGenerator(name, std::move(obj));
-        } else {
-            auto obj = std::unique_ptr<Point>(
-                Point::fromJson(jsonObject)
-            );
-            auto* geomGen = new GeometryGenerator(std::move(obj));
-            geomGen->getGeometryItem()->setHidden(isHidden);
-            gen = geomGen;
-        }
-    } else if (isRestricted) {
-        auto* restrictor = gens[getOrThrow(json["restrictor"]).toInt()];
-        auto posValue = getOrThrow(json["posValue"]).toDouble();
-
-        assert(restrictor->isGeometry());
-        auto* geomGen = new GeometryGenerator(
-            static_cast<GeometryGenerator*>(restrictor),
-            posValue
-        );
-        geomGen->getGeometryItem()->setHidden(isHidden);
-        gen = geomGen;
-    } else {
-        const auto& funcName = getOrThrow(json["funcName"]).toString();
-        const auto* func = sectionMaster->get(funcName);
-
-        QList<Generator*> args;
-        const auto& jsonArgs = getOrThrow(json["args"]).toArray();
-        for (const auto& arg : jsonArgs) {
-            int id = arg.toInt();
-            args << gens[id];
-        }
-
-        auto funcResNum = getOrThrow(json["funcResNum"]).toInt();
-
-        if (isReal) {
-            gen = new RealGenerator(name, func, args, funcResNum);
-        } else {
-            auto* geomGen = new GeometryGenerator(func, args, funcResNum);
-            geomGen->getGeometryItem()->setHidden(isHidden);
-            gen = geomGen;
-        }
-    }
-
-    return gen;
 }
 
 void Generator::onChanged() {
