@@ -23,8 +23,19 @@ class DependantCalculator : public Calculator {
         const Function* getFunc() const;
         int getFuncResNum() const;
 
+        QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const override;
+
     private:
+        // Is called from Calculator::fromJson(...)
+        static DependantCalculator* fromJson(
+            const QJsonObject& json,
+            const QList<Generator*>& gens,
+            const SectionMaster* sectionMaster
+        );
+
         const Function* func;
         const QList<Generator*> args;
         const int funcResNum;
+
+    friend Calculator;
 };

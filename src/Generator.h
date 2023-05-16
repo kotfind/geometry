@@ -36,7 +36,7 @@ class Generator {
 
         Geometry* getGeometry() const;
 
-        QJsonObject toJson(const QHash<Generator*, int>& ids) const;
+        virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
         static Generator* fromJson(
             const QJsonObject& json,
             const QList<Generator*>& gens,

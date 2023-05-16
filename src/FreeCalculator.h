@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <QPointF>
+#include <QJsonObject>
 
 class FreeCalculator : public Calculator {
     public:
@@ -21,6 +22,13 @@ class FreeCalculator : public Calculator {
 
         Object* getObject() const; // TODO: delete me
 
+        QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const override;
+
     private:
+        // Is called from Calculator::fromJson(...)
+        static FreeCalculator* fromJson(const QJsonObject& json, bool isReal);
+
         std::unique_ptr<Object> obj;
+
+    friend Calculator;
 };

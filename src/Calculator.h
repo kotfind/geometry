@@ -25,7 +25,7 @@ class Calculator {
 
         virtual void setPos(const QPointF& pos);
 
-        QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const;
+        virtual QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const = 0;
         static Calculator* fromJson(
             const QJsonObject& json,
             const QList<Generator*>& gens,
