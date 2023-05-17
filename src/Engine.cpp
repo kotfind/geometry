@@ -1,4 +1,4 @@
-#include "Geometry.h"
+#include "Engine.h"
 
 #include "Object.h"
 #include "Generator.h"
@@ -30,17 +30,17 @@
 #include <functional>
 #include <QMessageBox>
 
-Geometry::Geometry(QObject* parent)
+Engine::Engine(QObject* parent)
   : QObject(parent),
     sectionMaster(functionList::makeSectionMaster())
 {}
 
-Geometry::~Geometry() {
+Engine::~Engine() {
     clear();
 }
 
 // Topsort algorithm.
-QList<Generator*> Geometry::getGeneratorRecalcOrder() {
+QList<Generator*> Engine::getGeneratorRecalcOrder() {
     QSet<Generator*> used;
 
     QList<Generator*> ans;
@@ -68,19 +68,19 @@ QList<Generator*> Geometry::getGeneratorRecalcOrder() {
     return ans;
 }
 
-void Geometry::recalcAll() {
+void Engine::recalcAll() {
     for (auto* gen : getGeneratorRecalcOrder()) {
         gen->recalcSelf();
     }
 }
 
-void Geometry::recalcAllItems() {
+void Engine::recalcAllItems() {
     for (auto* gen : getGeomeryGenerators()) {
         gen->getGeometryItem()->update();
     }
 }
 
-void Geometry::scroll(const QPointF& delta) {
+void Engine::scroll(const QPointF& delta) {
     setChanged();
 
     transformation.scroll(delta);
@@ -88,7 +88,7 @@ void Geometry::scroll(const QPointF& delta) {
     recalcAllItems();
 }
 
-void Geometry::move(const QPointF& delta) {
+void Engine::move(const QPointF& delta) {
     setChanged();
 
     transformation.move(delta);
@@ -96,7 +96,7 @@ void Geometry::move(const QPointF& delta) {
     recalcAllItems();
 }
 
-void Geometry::zoom(double v, const QPointF& zoomCenter) {
+void Engine::zoom(double v, const QPointF& zoomCenter) {
     setChanged();
 
     transformation.zoom(v, zoomCenter);
@@ -104,7 +104,7 @@ void Geometry::zoom(double v, const QPointF& zoomCenter) {
     recalcAllItems();
 }
 
-QJsonObject Geometry::toJson() const {
+QJsonObject Engine::toJson() const {
     QJsonObject json;
 
     json["transformation"] = transformation.toJson();
@@ -123,7 +123,7 @@ QJsonObject Geometry::toJson() const {
     return json;
 }
 
-void Geometry::save(const QString& fileName) const {
+void Engine::save(const QString& fileName) const {
     QFile file(fileName);
 
     if (!file.open(QIODevice::WriteOnly))
@@ -182,7 +182,7 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
     return ans;
 }
 
-void Geometry::fromJson(const QJsonObject& json) {
+void Engine::fromJson(const QJsonObject& json) {
     transformation = Transformation::fromJson(
         getOrThrow(json["transformation"]).toObject()
     );
@@ -193,13 +193,13 @@ void Geometry::fromJson(const QJsonObject& json) {
     gens.resize(jsonGens.size(), nullptr);
     for (int i : order) {
         gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens, sectionMaster.get());
-        gens[i]->geom = this;
+        gens[i]->engine = this;
     }
 
     recalcAll();
 }
 
-void Geometry::load(const QString& fileName) {
+void Engine::load(const QString& fileName) {
     clear();
 
     QFile file(fileName);
@@ -212,7 +212,7 @@ void Geometry::load(const QString& fileName) {
     emit resetCompleted();
 }
 
-void Geometry::clear() {
+void Engine::clear() {
     transformation.clear();
 
     while (!gens.isEmpty()) {
@@ -224,7 +224,7 @@ void Geometry::clear() {
     emit resetCompleted();
 }
 
-void Geometry::populateScene(QGraphicsScene* scene) {
+void Engine::populateScene(QGraphicsScene* scene) {
     for (auto* gen : getGeomeryGenerators()) {
         scene->addItem(
             gen->getGeometryItem()
@@ -232,11 +232,11 @@ void Geometry::populateScene(QGraphicsScene* scene) {
     }
 }
 
-void Geometry::setChanged(bool v) {
+void Engine::setChanged(bool v) {
     changed = v;
 }
 
-void Geometry::removeGenerator(Generator* gen) {
+void Engine::removeGenerator(Generator* gen) {
     setChanged();
 
     emit generatorRemoved(gen);
@@ -258,7 +258,7 @@ void Geometry::removeGenerator(Generator* gen) {
     delete gen;
 }
 
-QList<RealGenerator*> Geometry::getRealGenerators() const {
+QList<RealGenerator*> Engine::getRealGenerators() const {
     QList<RealGenerator*> ans;
 
     for (auto* gen : gens) {
@@ -270,7 +270,7 @@ QList<RealGenerator*> Geometry::getRealGenerators() const {
     return ans;
 }
 
-QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
+QList<GeometryGenerator*> Engine::getGeomeryGenerators() const {
     QList<GeometryGenerator*> ans;
 
     for (auto* gen : gens) {
@@ -282,48 +282,48 @@ QList<GeometryGenerator*> Geometry::getGeomeryGenerators() const {
     return ans;
 }
 
-const Transformation& Geometry::getTransformation() const {
+const Transformation& Engine::getTransformation() const {
     return transformation;
 }
 
-const EditMode* Geometry::getEditMode() const {
+const EditMode* Engine::getEditMode() const {
     return editMode;
 }
 
-void Geometry::setEditMode(const EditMode* mode) {
+void Engine::setEditMode(const EditMode* mode) {
     editMode = mode;
 }
 
-const Function* Geometry::getActiveFunction() const {
+const Function* Engine::getActiveFunction() const {
     assert(editMode->getType() == EditMode::Type::FUNCTION);
     return activeFunction;
 }
 
-void Geometry::setActiveFunction(const Function* func, QGraphicsScene* scene) {
+void Engine::setActiveFunction(const Function* func, QGraphicsScene* scene) {
     assert(editMode->getType() == EditMode::Type::FUNCTION);
     activeFunction = func;
     clearFuncArgs(scene);
 }
 
-Object::Type Geometry::getNextFuncArgType() const {
+Object::Type Engine::getNextFuncArgType() const {
     return getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType();
 }
 
-void Geometry::selectFuncArg(Generator* gen, QGraphicsScene* scene) {
+void Engine::selectFuncArg(Generator* gen, QGraphicsScene* scene) {
     selectedFuncArgs << gen;
     emit selectedCountChanged(selectedFuncArgs.size());
 
     checkSelectedFuncArgs(scene);
 }
 
-void Geometry::clearFuncArgs(QGraphicsScene* scene) {
+void Engine::clearFuncArgs(QGraphicsScene* scene) {
     selectedFuncArgs.clear();
     emit selectedCountChanged(selectedFuncArgs.size());
 
     checkSelectedFuncArgs(scene);
 }
 
-void Geometry::checkSelectedFuncArgs(QGraphicsScene* scene) {
+void Engine::checkSelectedFuncArgs(QGraphicsScene* scene) {
     if (selectedFuncArgs.size() == getActiveFunction()->countArgs()) {
         createGeneratorFromSelectedFuncArgs(scene);
     }
@@ -333,7 +333,7 @@ void Geometry::checkSelectedFuncArgs(QGraphicsScene* scene) {
     }
 }
 
-void Geometry::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
+void Engine::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
     auto* func = getActiveFunction();
     for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
         auto* gen = makeGeometryGenerator(
@@ -348,7 +348,7 @@ void Geometry::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
     clearFuncArgs(scene);
 }
 
-void Geometry::processRealFuncArg(QGraphicsScene* scene) {
+void Engine::processRealFuncArg(QGraphicsScene* scene) {
     if (getRealGenerators().empty()) {
         QMessageBox::critical(
             nullptr,
@@ -370,6 +370,6 @@ void Geometry::processRealFuncArg(QGraphicsScene* scene) {
     selectFuncArg(var, scene);
 }
 
-const SectionMaster* Geometry::getSectionMaster() const {
+const SectionMaster* Engine::getSectionMaster() const {
     return sectionMaster.get();
 }

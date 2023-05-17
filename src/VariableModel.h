@@ -4,7 +4,7 @@
 #include <QList>
 #include <QString>
 
-class Geometry;
+class Engine;
 class Generator;
 class RealGenerator;
 
@@ -12,7 +12,7 @@ class VariableModel : public QAbstractTableModel {
     Q_OBJECT
 
     public:
-        VariableModel(Geometry* geom, QObject* parent = nullptr);
+        VariableModel(Engine* engine, QObject* parent = nullptr);
 
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
         int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -29,7 +29,7 @@ class VariableModel : public QAbstractTableModel {
         RealGenerator* getVariable(int row) const;
 
     private:
-        Geometry* geom;
+        Engine* engine;
 
         QList<RealGenerator*> gens;
 

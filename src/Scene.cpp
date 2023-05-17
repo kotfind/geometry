@@ -3,7 +3,7 @@
 #include "Function.h"
 #include "Point.h"
 #include "GeometryItem.h"
-#include "Geometry.h"
+#include "Engine.h"
 #include "Generator.h"
 #include "GeometryGenerator.h"
 #include "EditMode.h"
@@ -14,11 +14,11 @@
 #include <QPointF>
 #include <QCursor>
 
-Scene::Scene(Geometry* geom, QObject* parent)
+Scene::Scene(Engine* engine, QObject* parent)
   : QGraphicsScene(parent),
-    geom(geom)
+    engine(engine)
 {
-    setSceneRect(geom->getSceneRect());
+    setSceneRect(engine->getSceneRect());
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
@@ -28,7 +28,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (geom->getEditMode()->getType()) {
+    switch (engine->getEditMode()->getType()) {
         case EditMode::Type::MOVE:
         {
             currentFreeGenerator = getFreeOrRestrictedGeneratorAt(pos);
@@ -40,14 +40,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             GeometryGenerator* gen;
             if (auto* restrictor = getDependantGeneratorAt(pos)) {
                 // Make Restrcted Generator
-                gen = geom->makeGeometryGenerator(restrictor);
+                gen = engine->makeGeometryGenerator(restrictor);
                 gen->setPos(pos);
             } else {
                 // Make Free Generator
                 auto point = std::make_unique<Point>(
-                    geom->getTransformation().untransform(pos)
+                    engine->getTransformation().untransform(pos)
                 );
-                gen = geom->makeGeometryGenerator(std::move(point));
+                gen = engine->makeGeometryGenerator(std::move(point));
             }
             auto* item = gen->getGeometryItem();
             addItem(item);
@@ -58,11 +58,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             auto* gen = getGeneratorAt(
                 pos,
-                geom->getNextFuncArgType()
+                engine->getNextFuncArgType()
             );
             if (!gen) break;
 
-            geom->selectFuncArg(gen, this);
+            engine->selectFuncArg(gen, this);
         }
         break;
 
@@ -70,7 +70,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             auto* gen = getGeneratorAt(pos);
             if (gen) {
-                geom->removeGenerator(gen);
+                engine->removeGenerator(gen);
             }
         }
         break;
@@ -94,18 +94,18 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
     updateCursor(e);
 
     if (e->buttons() & Qt::MiddleButton) {
-        geom->move(delta);
+        engine->move(delta);
         update();
     }
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (geom->getEditMode()->getType()) {
+    switch (engine->getEditMode()->getType()) {
         case EditMode::Type::MOVE:
         {
             if (!currentFreeGenerator) break;
             currentFreeGenerator->setPos(
-                geom->getTransformation().untransform(pos)
+                engine->getTransformation().untransform(pos)
             );
         }
         break;
@@ -117,7 +117,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
 
     if (!(e->buttons() & Qt::LeftButton)) return;
 
-    switch (geom->getEditMode()->getType()) {
+    switch (engine->getEditMode()->getType()) {
         case EditMode::Type::MOVE:
         {
             currentFreeGenerator = nullptr;
@@ -171,7 +171,7 @@ GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Object::Type type, 
 void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
-    switch (geom->getEditMode()->getType()) {
+    switch (engine->getEditMode()->getType()) {
         case EditMode::Type::MOVE:
             if (currentFreeGenerator && (e->buttons() & Qt::LeftButton)) {
                 // Moving item
@@ -195,7 +195,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
         case EditMode::Type::FUNCTION:
             if (getGeneratorAt(
                 pos,
-                geom->getNextFuncArgType()
+                engine->getNextFuncArgType()
             )) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;
@@ -225,10 +225,10 @@ void Scene::wheelEvent(QGraphicsSceneWheelEvent* e) {
 
     if (e->modifiers() & Qt::ControlModifier) {
         // Zoom
-        geom->zoom(ang, e->scenePos());
+        engine->zoom(ang, e->scenePos());
     } else {
         // Scroll
-        geom->scroll(
+        engine->scroll(
             e->orientation() == Qt::Horizontal
                 ? QPointF(ang, 0)
                 : QPointF(0, ang)

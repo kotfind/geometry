@@ -4,7 +4,7 @@
 #include "Scene.h"
 #include "EditMode.h"
 #include "View.h"
-#include "Geometry.h"
+#include "Engine.h"
 #include "IOError.h"
 #include "ToolInfoWidget.h"
 #include "Section.h"
@@ -27,7 +27,7 @@
 
 MainWindow::MainWindow()
 {
-    geom = new Geometry(this);
+    engine = new Engine(this);
 
     updateTitle();
 
@@ -38,10 +38,10 @@ MainWindow::MainWindow()
     createToolsMenu();
     createDocks();
 
-    scene = new Scene(geom, this);
+    scene = new Scene(engine, this);
     view->setScene(scene);
 
-    varModel = new VariableModel(geom, this);
+    varModel = new VariableModel(engine, this);
     varWidget->setModel(varModel);
 
     connect(
@@ -52,14 +52,14 @@ MainWindow::MainWindow()
     );
 
     connect(
-        geom,
-        &Geometry::selectedCountChanged,
+        engine,
+        &Engine::selectedCountChanged,
         toolInfoWidget,
         &ToolInfoWidget::updateSelectedCount
     );
 
     modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
-    geom->setEditMode(EditMode::get(EditMode::Type::MOVE));
+    engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
     toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
 }
 
@@ -68,7 +68,7 @@ void MainWindow::createModeAndFuncActions() {
     toolActionGroup->setExclusive(true);
     toolActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
 
-    for (auto* section : geom->getSectionMaster()->getSections()) {
+    for (auto* section : engine->getSectionMaster()->getSections()) {
         for (auto mode : section->getModes()) {
             auto* action = new QAction(
                 mode->getIcon(),
@@ -159,7 +159,7 @@ void MainWindow::createFileMenu() {
 void MainWindow::createToolsMenu() {
     menuBar()->addAction(new QAction("|", this)); // Separator
 
-    for (auto* section : geom->getSectionMaster()->getSections()) {
+    for (auto* section : engine->getSectionMaster()->getSections()) {
         auto* menu = menuBar()->addMenu(section->getName());
 
         for (auto mode : section->getModes()) {
@@ -180,7 +180,7 @@ void MainWindow::createDocks() {
     toolWidget = new ToolWidget(
         modeToAction,
         funcToAction,
-        geom->getSectionMaster(),
+        engine->getSectionMaster(),
         this
     );
     createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
@@ -203,26 +203,26 @@ void MainWindow::onFunctionActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* func = action->data().value<const Function*>();
 
-    if (geom->getEditMode()->getType() == EditMode::Type::HIDE) {
+    if (engine->getEditMode()->getType() == EditMode::Type::HIDE) {
         scene->update();
     }
 
-    geom->setEditMode(EditMode::get(EditMode::Type::FUNCTION));
-    geom->setActiveFunction(func, scene);
-    toolInfoWidget->setMode(EditMode::get(EditMode::Type::FUNCTION)); // XXX: use Geometry mode ?
-    toolInfoWidget->setFunction(func); // XXX: use Geometry function ?
+    engine->setEditMode(EditMode::get(EditMode::Type::FUNCTION));
+    engine->setActiveFunction(func, scene);
+    toolInfoWidget->setMode(EditMode::get(EditMode::Type::FUNCTION)); // XXX: use Engine mode ?
+    toolInfoWidget->setFunction(func); // XXX: use Engine function ?
 }
 
 void MainWindow::onModeActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto mode = action->data().value<const EditMode*>();
 
-    if (geom->getEditMode()->getType() == EditMode::Type::HIDE ||
+    if (engine->getEditMode()->getType() == EditMode::Type::HIDE ||
             mode->getType() == EditMode::Type::HIDE) {
         scene->update();
     }
 
-    geom->setEditMode(mode);
+    engine->setEditMode(mode);
     toolInfoWidget->setMode(mode);
 }
 
@@ -248,11 +248,11 @@ QString MainWindow::getFileNameFilter() const {
 }
 
 void MainWindow::onNewActionTriggered() {
-    if (geom->isChanged() && askForSave(false) == QMessageBox::Save) {
+    if (engine->isChanged() && askForSave(false) == QMessageBox::Save) {
         onSaveActionTriggered();
     }
 
-    geom->clear();
+    engine->clear();
     openedFileName = "";
     updateTitle();
 }
@@ -264,9 +264,9 @@ void MainWindow::onSaveActionTriggered() {
     }
 
     try {
-        geom->save(openedFileName);
+        engine->save(openedFileName);
         updateTitle();
-        geom->setChanged(false);
+        engine->setChanged(false);
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
@@ -291,10 +291,10 @@ void MainWindow::onSaveAsActionTriggered() {
     }
 
     try {
-        geom->save(fileName);
+        engine->save(fileName);
         openedFileName = fileName;
         updateTitle();
-        geom->setChanged(false);
+        engine->setChanged(false);
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
@@ -317,12 +317,12 @@ void MainWindow::onOpenActionTriggered() {
     if (fileName.isEmpty()) return;
 
     try {
-        geom->load(fileName);
-        geom->populateScene(scene);
+        engine->load(fileName);
+        engine->populateScene(scene);
         openedFileName = fileName;
 
         updateTitle();
-        geom->setChanged(false);
+        engine->setChanged(false);
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
@@ -340,7 +340,7 @@ void MainWindow::updateTitle() {
 }
 
 void MainWindow::closeEvent(QCloseEvent* e) {
-    if (!geom->isChanged()) {
+    if (!engine->isChanged()) {
         e->accept();
         return;
     }

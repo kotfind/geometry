@@ -10,7 +10,7 @@
 #include "Object.h"
 
 class Function;
-class Geometry;
+class Engine;
 class SectionMaster;
 class GeometryGenerator;
 
@@ -34,7 +34,7 @@ class Generator {
 
         void recalc();
 
-        Geometry* getGeometry() const;
+        Engine* getEngine() const;
 
         virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
         static Generator* fromJson(
@@ -45,11 +45,11 @@ class Generator {
 
     protected:
         // Constructs Free Generator.
-        // Is called from Geometry::makeGenerator.
+        // Is called from Engine::makeGenerator.
         Generator(std::unique_ptr<Object> obj);
 
         // Constructs Dependant Generator.
-        // Is called from Geometry::makeGenerator.
+        // Is called from Engine::makeGenerator.
         Generator(
             const Function* func,
             const QList<Generator*>& args,
@@ -57,7 +57,7 @@ class Generator {
         );
 
         // Constructs Restricted Generator.
-        // Is called from Geometry::makeGenerator.
+        // Is called from Engine::makeGenerator.
         Generator(GeometryGenerator* restrictor, double posValue = 0);
 
         // Basic Generator c'tor.
@@ -70,7 +70,7 @@ class Generator {
 
         std::unique_ptr<Calculator> calc;
 
-        Geometry* geom = nullptr;
+        Engine* engine = nullptr;
 
     private:
         void recalcSelf();
@@ -79,5 +79,5 @@ class Generator {
 
         QList<Generator*> dependant;
 
-    friend Geometry;
+    friend Engine;
 };

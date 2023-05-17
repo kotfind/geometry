@@ -2,7 +2,7 @@
 
 #include "GeometryObject.h"
 #include "GeometryGenerator.h"
-#include "Geometry.h"
+#include "Engine.h"
 #include "EditMode.h"
 
 #include <QGraphicsScene>
@@ -13,7 +13,7 @@ GeometryItem::GeometryItem(GeometryGenerator* gen)
 {}
 
 void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
-    bool showHidden = gen->getGeometry()->getEditMode()->getType() == EditMode::Type::HIDE;
+    bool showHidden = gen->getEngine()->getEditMode()->getType() == EditMode::Type::HIDE;
     if (obj && (!hidden || showHidden)) {
         obj->paint(qp, QColor(0, 0, 0, hidden ? 127 : 255));
     }
@@ -41,7 +41,7 @@ void GeometryItem::update() {
     obj.reset(
         object
         ? object->transformed(
-                gen->getGeometry()->getTransformation()
+                gen->getEngine()->getTransformation()
             )
         : nullptr
     );
@@ -54,15 +54,15 @@ bool GeometryItem::isHidden() const {
 void GeometryItem::setHidden(bool v) {
     hidden = v;
     QGraphicsItem::update();
-    if (auto geom = gen->getGeometry(); geom) {
-        geom->setChanged();
+    if (auto engine = gen->getEngine(); engine) {
+        engine->setChanged();
     }
 }
 
 void GeometryItem::toggleHidden() {
     hidden = !hidden;
     QGraphicsItem::update();
-    if (auto geom = gen->getGeometry(); geom) {
-        geom->setChanged();
+    if (auto engine = gen->getEngine()) {
+        engine->setChanged();
     }
 }

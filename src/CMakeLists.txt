@@ -45,7 +45,7 @@ add_executable(geometry
     Scene.cpp
     View.cpp
 
-    Geometry.cpp
+    Engine.cpp
 
     getOrThrow.cpp
 

@@ -5,7 +5,7 @@
 #include <QString>
 
 class Real;
-class Geometry;
+class Engine;
 
 class RealGenerator : public Generator {
     public:
@@ -29,6 +29,6 @@ class RealGenerator : public Generator {
 
         QString name;
 
-    friend Geometry;
+    friend Engine;
     friend Generator;
 };

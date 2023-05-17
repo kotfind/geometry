@@ -55,8 +55,8 @@ RealGenerator* VariableDialog::getCurrentVariable() const {
     return varModel->getVariable(i);
 }
 
-RealGenerator* VariableDialog::getVariable(Geometry* geom, QWidget* parent) {
-    VariableModel model(geom);
+RealGenerator* VariableDialog::getVariable(Engine* engine, QWidget* parent) {
+    VariableModel model(engine);
 
     VariableDialog d(parent);
     d.setModel(&model);

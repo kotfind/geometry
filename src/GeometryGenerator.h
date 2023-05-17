@@ -6,7 +6,7 @@
 #include <memory>
 
 class GeometryObject;
-class Geometry;
+class Engine;
 
 class GeometryGenerator : public Generator {
     public:
@@ -32,6 +32,6 @@ class GeometryGenerator : public Generator {
 
         std::unique_ptr<GeometryItem> item;
 
-    friend Geometry;
+    friend Engine;
     friend Generator;
 };

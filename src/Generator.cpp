@@ -4,7 +4,7 @@
 #include "DependantCalculator.h"
 #include "RestrictedCalculator.h"
 #include "Object.h"
-#include "Geometry.h"
+#include "Engine.h"
 #include "Function.h"
 #include "getOrThrow.h"
 #include "GeometryGenerator.h"
@@ -92,8 +92,8 @@ QList<Generator*> Generator::getArgs() const {
     return calc->getArgs();
 }
 
-Geometry* Generator::getGeometry() const {
-    return geom;
+Engine* Generator::getEngine() const {
+    return engine;
 }
 
 QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
@@ -146,5 +146,5 @@ Generator* Generator::fromJson(
 }
 
 void Generator::onChanged() {
-    geom->generatorChanged(this);
+    engine->generatorChanged(this);
 }

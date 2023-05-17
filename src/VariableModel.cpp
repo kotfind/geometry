@@ -1,38 +1,38 @@
 #include "VariableModel.h"
 
 #include "RealGenerator.h"
-#include "Geometry.h"
+#include "Engine.h"
 #include "Real.h"
 
-VariableModel::VariableModel(Geometry* geom, QObject* parent)
+VariableModel::VariableModel(Engine* engine, QObject* parent)
   : QAbstractTableModel(parent),
-    geom(geom),
-    gens(geom->getRealGenerators())
+    engine(engine),
+    gens(engine->getRealGenerators())
 {
     connect(
-        geom,
-        &Geometry::generatorRemoved,
+        engine,
+        &Engine::generatorRemoved,
         this,
         &VariableModel::onGeneratorRemoved
     );
 
     connect(
-        geom,
-        &Geometry::generatorChanged,
+        engine,
+        &Engine::generatorChanged,
         this,
         &VariableModel::onGeneratorChanged
     );
 
     connect(
-        geom,
-        &Geometry::generatorMade,
+        engine,
+        &Engine::generatorMade,
         this,
         &VariableModel::onGeneratorMade
     );
 
     connect(
-        geom,
-        &Geometry::resetCompleted,
+        engine,
+        &Engine::resetCompleted,
         this,
         &VariableModel::onGeometryReset
     );
@@ -99,7 +99,7 @@ void VariableModel::onGeneratorMade(Generator* gen_) {
 
 void VariableModel::onGeometryReset() {
     beginResetModel();
-    gens = geom->getRealGenerators();
+    gens = engine->getRealGenerators();
     endResetModel();
 }
 
@@ -135,7 +135,7 @@ Qt::ItemFlags VariableModel::flags(const QModelIndex& index) const {
 bool VariableModel::insertRows(int row, int count, const QModelIndex& parent) {
     if (count != 1 || row != rowCount()) return false;
 
-    geom->makeRealGenerator("new", std::make_unique<Real>(0));
+    engine->makeRealGenerator("new", std::make_unique<Real>(0));
 
     return true;
 }
@@ -143,7 +143,7 @@ bool VariableModel::insertRows(int row, int count, const QModelIndex& parent) {
 bool VariableModel::removeRows(int row, int count, const QModelIndex& parent) {
     if (count != 1) return false;
 
-    geom->removeGenerator(gens[row]);
+    engine->removeGenerator(gens[row]);
 
     return true;
 }

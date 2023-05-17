@@ -8,7 +8,7 @@
 #include <QList>
 
 class Function;
-class Geometry;
+class Engine;
 class Generator;
 class GeometryGenerator;
 
@@ -16,7 +16,7 @@ class Scene : public QGraphicsScene {
     Q_OBJECT
 
     public:
-        Scene(Geometry* geom, QObject* parent = nullptr);
+        Scene(Engine* engine, QObject* parent = nullptr);
 
     private:
         GeometryGenerator* getFreeOrRestrictedGeneratorAt(const QPointF& pos) const;
@@ -27,7 +27,7 @@ class Scene : public QGraphicsScene {
 
         GeometryGenerator* currentFreeGenerator = nullptr;
 
-        Geometry* geom;
+        Engine* engine;
 
     signals:
         void cursorChanged(const QCursor& cursor);

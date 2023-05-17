@@ -18,12 +18,12 @@ class RealGenerator;
 class GeometryGenerator;
 class EditMode;
 
-class Geometry : public QObject {
+class Engine : public QObject {
     Q_OBJECT
 
     public:
-        Geometry(QObject* parent = nullptr);
-        ~Geometry();
+        Engine(QObject* parent = nullptr);
+        ~Engine();
 
         template<typename GenT, typename... Args>
         std::enable_if_t<std::is_base_of_v<Generator, GenT>, GenT*>
@@ -33,7 +33,7 @@ class Geometry : public QObject {
             auto* gen = new GenT(std::forward<Args>(args)...);
 
             gens << gen;
-            gen->geom = this;
+            gen->engine = this;
             gen->recalc();
 
             emit generatorMade(gen);

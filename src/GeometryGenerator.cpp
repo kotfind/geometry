@@ -3,7 +3,7 @@
 #include "GeometryItem.h"
 #include "GeometryObject.h"
 #include "Object.h"
-#include "Geometry.h"
+#include "Engine.h"
 #include "FreeCalculator.h"
 
 bool GeometryGenerator::isReal() const {
@@ -30,7 +30,7 @@ void GeometryGenerator::setPos(const QPointF& pos) {
 
     calc->setPos(pos);
 
-    geom->setChanged();
+    engine->setChanged();
 
     recalc();
 }

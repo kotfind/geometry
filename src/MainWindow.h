@@ -17,7 +17,7 @@ class Function;
 class EditMode;
 class ToolWidget;
 class VariableModel;
-class Geometry;
+class Engine;
 class VariableWidget;
 class QActionGroup;
 
@@ -44,7 +44,7 @@ class MainWindow : public QMainWindow {
 
         QString getFileNameFilter() const;
 
-        Geometry* geom;
+        Engine* engine;
 
         QString openedFileName = "";
 
