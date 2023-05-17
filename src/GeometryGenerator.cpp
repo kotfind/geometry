@@ -20,9 +20,9 @@ const GeometryObject* GeometryGenerator::getGeometryObject() const {
 }
 
 bool GeometryGenerator::checkObjectType() const {
-    if (obj->is(Object::Type::Real)) return false;
+    if (obj->isReal()) return false;
     if ((isFree() || isRestricted()) &&
-            !obj->is(Object::Type::Point)) return false;
+        !static_cast<GeometryObject*>(obj.get())->isPoint()) return false;
     return true;
 }
 
