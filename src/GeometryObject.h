@@ -12,6 +12,10 @@ class Transformation;
 
 class GeometryObject : public Object {
     public:
+        bool isGeometry() const override { return true; }
+
+        virtual bool isPoint() const { return false; }
+
         virtual void paint(QPainter* painter, const QColor& color) const = 0;
         virtual QRectF boundingRect() const = 0;
         virtual QPainterPath shape() const = 0;
@@ -24,5 +28,5 @@ class GeometryObject : public Object {
         virtual QPointF posValueToPoint(double val) const = 0;
         
     protected:
-        GeometryObject() : Object() {}
+        GeometryObject() {}
 };

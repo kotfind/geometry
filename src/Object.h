@@ -19,9 +19,12 @@ class Object {
 
         virtual Type getType() const = 0;
 
-        bool is(Type) const;
+        virtual bool isGeometry() const = 0;
+        bool isReal() const;
 
         virtual Object* clone() const = 0;
+
+        bool is(Type) const;
 
     protected:
         Object() {}

@@ -12,6 +12,10 @@ bool Object::is(Type t) const {
     return static_cast<bool>(getType() & t);
 }
 
+bool Object::isReal() const {
+    return !isGeometry();
+}
+
 // -------------------- Object::Type --------------------
 
 using Type = Object::Type;

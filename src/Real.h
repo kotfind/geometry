@@ -6,10 +6,12 @@ class QJsonObject;
 
 class Real : public Object {
     public:
-        Type getType() const { return Type::Real; }
-
         Real();
         Real(double value);
+
+        Type getType() const override { return Type::Real; }
+
+        bool isGeometry() const override { return false; }
 
         Object* clone() const override;
 

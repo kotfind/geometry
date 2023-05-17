@@ -7,11 +7,13 @@ class QJsonObject;
 
 class Point : public GeometryObject {
     public:
-        Type getType() const { return Type::Point; }
-
         Point();
         Point(double x, double y);
         explicit Point(const QPointF& pos);
+
+        Type getType() const override { return Type::Point; }
+
+        bool isPoint() const override { return true; }
 
         Object* clone() const override;
 
