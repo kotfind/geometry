@@ -1,11 +1,11 @@
 #pragma once
 
-#include "GeometryObject.h"
+#include "AbstractPoint.h"
 
 class QPointF;
 class QJsonObject;
 
-class Point : public GeometryObject {
+class Point : public AbstractPoint {
     public:
         Point();
         Point(double x, double y);
@@ -13,16 +13,14 @@ class Point : public GeometryObject {
 
         Type getType() const override { return Type::Point; }
 
-        bool isPoint() const override { return true; }
-
         Object* clone() const override;
 
         void paint(QPainter* painter, const QColor& color) const override;
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
-        QJsonObject toJson() const;
-        static Point* fromJson(const QJsonObject& json);
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject& json) override;
 
         GeometryObject* transformed(const Transformation&) const override;
         Point* untransformed(const Transformation&) const;
@@ -32,9 +30,9 @@ class Point : public GeometryObject {
         double pointToPosValue(const QPointF& pos) const override;
         QPointF posValueToPoint(double val) const override;
 
-        void setPos(const QPointF& pos);
+        void setPos(const QPointF& pos) override;
 
-        QPointF getPos() const;
+        QPointF getPos() const override;
 
         double x, y;
 

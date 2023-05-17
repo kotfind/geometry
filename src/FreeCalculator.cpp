@@ -2,6 +2,7 @@
 
 #include "Real.h"
 #include "getOrThrow.h"
+#include "AbstractPoint.h"
 
 FreeCalculator::FreeCalculator(std::unique_ptr<Object> obj)
   : obj(std::move(obj))
@@ -20,8 +21,9 @@ QList<Generator*> FreeCalculator::getArgs() const {
 }
 
 void FreeCalculator::setPos(const QPointF& pos) {
-    assert(obj->is(Object::Type::Point));
-    static_cast<Point*>(obj.get())->setPos(pos);
+    assert(obj->isGeometry());
+    assert(static_cast<GeometryObject*>(obj.get())->isPoint());
+    static_cast<AbstractPoint*>(obj.get())->setPos(pos);
 }
 
 void FreeCalculator::setValue(double v) {
@@ -35,15 +37,20 @@ QJsonObject FreeCalculator::toJson(const QHash<Generator*, int>& ids, bool isRea
 
     json["object"] = isReal
         ? static_cast<Real*>(obj.get())->toJson()
-        : static_cast<Point*>(obj.get())->toJson();
+        : static_cast<AbstractPoint*>(obj.get())->toJson();
 
     return json;
 }
 
 FreeCalculator* FreeCalculator::fromJson(const QJsonObject& json, bool isReal) {
     auto jsonObject = getOrThrow(json["object"]).toObject();
-    auto obj = isReal
-        ? std::unique_ptr<Object>(Real::fromJson(jsonObject))
-        : std::unique_ptr<Object>(Point::fromJson(jsonObject));
+    std::unique_ptr<Object> obj;
+    if (isReal) {
+        obj.reset(Real::fromJson(jsonObject));
+    } else {
+        auto* pt = new Point;
+        pt->fromJson(jsonObject);
+        obj.reset(pt);
+    }
     return new FreeCalculator(std::move(obj));
 }

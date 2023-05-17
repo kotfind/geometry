@@ -12,6 +12,8 @@ class Transformation;
 
 class GeometryObject : public Object {
     public:
+        virtual ~GeometryObject() {}
+
         bool isGeometry() const override { return true; }
 
         virtual bool isPoint() const { return false; }

@@ -65,11 +65,9 @@ QJsonObject Point::toJson() const {
     return json;
 }
 
-Point* Point::fromJson(const QJsonObject& json) {
-    auto* pt = new Point;
-    pt->x = getOrThrow(json["x"]).toDouble();
-    pt->y = getOrThrow(json["y"]).toDouble();
-    return pt;
+void Point::fromJson(const QJsonObject& json) {
+    x = getOrThrow(json["x"]).toDouble();
+    y = getOrThrow(json["y"]).toDouble();
 }
 
 GeometryObject* Point::transformed(const Transformation& t) const {
