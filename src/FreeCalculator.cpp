@@ -3,6 +3,7 @@
 #include "Real.h"
 #include "getOrThrow.h"
 #include "AbstractPoint.h"
+#include "Point.h"
 
 FreeCalculator::FreeCalculator(std::unique_ptr<Object> obj)
   : obj(std::move(obj))

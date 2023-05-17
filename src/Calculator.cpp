@@ -1,7 +1,6 @@
 #include "Calculator.h"
 
 #include "Real.h"
-#include "Point.h"
 #include "FreeCalculator.h"
 #include "DependantCalculator.h"
 #include "RestrictedCalculator.h"

@@ -4,7 +4,6 @@
 #include "GeometryObject.h"
 #include "Object.h"
 #include "Geometry.h"
-#include "Point.h"
 #include "FreeCalculator.h"
 
 bool GeometryGenerator::isReal() const {

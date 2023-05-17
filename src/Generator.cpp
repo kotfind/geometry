@@ -5,7 +5,6 @@
 #include "RestrictedCalculator.h"
 #include "Object.h"
 #include "Geometry.h"
-#include "Point.h"
 #include "Function.h"
 #include "getOrThrow.h"
 #include "GeometryGenerator.h"
