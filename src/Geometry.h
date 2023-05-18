@@ -12,7 +12,7 @@ class Geometry {
     public:
         Geometry();
 
-        AbstractPoint* makePoint(const QPointF& pos = QPointF());
+        AbstractPoint* makePoint(const QPointF& pos = QPointF()) const;
 
         const SectionMaster* getSectionMaster() const;
         Transformation* getTransformation() const;

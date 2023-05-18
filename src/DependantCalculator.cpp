@@ -4,14 +4,17 @@
 #include "Function.h"
 #include "getOrThrow.h"
 #include "SectionMaster.h"
+#include "Geometry.h"
 
 #include <QJsonArray>
 
 DependantCalculator::DependantCalculator(
+    const Geometry* geom,
     const Function* func,
     const QList<Generator*>& args,
     int funcResNum
-) : func(func),
+) : Calculator(geom),
+    func(func),
     args(args),
     funcResNum(funcResNum)
 {}
@@ -62,12 +65,12 @@ QJsonObject DependantCalculator::toJson(const QHash<Generator*, int>& ids, bool 
 }
 
 DependantCalculator* DependantCalculator::fromJson(
+    const Geometry* geom,
     const QJsonObject& json,
-    const QList<Generator*>& gens,
-    const SectionMaster* sectionMaster
+    const QList<Generator*>& gens
 ) {
     const auto& funcName = getOrThrow(json["funcName"]).toString();
-    const auto* func = sectionMaster->get(funcName);
+    const auto* func = geom->getSectionMaster()->get(funcName);
 
     QList<Generator*> args;
     const auto& jsonArgs = getOrThrow(json["args"]).toArray();
@@ -78,5 +81,5 @@ DependantCalculator* DependantCalculator::fromJson(
 
     auto funcResNum = getOrThrow(json["funcResNum"]).toInt();
 
-    return new DependantCalculator(func, args, funcResNum);
+    return new DependantCalculator(geom, func, args, funcResNum);
 }

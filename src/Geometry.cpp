@@ -11,7 +11,7 @@ Geometry::Geometry()
     sectionMaster(functionList::makeSectionMaster())
 {}
 
-AbstractPoint* Geometry::makePoint(const QPointF& pos) {
+AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
     return new Point(pos);
 }
 

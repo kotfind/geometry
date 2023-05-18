@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 #include "Function.h"
-#include "Point.h"
+#include "AbstractPoint.h"
 #include "GeometryItem.h"
 #include "Engine.h"
 #include "Generator.h"
@@ -40,14 +40,22 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             GeometryGenerator* gen;
             if (auto* restrictor = getDependantGeneratorAt(pos)) {
                 // Make Restrcted Generator
-                gen = engine->makeGeometryGenerator(restrictor);
+                gen = engine->makeGeometryGenerator(
+                    engine->getGeometry(),
+                    restrictor
+                );
                 gen->setPos(pos);
             } else {
                 // Make Free Generator
-                auto point = std::make_unique<Point>(
-                    engine->getGeometry()->getTransformation()->untransform(pos)
+                auto point = std::unique_ptr<AbstractPoint>(
+                    engine->getGeometry()->makePoint(
+                        engine->getGeometry()->getTransformation()->untransform(pos)
+                    )
                 );
-                gen = engine->makeGeometryGenerator(std::move(point));
+                gen = engine->makeGeometryGenerator(
+                    engine->getGeometry(),
+                    std::move(point)
+                );
             }
             auto* item = gen->getGeometryItem();
             addItem(item);

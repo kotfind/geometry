@@ -10,6 +10,7 @@ class Generator;
 class DependantCalculator : public Calculator {
     public:
         DependantCalculator(
+            const Geometry* geom,
             const Function* func,
             const QList<Generator*>& args,
             int funcResNum = 0
@@ -26,9 +27,9 @@ class DependantCalculator : public Calculator {
     private:
         // Is called from Calculator::fromJson(...)
         static DependantCalculator* fromJson(
+            const Geometry* geom,
             const QJsonObject& json,
-            const QList<Generator*>& gens,
-            const SectionMaster* sectionMaster
+            const QList<Generator*>& gens
         );
 
         const Function* func;

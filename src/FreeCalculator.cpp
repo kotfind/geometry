@@ -4,9 +4,11 @@
 #include "getOrThrow.h"
 #include "AbstractPoint.h"
 #include "Point.h"
+#include "Geometry.h"
 
-FreeCalculator::FreeCalculator(std::unique_ptr<Object> obj)
-  : obj(std::move(obj))
+FreeCalculator::FreeCalculator(const Geometry* geom, std::unique_ptr<Object> obj)
+  : Calculator(geom),
+    obj(std::move(obj))
 {}
 
 Object* FreeCalculator::calc() const {
@@ -43,15 +45,19 @@ QJsonObject FreeCalculator::toJson(const QHash<Generator*, int>& ids, bool isRea
     return json;
 }
 
-FreeCalculator* FreeCalculator::fromJson(const QJsonObject& json, bool isReal) {
+FreeCalculator* FreeCalculator::fromJson(
+    const Geometry* geom,
+    const QJsonObject& json,
+    bool isReal
+) {
     auto jsonObject = getOrThrow(json["object"]).toObject();
     std::unique_ptr<Object> obj;
     if (isReal) {
         obj.reset(Real::fromJson(jsonObject));
     } else {
-        auto* pt = new Point;
+        auto* pt = geom->makePoint();
         pt->fromJson(jsonObject);
         obj.reset(pt);
     }
-    return new FreeCalculator(std::move(obj));
+    return new FreeCalculator(geom, std::move(obj));
 }

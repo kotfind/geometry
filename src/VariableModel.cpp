@@ -135,7 +135,7 @@ Qt::ItemFlags VariableModel::flags(const QModelIndex& index) const {
 bool VariableModel::insertRows(int row, int count, const QModelIndex& parent) {
     if (count != 1 || row != rowCount()) return false;
 
-    engine->makeRealGenerator("new", std::make_unique<Real>(0));
+    engine->makeRealGenerator("new", engine->getGeometry(), std::make_unique<Real>(0));
 
     return true;
 }

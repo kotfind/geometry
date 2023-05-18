@@ -3,18 +3,21 @@
 #include "GeometryGenerator.h"
 #include "Point.h"
 #include "getOrThrow.h"
+#include "Geometry.h"
 
 RestrictedCalculator::RestrictedCalculator(
+    const Geometry* geom,
     GeometryGenerator* restrictor,
     double posValue
-) : restrictor(restrictor),
+) : Calculator(geom),
+    restrictor(restrictor),
     posValue(posValue)
 {}
 
 Object* RestrictedCalculator::calc() const {
     auto* obj = restrictor->getGeometryObject();
     return obj
-        ? new Point(obj->posValueToPoint(posValue))
+        ? geom->makePoint(obj->posValueToPoint(posValue))
         : nullptr;
 }
 
@@ -45,6 +48,7 @@ QJsonObject RestrictedCalculator::toJson(const QHash<Generator*, int>& ids, bool
 }
 
 RestrictedCalculator* RestrictedCalculator::fromJson(
+    const Geometry* geom,
     const QJsonObject& json,
     const QList<Generator*>& gens
 ) {
@@ -53,6 +57,7 @@ RestrictedCalculator* RestrictedCalculator::fromJson(
 
     assert(restrictor->isGeometry());
     return new RestrictedCalculator(
+        geom,
         static_cast<GeometryGenerator*>(restrictor),
         posValue
     );

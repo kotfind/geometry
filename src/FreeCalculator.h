@@ -10,7 +10,7 @@
 
 class FreeCalculator : public Calculator {
     public:
-        FreeCalculator(std::unique_ptr<Object> pt);
+        FreeCalculator(const Geometry* geom, std::unique_ptr<Object> pt);
 
         Object* calc() const override;
 
@@ -26,7 +26,11 @@ class FreeCalculator : public Calculator {
 
     private:
         // Is called from Calculator::fromJson(...)
-        static FreeCalculator* fromJson(const QJsonObject& json, bool isReal);
+        static FreeCalculator* fromJson(
+            const Geometry* geom,
+            const QJsonObject& json,
+            bool isReal
+        );
 
         std::unique_ptr<Object> obj;
 

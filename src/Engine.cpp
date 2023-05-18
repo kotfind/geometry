@@ -199,9 +199,9 @@ void Engine::fromJson(const QJsonObject& json) {
     gens.resize(jsonGens.size(), nullptr);
     for (int i : order) {
         gens[i] = Generator::fromJson(
+            geom.get(),
             jsonGens[i].toObject(),
-            gens,
-            geom->getSectionMaster()
+            gens
         );
         gens[i]->engine = this;
     }
@@ -343,6 +343,7 @@ void Engine::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
     auto* func = getActiveFunction();
     for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
         auto* gen = makeGeometryGenerator(
+            geom.get(),
             func,
             selectedFuncArgs,
             funcResNum
