@@ -4,9 +4,6 @@
 
 #include <math.h>
 
-Transformation::Transformation()
-{}
-
 void Transformation::scroll(const QPointF& delta) {
     center += delta * scrollSpeed / scale;
 }
@@ -40,18 +37,14 @@ QJsonObject Transformation::toJson() const {
     return json;
 }
 
-Transformation Transformation::fromJson(const QJsonObject& json) {
-    Transformation t;
-
+void Transformation::fromJson(const QJsonObject& json) {
     auto centerJson = getOrThrow(json["center"]).toObject();
-    t.center = {
+    center = {
         getOrThrow(centerJson["x"]).toDouble(),
         getOrThrow(centerJson["y"]).toDouble()
     };
 
-    t.scale = getOrThrow(json["scale"]).toDouble();
-
-    return t;
+    scale = getOrThrow(json["scale"]).toDouble();
 }
 
 QPointF Transformation::transform(const QPointF& p) const {

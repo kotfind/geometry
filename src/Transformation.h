@@ -5,8 +5,6 @@
 
 class Transformation {
     public:
-        Transformation();
-
         void scroll(const QPointF& delta);
         void move(const QPointF& delta);
         void zoom(double, const QPointF& zoomCenter);
@@ -17,7 +15,7 @@ class Transformation {
         QPointF untransform(const QPointF&) const;
 
         QJsonObject toJson() const;
-        static Transformation fromJson(const QJsonObject& json);
+        void fromJson(const QJsonObject& json);
         
     private:
         QPointF center{0, 0};
