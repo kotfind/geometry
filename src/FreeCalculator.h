@@ -2,7 +2,6 @@
 
 #include "Calculator.h"
 #include "Object.h"
-#include "Point.h"
 
 #include <memory>
 #include <QPointF>

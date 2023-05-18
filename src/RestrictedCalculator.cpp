@@ -1,9 +1,9 @@
 #include "RestrictedCalculator.h"
 
 #include "GeometryGenerator.h"
-#include "Point.h"
 #include "getOrThrow.h"
 #include "Geometry.h"
+#include "AbstractPoint.h"
 
 RestrictedCalculator::RestrictedCalculator(
     const Geometry* geom,

@@ -3,7 +3,6 @@
 #include "Real.h"
 #include "getOrThrow.h"
 #include "AbstractPoint.h"
-#include "Point.h"
 #include "Geometry.h"
 
 FreeCalculator::FreeCalculator(const Geometry* geom, std::unique_ptr<Object> obj)
