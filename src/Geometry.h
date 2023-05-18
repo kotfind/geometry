@@ -1,23 +1,17 @@
 #pragma once
 
-#include "Transformation.h"
-#include "SectionMaster.h"
-
-#include <memory>
 #include <QPointF>
 
 class AbstractPoint;
+class Transformation;
+class SectionMaster;
 
 class Geometry {
     public:
-        Geometry();
+        virtual ~Geometry() {}
 
-        AbstractPoint* makePoint(const QPointF& pos = QPointF()) const;
+        virtual AbstractPoint* makePoint(const QPointF& pos = QPointF()) const = 0;
 
-        const SectionMaster* getSectionMaster() const;
-        Transformation* getTransformation() const;
-
-    private:
-        std::unique_ptr<Transformation> transformation;
-        std::unique_ptr<SectionMaster> sectionMaster;
+        virtual const SectionMaster* getSectionMaster() const = 0;
+        virtual Transformation* getTransformation() const = 0;
 };

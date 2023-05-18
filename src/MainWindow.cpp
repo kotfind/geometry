@@ -13,6 +13,7 @@
 #include "RealGenerator.h"
 #include "Real.h"
 #include "VariableWidget.h"
+#include "SectionMaster.h"
 
 #include <QAction>
 #include <QMenuBar>

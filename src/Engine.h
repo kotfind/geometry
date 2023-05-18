@@ -16,6 +16,7 @@ class QGraphicsScene;
 class RealGenerator;
 class GeometryGenerator;
 class EditMode;
+class Function;
 
 class Engine : public QObject {
     Q_OBJECT

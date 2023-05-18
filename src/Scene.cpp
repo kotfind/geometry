@@ -7,6 +7,7 @@
 #include "Generator.h"
 #include "GeometryGenerator.h"
 #include "EditMode.h"
+#include "Transformation.h"
 
 #include <QDebug>
 #include <cassert>

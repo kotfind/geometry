@@ -5,22 +5,17 @@
 
 class Transformation {
     public:
-        void scroll(const QPointF& delta);
-        void move(const QPointF& delta);
-        void zoom(double, const QPointF& zoomCenter);
+        virtual ~Transformation() {}
 
-        void clear();
+        virtual void scroll(const QPointF& delta) = 0;
+        virtual void move(const QPointF& delta) = 0;
+        virtual void zoom(double, const QPointF& zoomCenter) = 0;
 
-        QPointF transform(const QPointF&) const;
-        QPointF untransform(const QPointF&) const;
+        virtual void clear() = 0;
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject& json);
-        
-    private:
-        QPointF center{0, 0};
-        double scale = 1;
+        virtual QPointF transform(const QPointF&) const = 0;
+        virtual QPointF untransform(const QPointF&) const = 0;
 
-        static constexpr double scrollSpeed = 0.01;
-        static constexpr double zoomSpeed = 0.01;
+        virtual QJsonObject toJson() const = 0;
+        virtual void fromJson(const QJsonObject& json) = 0;
 };

@@ -13,6 +13,7 @@
 #include "Function.h"
 #include "VariableDialog.h"
 #include "functionList.h"
+#include "EGeometry.h"
 
 #include <QHash>
 #include <cassert>
@@ -32,7 +33,7 @@
 
 Engine::Engine(QObject* parent)
   : QObject(parent),
-    geom(std::make_unique<Geometry>())
+    geom(std::make_unique<EGeometry>())
 {}
 
 Engine::~Engine() {
