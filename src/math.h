@@ -14,3 +14,4 @@ bool geq(double a, double b);
 double sq(double x);
 
 double len(const QPointF& p);
+double dist(const QPointF& p1, const QPointF& p2);

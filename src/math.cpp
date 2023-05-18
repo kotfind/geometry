@@ -29,3 +29,7 @@ double sq(double x) {
 double len(const QPointF& p) {
     return hypot(p.x(), p.y());
 }
+
+double dist(const QPointF& p1, const QPointF& p2) {
+    return len(p1 - p2);
+}

@@ -22,7 +22,7 @@ class GeometryObject : public Object {
         virtual QRectF boundingRect() const = 0;
         virtual QPainterPath shape() const = 0;
 
-        virtual GeometryObject* transformed(const Transformation&) const = 0;
+        virtual GeometryObject* transformed(const Transformation*) const = 0;
 
         virtual QPointF calcNearestPoint(const QPointF& pos) const = 0;
 

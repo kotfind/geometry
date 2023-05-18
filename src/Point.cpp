@@ -70,12 +70,12 @@ void Point::fromJson(const QJsonObject& json) {
     y = getOrThrow(json["y"]).toDouble();
 }
 
-GeometryObject* Point::transformed(const Transformation& t) const {
-    return new Point(t.transform(getPos()));
+GeometryObject* Point::transformed(const Transformation* t) const {
+    return new Point(t->transform(getPos()));
 }
 
-Point* Point::untransformed(const Transformation& t) const {
-    return new Point(t.untransform(getPos()));
+Point* Point::untransformed(const Transformation* t) const {
+    return new Point(t->untransform(getPos()));
 }
 
 QPointF Point::calcNearestPoint(const QPointF& pos) const {

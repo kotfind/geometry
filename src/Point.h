@@ -22,8 +22,8 @@ class Point : public AbstractPoint {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject& json) override;
 
-        GeometryObject* transformed(const Transformation&) const override;
-        Point* untransformed(const Transformation&) const;
+        GeometryObject* transformed(const Transformation*) const override;
+        Point* untransformed(const Transformation*) const;
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 

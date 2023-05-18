@@ -61,10 +61,10 @@ QPainterPath Line::shape() const {
     return path;
 }
 
-GeometryObject* Line::transformed(const Transformation& t) const {
+GeometryObject* Line::transformed(const Transformation* t) const {
     return new Line(
-        t.transform(p1),
-        t.transform(p2)
+        t->transform(p1),
+        t->transform(p2)
     );
 }
 

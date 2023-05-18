@@ -19,6 +19,6 @@ const SectionMaster* Geometry::getSectionMaster() const {
     return sectionMaster.get();
 }
 
-Transformation& Geometry::getTransformation() const {
-    return *transformation;
+Transformation* Geometry::getTransformation() const {
+    return transformation.get();
 }

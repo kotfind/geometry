@@ -83,7 +83,7 @@ void Engine::recalcAllItems() {
 void Engine::scroll(const QPointF& delta) {
     setChanged();
 
-    geom->getTransformation().scroll(delta);
+    geom->getTransformation()->scroll(delta);
 
     recalcAllItems();
 }
@@ -91,7 +91,7 @@ void Engine::scroll(const QPointF& delta) {
 void Engine::move(const QPointF& delta) {
     setChanged();
 
-    geom->getTransformation().move(delta);
+    geom->getTransformation()->move(delta);
 
     recalcAllItems();
 }
@@ -99,7 +99,7 @@ void Engine::move(const QPointF& delta) {
 void Engine::zoom(double v, const QPointF& zoomCenter) {
     setChanged();
 
-    geom->getTransformation().zoom(v, zoomCenter);
+    geom->getTransformation()->zoom(v, zoomCenter);
 
     recalcAllItems();
 }
@@ -223,7 +223,7 @@ void Engine::load(const QString& fileName) {
 }
 
 void Engine::clear() {
-    geom->getTransformation().clear();
+    geom->getTransformation()->clear();
 
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());

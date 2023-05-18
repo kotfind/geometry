@@ -15,7 +15,7 @@ class Geometry {
         AbstractPoint* makePoint(const QPointF& pos = QPointF());
 
         const SectionMaster* getSectionMaster() const;
-        Transformation& getTransformation() const;
+        Transformation* getTransformation() const;
 
     private:
         std::unique_ptr<Transformation> transformation;
