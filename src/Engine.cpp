@@ -12,7 +12,7 @@
 #include "EditMode.h"
 #include "Function.h"
 #include "VariableDialog.h"
-#include "EGeometry.h"
+#include "Transformation.h"
 
 #include <QHash>
 #include <cassert>
@@ -30,9 +30,9 @@
 #include <functional>
 #include <QMessageBox>
 
-Engine::Engine(QObject* parent)
+Engine::Engine(std::unique_ptr<Geometry> geom, QObject* parent)
   : QObject(parent),
-    geom(std::make_unique<EGeometry>())
+    geom(std::move(geom))
 {}
 
 Engine::~Engine() {

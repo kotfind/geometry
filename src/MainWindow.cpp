@@ -26,10 +26,9 @@
 #include <QTableView>
 #include <QActionGroup>
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(Engine* engine)
+  : engine(engine)
 {
-    engine = new Engine(this);
-
     updateTitle();
 
     createModeAndFuncActions();

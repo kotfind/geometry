@@ -22,7 +22,7 @@ class Engine : public QObject {
     Q_OBJECT
 
     public:
-        Engine(QObject* parent = nullptr);
+        Engine(std::unique_ptr<Geometry> geom, QObject* parent = nullptr);
         ~Engine();
 
         template<typename GenT, typename... Args>

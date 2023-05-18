@@ -23,7 +23,7 @@ class QActionGroup;
 
 class MainWindow : public QMainWindow {
     public:
-        MainWindow();
+        MainWindow(Engine* engine);
 
     private:
         void createModeAndFuncActions();
