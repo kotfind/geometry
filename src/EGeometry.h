@@ -17,6 +17,8 @@ class EGeometry : public Geometry {
         const SectionMaster* getSectionMaster() const override;
         Transformation* getTransformation() const override;
 
+        QString typeName(int) const override;
+
     private:
         // Is called from c'tor
         // Is defined in EFunctionList.cpp

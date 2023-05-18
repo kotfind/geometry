@@ -1,9 +1,5 @@
 #pragma once
 
-#include <QStringList>
-
-class QString;
-
 class Object {
     public:
         virtual ~Object() {}
@@ -17,6 +13,3 @@ class Object {
 
         bool is(int) const;
 };
-
-QString typeName(int);
-QStringList complexTypeName(int);

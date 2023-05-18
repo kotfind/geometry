@@ -10,11 +10,13 @@
 #include <cassert>
 #include <QSize>
 
-ToolInfoWidget::ToolInfoWidget(QWidget* parent) : QWidget(parent) {
+ToolInfoWidget::ToolInfoWidget(const Geometry* geom, QWidget* parent)
+  : QWidget(parent)
+{
     setEnabled(false);
     createUi();
 
-    argsModel = new ArgumentInfoModel(this);
+    argsModel = new ArgumentInfoModel(geom, this);
     argsView->setModel(argsModel);
     argsView->setSelectionMode(QTreeView::SelectionMode::NoSelection);
 }

@@ -175,7 +175,7 @@ void MainWindow::createToolsMenu() {
 }
 
 void MainWindow::createDocks() {
-    toolInfoWidget = new ToolInfoWidget(this);
+    toolInfoWidget = new ToolInfoWidget(engine->getGeometry(), this);
     createDock(toolInfoWidget, tr("Tool Info"), Qt::LeftDockWidgetArea);
 
     toolWidget = new ToolWidget(

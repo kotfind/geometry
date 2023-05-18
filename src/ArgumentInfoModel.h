@@ -3,12 +3,13 @@
 #include <QAbstractListModel>
 
 class Function;
+class Geometry;
 
 class ArgumentInfoModel : public QAbstractListModel {
     Q_OBJECT
 
     public:
-        ArgumentInfoModel(QObject* parent = nullptr);
+        ArgumentInfoModel(const Geometry* geom, QObject* parent = nullptr);
 
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
         int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -20,6 +21,8 @@ class ArgumentInfoModel : public QAbstractListModel {
         const Function* func = nullptr;
 
         int selectedCount = 0;
+
+        const Geometry* geom;
 
     public slots:
         void setFunction(const Function*);

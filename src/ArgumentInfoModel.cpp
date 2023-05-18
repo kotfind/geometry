@@ -2,12 +2,14 @@
 
 #include "Function.h"
 #include "ArgumentInfo.h"
+#include "Geometry.h"
 
 #include <QColor>
 #include <QStringList>
 
-ArgumentInfoModel::ArgumentInfoModel(QObject* parent)
-  : QAbstractListModel(parent)
+ArgumentInfoModel::ArgumentInfoModel(const Geometry* geom, QObject* parent)
+  : QAbstractListModel(parent),
+    geom(geom)
 {}
 
 int ArgumentInfoModel::rowCount(const QModelIndex& parent) const {
@@ -24,7 +26,7 @@ QVariant ArgumentInfoModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
         const auto& argInfo = func->getArgInfo(index.row());
         switch (index.column()) {
-            case 0: return complexTypeName(argInfo.getType()).join(" or ");
+            case 0: return geom->complexTypeName(argInfo.getType()).join(" or ");
             case 1: return argInfo.getDescription();
         }
     } else if (role == Qt::BackgroundRole) {

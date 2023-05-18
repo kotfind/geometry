@@ -3,6 +3,14 @@
 #include "AbstractPoint.h"
 #include "Point.h"
 #include "ETransformation.h"
+#include "TR.h"
+#include "Real.h"
+#include "Point.h"
+#include "Line.h"
+#include "Circle.h"
+
+#include <QString>
+#include <stdexcept>
 
 EGeometry::EGeometry()
   : transformation(
@@ -21,4 +29,14 @@ const SectionMaster* EGeometry::getSectionMaster() const {
 
 Transformation* EGeometry::getTransformation() const {
     return transformation.get();
+}
+
+QString EGeometry::typeName(int t) const {
+    switch (t) {
+        case Real::Type: return TR("Real");
+        case Point::Type: return TR("Point");
+        case Line::Type: return TR("Line");
+        case Circle::Type: return TR("Circle");
+        default: throw std::invalid_argument("Wrong or complex type");
+    }
 }

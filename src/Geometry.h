@@ -1,10 +1,12 @@
 #pragma once
 
 #include <QPointF>
+#include <QStringList>
 
 class AbstractPoint;
 class Transformation;
 class SectionMaster;
+class QString;
 
 class Geometry {
     public:
@@ -14,4 +16,7 @@ class Geometry {
 
         virtual const SectionMaster* getSectionMaster() const = 0;
         virtual Transformation* getTransformation() const = 0;
+
+        virtual QString typeName(int) const = 0;
+        QStringList complexTypeName(int) const;
 };

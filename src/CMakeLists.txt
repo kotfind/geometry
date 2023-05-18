@@ -65,6 +65,8 @@ add_executable(geometry
     VariableWidget.cpp
     VariableDialog.cpp
 
+    Geometry.cpp
+
     EGeometry.cpp
     ETransformation.cpp
     EFunctionList.cpp
