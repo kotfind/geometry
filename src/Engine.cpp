@@ -32,7 +32,7 @@
 
 Engine::Engine(QObject* parent)
   : QObject(parent),
-    sectionMaster(functionList::makeSectionMaster())
+    geom(std::make_unique<Geometry>())
 {}
 
 Engine::~Engine() {
@@ -83,7 +83,7 @@ void Engine::recalcAllItems() {
 void Engine::scroll(const QPointF& delta) {
     setChanged();
 
-    transformation.scroll(delta);
+    geom->getTransformation().scroll(delta);
 
     recalcAllItems();
 }
@@ -91,7 +91,7 @@ void Engine::scroll(const QPointF& delta) {
 void Engine::move(const QPointF& delta) {
     setChanged();
 
-    transformation.move(delta);
+    geom->getTransformation().move(delta);
 
     recalcAllItems();
 }
@@ -99,7 +99,7 @@ void Engine::move(const QPointF& delta) {
 void Engine::zoom(double v, const QPointF& zoomCenter) {
     setChanged();
 
-    transformation.zoom(v, zoomCenter);
+    geom->getTransformation().zoom(v, zoomCenter);
 
     recalcAllItems();
 }
@@ -107,7 +107,10 @@ void Engine::zoom(double v, const QPointF& zoomCenter) {
 QJsonObject Engine::toJson() const {
     QJsonObject json;
 
+    // FIXME
+    /*
     json["transformation"] = transformation.toJson();
+    */
 
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
@@ -183,16 +186,23 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Engine::fromJson(const QJsonObject& json) {
+    // FIXME
+    /*
     transformation = Transformation::fromJson(
         getOrThrow(json["transformation"]).toObject()
     );
+    */
 
     const auto& jsonGens = getOrThrow(json["gens"]).toArray();
     const auto order = getGeneratorLoadOrder(jsonGens);
 
     gens.resize(jsonGens.size(), nullptr);
     for (int i : order) {
-        gens[i] = Generator::fromJson(jsonGens[i].toObject(), gens, sectionMaster.get());
+        gens[i] = Generator::fromJson(
+            jsonGens[i].toObject(),
+            gens,
+            geom->getSectionMaster()
+        );
         gens[i]->engine = this;
     }
 
@@ -213,7 +223,7 @@ void Engine::load(const QString& fileName) {
 }
 
 void Engine::clear() {
-    transformation.clear();
+    geom->getTransformation().clear();
 
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());
@@ -280,10 +290,6 @@ QList<GeometryGenerator*> Engine::getGeomeryGenerators() const {
     }
 
     return ans;
-}
-
-const Transformation& Engine::getTransformation() const {
-    return transformation;
 }
 
 const EditMode* Engine::getEditMode() const {
@@ -370,6 +376,6 @@ void Engine::processRealFuncArg(QGraphicsScene* scene) {
     selectFuncArg(var, scene);
 }
 
-const SectionMaster* Engine::getSectionMaster() const {
-    return sectionMaster.get();
+const Geometry* Engine::getGeometry() const {
+    return geom.get();
 }

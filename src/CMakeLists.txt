@@ -67,6 +67,8 @@ add_executable(geometry
     VariableDialog.cpp
 
     Transformation.cpp
+
+    Geometry.cpp
 )
 
 target_link_libraries(geometry

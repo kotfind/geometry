@@ -41,7 +41,7 @@ void GeometryItem::update() {
     obj.reset(
         object
         ? object->transformed(
-                gen->getEngine()->getTransformation()
+                gen->getEngine()->getGeometry()->getTransformation()
             )
         : nullptr
     );

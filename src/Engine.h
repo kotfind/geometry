@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Transformation.h"
-#include "SectionMaster.h"
 #include "Object.h"
+#include "Geometry.h"
 
 #include <QRectF>
 #include <QList>
@@ -87,9 +86,7 @@ class Engine : public QObject {
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
-        const Transformation& getTransformation() const;
-
-        const SectionMaster* getSectionMaster() const;
+        const Geometry* getGeometry() const;
 
     private:
         QList<Generator*> getGeneratorRecalcOrder();
@@ -111,9 +108,7 @@ class Engine : public QObject {
         const Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
 
-        Transformation transformation;
-
-        std::unique_ptr<SectionMaster> sectionMaster;
+        std::unique_ptr<Geometry> geom;
 
     signals:
         void generatorChanged(Generator*);
