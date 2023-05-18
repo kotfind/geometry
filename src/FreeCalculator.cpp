@@ -29,7 +29,7 @@ void FreeCalculator::setPos(const QPointF& pos) {
 }
 
 void FreeCalculator::setValue(double v) {
-    assert(obj->is(Object::Type::Real));
+    assert(obj->isReal());
     static_cast<Real*>(obj.get())->value = v;
 }
 

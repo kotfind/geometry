@@ -21,7 +21,7 @@ class Scene : public QGraphicsScene {
     private:
         GeometryGenerator* getFreeOrRestrictedGeneratorAt(const QPointF& pos) const;
         GeometryGenerator* getDependantGeneratorAt(const QPointF& pos) const;
-        GeometryGenerator* getGeneratorAt(const QPointF& pos, Object::Type type = Object::Type::Any, bool allowHidden = false) const;
+        GeometryGenerator* getGeneratorAt(const QPointF& pos, int objectType = ~0, bool allowHidden = false) const;
 
         void updateCursor(QGraphicsSceneMouseEvent* e);
 

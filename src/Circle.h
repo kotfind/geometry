@@ -5,11 +5,12 @@
 
 class Circle : public GeometryObject {
     public:
-        Type getType() const { return Type::Circle; }
-
         Circle();
         Circle(const QPointF& o, double r);
         Circle(const Point& o, double r);
+
+        enum { Type = 1 << 3 };
+        int getType() const override { return Type; }
 
         Object* clone() const override;
 

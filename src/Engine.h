@@ -80,7 +80,7 @@ class Engine : public QObject {
         const Function* getActiveFunction() const;
         void setActiveFunction(const Function*, QGraphicsScene*);
 
-        Object::Type getNextFuncArgType() const;
+        int getNextFuncArgType() const;
         void selectFuncArg(Generator*, QGraphicsScene*);
         void clearFuncArgs(QGraphicsScene*);
 

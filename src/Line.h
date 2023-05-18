@@ -10,11 +10,12 @@ class Point;
 // Line with equation a*x + b*y + c = 0
 class Line : public GeometryObject {
     public:
-        Type getType() const { return Type::Line; }
-
         Line();
         Line(const QPointF& p1, const QPointF& p2);
         Line(const Point& p1, const Point& p2);
+
+        enum { Type = 1 << 2 };
+        int getType() const override { return Type; }
 
         Object* clone() const override;
 

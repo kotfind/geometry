@@ -11,7 +11,8 @@ class Point : public AbstractPoint {
         Point(double x, double y);
         explicit Point(const QPointF& pos);
 
-        Type getType() const override { return Type::Point; }
+        enum { Type = 1 << 1 };
+        int getType() const override { return Type; }
 
         Object* clone() const override;
 

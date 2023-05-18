@@ -9,7 +9,8 @@ class Real : public Object {
         Real();
         Real(double value);
 
-        Type getType() const override { return Type::Real; }
+        enum { Type = 1 << 0 };
+        int getType() const override { return Type; }
 
         bool isGeometry() const override { return false; }
 

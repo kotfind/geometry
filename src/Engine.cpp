@@ -311,7 +311,7 @@ void Engine::setActiveFunction(const Function* func, QGraphicsScene* scene) {
     clearFuncArgs(scene);
 }
 
-Object::Type Engine::getNextFuncArgType() const {
+int Engine::getNextFuncArgType() const {
     return getActiveFunction()->getArgInfo(selectedFuncArgs.size()).getType();
 }
 
@@ -334,7 +334,7 @@ void Engine::checkSelectedFuncArgs(QGraphicsScene* scene) {
         createGeneratorFromSelectedFuncArgs(scene);
     }
 
-    if (getNextFuncArgType() == Object::Type::Real) {
+    if (getNextFuncArgType() == Real::Type) {
         processRealFuncArg(scene);
     }
 }

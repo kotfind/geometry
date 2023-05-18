@@ -17,8 +17,6 @@
 #define DO [=](const QList<const Object*>& objs) -> QList<Object*>
 #define ARGS QList<ArgumentInfo>
 
-using Type = Object::Type;
-
 SectionMaster* EGeometry::makeSectionMaster() const {
     auto* master = new SectionMaster;
 
@@ -68,12 +66,12 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Intersects two objects."),
         ARGS {
-            {Type::Line | Type::Circle, TR("First object")},
-            {Type::Line | Type::Circle, TR("Second object")},
+            {Line::Type | Circle::Type, TR("First object")},
+            {Line::Type | Circle::Type, TR("Second object")},
         },
         2,
         DO {
-            if (objs[0]->is(Type::Line) && objs[1]->is(Type::Line)) {
+            if (objs[0]->is(Line::Type) && objs[1]->is(Line::Type)) {
                 const auto& l1 = *static_cast<const Line*>(objs[0]);
                 const auto& l2 = *static_cast<const Line*>(objs[1]);
 
@@ -89,7 +87,7 @@ SectionMaster* EGeometry::makeSectionMaster() const {
                     return {};
 
                 return {new Point(cramerAns[0], cramerAns[1])};
-            } else if (objs[0]->is(Type::Circle) && objs[1]->is(Type::Circle)) {
+            } else if (objs[0]->is(Circle::Type) && objs[1]->is(Circle::Type)) {
                 const auto& w1 = *static_cast<const Circle*>(objs[0]);
                 const auto& w2 = *static_cast<const Circle*>(objs[1]);
 
@@ -128,7 +126,7 @@ SectionMaster* EGeometry::makeSectionMaster() const {
             } else {
                 const Line* lPtr;
                 const Circle* wPtr;
-                if (objs[0]->is(Type::Line)) {
+                if (objs[0]->is(Line::Type)) {
                     lPtr = static_cast<const Line*>(objs[0]);
                     wPtr = static_cast<const Circle*>(objs[1]);
                 } else {
@@ -168,8 +166,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates point between two current."),
         ARGS {
-            {Type::Point, TR("First point")},
-            {Type::Point, TR("Second point")},
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
         },
         1,
         DO {
@@ -187,8 +185,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates line by two points."),
         ARGS {
-            {Type::Point, TR("First point")},
-            {Type::Point, TR("Second point")},
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
         },
         1,
         DO {
@@ -207,8 +205,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
-            {Type::Point, TR("Point")},
-            {Type::Line, TR("Line")},
+            {Point::Type, TR("Point")},
+            {Line::Type, TR("Line")},
         },
         1,
         DO {
@@ -224,8 +222,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates line parallel to current line through current point."),
         ARGS {
-            {Type::Point, TR("Point")},
-            {Type::Line, TR("Line")},
+            {Point::Type, TR("Point")},
+            {Line::Type, TR("Line")},
         },
         1,
         DO {
@@ -241,8 +239,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates tangents to circle from point."),
         ARGS {
-            {Type::Point, TR("Point")},
-            {Type::Circle, TR("Circle")},
+            {Point::Type, TR("Point")},
+            {Circle::Type, TR("Circle")},
         },
         2,
         DO {
@@ -278,8 +276,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates common tangents for two circle."),
         ARGS {
-            {Type::Circle, TR("Fistt circle")},
-            {Type::Circle, TR("Second circle")},
+            {Circle::Type, TR("Fistt circle")},
+            {Circle::Type, TR("Second circle")},
         },
         2,
         DO {
@@ -342,9 +340,9 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates bisector line of angle formed by three points."),
         ARGS {
-            {Type::Point, TR("First point")},
-            {Type::Point, TR("Angle vertex")},
-            {Type::Point, TR("Second point")},
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Angle vertex")},
+            {Point::Type, TR("Second point")},
         },
         1,
         DO {
@@ -374,8 +372,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates circle by center and point on it."),
         ARGS {
-            {Type::Point, TR("Center")},
-            {Type::Point, TR("Point on circle")},
+            {Point::Type, TR("Center")},
+            {Point::Type, TR("Point on circle")},
         },
         1,
         DO {
@@ -396,8 +394,8 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates circle by its center and radius."),
         ARGS {
-            {Type::Point, TR("Center")},
-            {Type::Real, TR("Radius")},
+            {Point::Type, TR("Center")},
+            {Real::Type, TR("Radius")},
         },
         1,
         DO {
@@ -416,9 +414,9 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Creates circle by three points on it."),
         ARGS {
-            {Type::Point, TR("First point")},
-            {Type::Point, TR("Second point")},
-            {Type::Point, TR("Third point")},
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
+            {Point::Type, TR("Third point")},
         },
         1,
         DO {
@@ -455,9 +453,9 @@ SectionMaster* EGeometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Incircle by three vertexes of triangle."),
         ARGS {
-            {Type::Point, TR("First point")},
-            {Type::Point, TR("Second point")},
-            {Type::Point, TR("Third point")},
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
+            {Point::Type, TR("Third point")},
         },
         1,
         DO {

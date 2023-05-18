@@ -86,7 +86,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
 
         case EditMode::Type::HIDE:
         {
-            auto* gen = getGeneratorAt(pos, Object::Type::Any, true);
+            auto* gen = getGeneratorAt(pos, ~0, true);
 
             if (gen) {
                 gen->getGeometryItem()->toggleHidden();
@@ -163,7 +163,7 @@ GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
     return nullptr;
 }
 
-GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, Object::Type type, bool allowHidden) const {
+GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, int type, bool allowHidden) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         auto* item = static_cast<GeometryItem*>(item_);
@@ -219,7 +219,7 @@ void Scene::updateCursor(QGraphicsSceneMouseEvent* e) {
             break;
 
         case EditMode::Type::HIDE:
-            if (getGeneratorAt(pos, Object::Type::Any, true)) {
+            if (getGeneratorAt(pos, ~0, true)) {
                 emit cursorChanged(Qt::PointingHandCursor);
                 return;
             }
