@@ -70,6 +70,8 @@ add_executable(geometry
     EGeometry.cpp
     ETransformation.cpp
     EFunctionList.cpp
+
+    run.cpp
 )
 
 target_link_libraries(geometry
