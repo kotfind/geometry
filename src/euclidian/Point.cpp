@@ -1,8 +1,9 @@
 #include "Point.h"
 
-#include "math.h"
-#include "getOrThrow.h"
-#include "Transformation.h"
+#include "core/Transformation.h"
+
+#include "util/math.h"
+#include "util/getOrThrow.h"
 
 #include <QRectF>
 #include <QPainter>

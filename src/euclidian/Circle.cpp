@@ -1,7 +1,8 @@
 #include "Circle.h"
 
-#include "Transformation.h"
-#include "math.h"
+#include "core/Transformation.h"
+
+#include "util/math.h"
 
 #include <QRectF>
 #include <QPainterPath>

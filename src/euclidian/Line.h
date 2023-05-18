@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GeometryObject.h"
+#include "core/GeometryObject.h"
 
 #include <tuple>
 #include <QPointF>

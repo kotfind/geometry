@@ -6,11 +6,12 @@
 #include "Object.h"
 #include "Engine.h"
 #include "Function.h"
-#include "getOrThrow.h"
 #include "GeometryGenerator.h"
 #include "RealGenerator.h"
 #include "Real.h"
 #include "SectionMaster.h"
+
+#include "util/getOrThrow.h"
 
 #include <stdexcept>
 #include <QJsonArray>

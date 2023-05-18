@@ -1,13 +1,15 @@
 #include "EGeometry.h"
 
-#include "AbstractPoint.h"
 #include "Point.h"
 #include "ETransformation.h"
-#include "TR.h"
-#include "Real.h"
 #include "Point.h"
 #include "Line.h"
 #include "Circle.h"
+
+#include "core/AbstractPoint.h"
+#include "core/Real.h"
+
+#include "util/TR.h"
 
 #include <QString>
 #include <stdexcept>

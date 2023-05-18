@@ -1,8 +1,10 @@
 #include "Line.h"
 
-#include "math.h"
 #include "Point.h"
-#include "Transformation.h"
+
+#include "core/Transformation.h"
+
+#include "util/math.h"
 
 #include <QRectF>
 #include <QPainter>

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Geometry.h"
+#include "core/Geometry.h"
 
 #include "ETransformation.h"
-#include "SectionMaster.h"
+#include "core/SectionMaster.h"
 
 #include <memory>
 #include <QPointF>

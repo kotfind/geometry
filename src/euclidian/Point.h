@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AbstractPoint.h"
+#include "core/AbstractPoint.h"
 
 class QPointF;
 class QJsonObject;

@@ -2,9 +2,10 @@
 
 #include "Generator.h"
 #include "Function.h"
-#include "getOrThrow.h"
 #include "SectionMaster.h"
 #include "Geometry.h"
+
+#include "util/getOrThrow.h"
 
 #include <QJsonArray>
 

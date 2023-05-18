@@ -1,9 +1,10 @@
 #include "FreeCalculator.h"
 
 #include "Real.h"
-#include "getOrThrow.h"
 #include "AbstractPoint.h"
 #include "Geometry.h"
+
+#include "util/getOrThrow.h"
 
 FreeCalculator::FreeCalculator(const Geometry* geom, std::unique_ptr<Object> obj)
   : Calculator(geom),

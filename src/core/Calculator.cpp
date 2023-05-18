@@ -6,8 +6,9 @@
 #include "RestrictedCalculator.h"
 #include "GeometryGenerator.h"
 #include "Function.h"
-#include "getOrThrow.h"
 #include "SectionMaster.h"
+
+#include "util/getOrThrow.h"
 
 #include <stdexcept>
 #include <QJsonArray>

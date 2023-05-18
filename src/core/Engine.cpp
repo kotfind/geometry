@@ -3,8 +3,6 @@
 #include "Object.h"
 #include "Generator.h"
 #include "GeometryItem.h"
-#include "getOrThrow.h"
-#include "IOError.h"
 #include "GeometryGenerator.h"
 #include "DependantCalculator.h"
 #include "RealGenerator.h"
@@ -13,6 +11,9 @@
 #include "Function.h"
 #include "VariableDialog.h"
 #include "Transformation.h"
+
+#include "util/getOrThrow.h"
+#include "util/IOError.h"
 
 #include <QHash>
 #include <cassert>

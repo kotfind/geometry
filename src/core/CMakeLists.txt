@@ -1,0 +1,59 @@
+add_library(core STATIC)
+target_include_directories(core PRIVATE "${PROJECT_SOURCE_DIR}")
+
+target_sources(core
+    PUBLIC FILE_SET HEADERS
+    BASE_DIRS ${PROJECT_SOURCE_DIR}
+    FILES
+        run.h
+
+        Object.h
+        GeometryObject.h
+
+        Geometry.h
+        Transformation.h
+
+        AbstractPoint.h
+
+    PRIVATE
+        run.cpp
+        MainWindow.cpp
+        Engine.cpp
+        Geometry.cpp
+        EditMode.cpp
+
+        Calculator.cpp
+        FreeCalculator.cpp
+        DependantCalculator.cpp
+        RestrictedCalculator.cpp
+
+        SectionMaster.cpp
+        Section.cpp
+        Function.cpp
+
+        Generator.cpp
+        GeometryGenerator.cpp
+        RealGenerator.cpp
+
+        GeometryItem.cpp
+
+        Object.cpp
+        Real.cpp
+
+        Scene.cpp
+        View.cpp
+
+        ToolWidget.cpp
+        ToolInfoWidget.cpp
+        ArgumentInfo.cpp
+        ArgumentInfoModel.cpp
+
+        VariableDialog.cpp
+        VariableModel.cpp
+        VariableWidget.cpp
+)
+
+target_link_libraries(core PRIVATE
+    Qt6::Core
+    Qt6::Widgets
+)

@@ -5,7 +5,6 @@
 #include "EditMode.h"
 #include "View.h"
 #include "Engine.h"
-#include "IOError.h"
 #include "ToolInfoWidget.h"
 #include "Section.h"
 #include "ToolWidget.h"
@@ -14,6 +13,8 @@
 #include "Real.h"
 #include "VariableWidget.h"
 #include "SectionMaster.h"
+
+#include "util/IOError.h"
 
 #include <QAction>
 #include <QMenuBar>

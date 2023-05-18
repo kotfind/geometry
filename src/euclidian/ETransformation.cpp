@@ -1,6 +1,6 @@
 #include "ETransformation.h"
 
-#include "getOrThrow.h"
+#include "util/getOrThrow.h"
 
 #include <math.h>
 

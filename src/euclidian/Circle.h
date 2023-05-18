@@ -1,7 +1,8 @@
 #pragma once
 
-#include "GeometryObject.h"
 #include "Point.h"
+
+#include "core/GeometryObject.h"
 
 class Circle : public GeometryObject {
     public:

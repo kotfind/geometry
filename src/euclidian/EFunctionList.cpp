@@ -1,15 +1,18 @@
 #include "EGeometry.h"
 
-#include "SectionMaster.h"
-#include "Section.h"
-#include "Function.h"
-#include "Real.h"
 #include "Line.h"
 #include "Point.h"
 #include "Circle.h"
-#include "cramer.h"
-#include "TR.h"
-#include "math.h"
+
+#include "core/SectionMaster.h"
+#include "core/Section.h"
+#include "core/Function.h"
+#include "core/Real.h"
+#include "core/ArgumentInfo.h"
+
+#include "util/TR.h"
+#include "util/math.h"
+#include "util/cramer.h"
 
 #include <QDebug>
 #include <QIcon>

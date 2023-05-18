@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
-
+cmake_minimum_required(VERSION 3.23)
 project(geometry LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -15,76 +14,19 @@ find_package(Qt6 REQUIRED
 
 qt_standard_project_setup()
 
-add_executable(geometry
+add_subdirectory(core)
+add_subdirectory(euclidian)
+add_subdirectory(util)
+
+add_executable(geometry)
+
+target_sources(geometry PRIVATE
     main.cpp
-    math.cpp
-
-    SectionMaster.cpp
-    Section.cpp
-    Function.cpp
-
-    Generator.cpp
-    RealGenerator.cpp
-    GeometryGenerator.cpp
-
-    Calculator.cpp
-    FreeCalculator.cpp
-    DependantCalculator.cpp
-    RestrictedCalculator.cpp
-
-    Point.cpp
-    Line.cpp
-    Circle.cpp
-    Real.cpp
-
-    MainWindow.cpp
-
-    GeometryItem.cpp
-
-    Scene.cpp
-    View.cpp
-
-    Engine.cpp
-
-    getOrThrow.cpp
-
-    Object.cpp
-
-    ToolInfoWidget.cpp
-
-    ArgumentInfo.cpp
-    ArgumentInfoModel.cpp
-
-    EditMode.cpp
-
-    cramer.cpp
-
-    ToolWidget.cpp
-
-    VariableModel.cpp
-    VariableWidget.cpp
-    VariableDialog.cpp
-
-    Geometry.cpp
-
-    EGeometry.cpp
-    ETransformation.cpp
-    EFunctionList.cpp
-
-    run.cpp
 )
 
-target_link_libraries(geometry
-    Qt6::Core
-    Qt6::Widgets
-    Qt6::Svg
-)
-
-qt_add_resources(geometry "imgs"
-    PREFIX "/"
-    BASE "img/"
-    FILES
-        "img/none.svg"
+target_link_libraries(geometry PRIVATE
+    core
+    euclidian
 )
 
 find_package(Doxygen)
