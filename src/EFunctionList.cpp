@@ -1,4 +1,4 @@
-#include "functionList.h"
+#include "EGeometry.h"
 
 #include "SectionMaster.h"
 #include "Section.h"
@@ -19,7 +19,7 @@
 
 using Type = Object::Type;
 
-SectionMaster* functionList::makeSectionMaster() {
+SectionMaster* EGeometry::makeSectionMaster() const {
     auto* master = new SectionMaster;
 
     // -------------------- Sections --------------------

@@ -2,14 +2,13 @@
 
 #include "AbstractPoint.h"
 #include "Point.h"
-#include "functionList.h"
 #include "ETransformation.h"
 
 EGeometry::EGeometry()
   : transformation(
         std::make_unique<ETransformation>()
     ),
-    sectionMaster(functionList::makeSectionMaster())
+    sectionMaster(makeSectionMaster())
 {}
 
 AbstractPoint* EGeometry::makePoint(const QPointF& pos) const {

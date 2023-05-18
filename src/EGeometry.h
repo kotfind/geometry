@@ -18,6 +18,10 @@ class EGeometry : public Geometry {
         Transformation* getTransformation() const override;
 
     private:
+        // Is called from c'tor
+        // Is defined in EFunctionList.cpp
+        SectionMaster* makeSectionMaster() const;
+
         std::unique_ptr<ETransformation> transformation;
         std::unique_ptr<SectionMaster> sectionMaster;
 };

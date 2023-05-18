@@ -12,7 +12,6 @@
 #include "EditMode.h"
 #include "Function.h"
 #include "VariableDialog.h"
-#include "functionList.h"
 #include "EGeometry.h"
 
 #include <QHash>

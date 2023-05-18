@@ -22,7 +22,6 @@ add_executable(geometry
     SectionMaster.cpp
     Section.cpp
     Function.cpp
-    functionList.cpp
 
     Generator.cpp
     RealGenerator.cpp
@@ -66,9 +65,9 @@ add_executable(geometry
     VariableWidget.cpp
     VariableDialog.cpp
 
-    ETransformation.cpp
-
     EGeometry.cpp
+    ETransformation.cpp
+    EFunctionList.cpp
 )
 
 target_link_libraries(geometry
