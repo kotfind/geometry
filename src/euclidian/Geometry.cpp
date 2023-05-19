@@ -1,7 +1,7 @@
-#include "EGeometry.h"
+#include "Geometry.h"
 
 #include "Point.h"
-#include "ETransformation.h"
+#include "Transformation.h"
 #include "Point.h"
 #include "Line.h"
 #include "Circle.h"
@@ -14,26 +14,26 @@
 #include <QString>
 #include <stdexcept>
 
-EGeometry::EGeometry()
+Geometry::Geometry()
   : transformation(
-        std::make_unique<ETransformation>()
+        std::make_unique<Transformation>()
     ),
     sectionMaster(makeSectionMaster())
 {}
 
-AbstractPoint* EGeometry::makePoint(const QPointF& pos) const {
+AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
     return new Point(pos);
 }
 
-const SectionMaster* EGeometry::getSectionMaster() const {
+const SectionMaster* Geometry::getSectionMaster() const {
     return sectionMaster.get();
 }
 
-AbstractTransformation* EGeometry::getTransformation() const {
+AbstractTransformation* Geometry::getTransformation() const {
     return transformation.get();
 }
 
-QString EGeometry::typeName(int t) const {
+QString Geometry::typeName(int t) const {
     switch (t) {
         case Real::Type: return TR("Real");
         case Point::Type: return TR("Point");

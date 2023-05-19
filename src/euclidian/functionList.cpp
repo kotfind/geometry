@@ -1,4 +1,4 @@
-#include "EGeometry.h"
+#include "Geometry.h"
 
 #include "Line.h"
 #include "Point.h"
@@ -20,7 +20,7 @@
 #define DO [=](const QList<const Object*>& objs) -> QList<Object*>
 #define ARGS QList<ArgumentInfo>
 
-SectionMaster* EGeometry::makeSectionMaster() const {
+SectionMaster* Geometry::makeSectionMaster() const {
     auto* master = new SectionMaster;
 
     // -------------------- Sections --------------------

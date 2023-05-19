@@ -2,15 +2,15 @@
 
 #include "core/AbstractGeometry.h"
 
-#include "ETransformation.h"
+#include "Transformation.h"
 #include "core/SectionMaster.h"
 
 #include <memory>
 #include <QPointF>
 
-class EGeometry : public AbstractGeometry {
+class Geometry : public AbstractGeometry {
     public:
-        EGeometry();
+        Geometry();
 
         AbstractPoint* makePoint(const QPointF& pos = QPointF()) const override;
 
@@ -24,6 +24,6 @@ class EGeometry : public AbstractGeometry {
         // Is defined in EFunctionList.cpp
         SectionMaster* makeSectionMaster() const;
 
-        std::unique_ptr<ETransformation> transformation;
+        std::unique_ptr<Transformation> transformation;
         std::unique_ptr<SectionMaster> sectionMaster;
 };

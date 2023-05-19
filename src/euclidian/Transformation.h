@@ -2,7 +2,7 @@
 
 #include "core/AbstractTransformation.h"
 
-class ETransformation : public AbstractTransformation {
+class Transformation : public AbstractTransformation {
     public:
         void scroll(const QPointF& delta) override;
         void move(const QPointF& delta) override;

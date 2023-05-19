@@ -5,13 +5,13 @@ target_sources(euclidian
     PUBLIC FILE_SET HEADERS
     BASE_DIRS ${PROJECT_SOURCE_DIR}
     FILES
-        EGeometry.h
+        Geometry.h
 
     PRIVATE
-        EGeometry.cpp
-        EFunctionList.cpp
+        Geometry.cpp
+        functionList.cpp
 
-        ETransformation.cpp
+        Transformation.cpp
 
         Point.cpp
         Line.cpp
