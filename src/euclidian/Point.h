@@ -5,7 +5,7 @@
 class QPointF;
 class QJsonObject;
 
-namespace euclidian {
+namespace euclidian::impl {
     class Point : public AbstractPoint {
         public:
             Point();

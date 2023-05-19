@@ -12,7 +12,7 @@
 #include <memory>
 #include <math.h>
 
-namespace euclidian {
+namespace euclidian::impl {
     Circle::Circle()
       : Circle(Point(), 1)
     {}

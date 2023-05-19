@@ -2,7 +2,7 @@
 
 #include "core/AbstractTransformation.h"
 
-namespace euclidian {
+namespace euclidian::impl {
     class Transformation : public AbstractTransformation {
         public:
             void scroll(const QPointF& delta) override;

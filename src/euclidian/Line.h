@@ -5,7 +5,7 @@
 #include <tuple>
 #include <QPointF>
 
-namespace euclidian {
+namespace euclidian::impl {
     class Line;
     class Point;
 

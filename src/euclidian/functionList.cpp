@@ -21,6 +21,7 @@
 #define ARGS QList<ArgumentInfo>
 
 using namespace euclidian;
+using namespace euclidian::impl;
 
 SectionMaster* Geometry::makeSectionMaster() const {
     auto* master = new SectionMaster;

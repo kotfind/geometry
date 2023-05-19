@@ -14,7 +14,7 @@
 #include <QPointF>
 #include <memory>
 
-namespace euclidian {
+namespace euclidian::impl {
     Line::Line() {}
 
     Line::Line(const QPointF& p1, const QPointF& p2)

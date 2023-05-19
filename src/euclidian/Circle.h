@@ -4,7 +4,7 @@
 
 #include "core/GeometryObject.h"
 
-namespace euclidian {
+namespace euclidian::impl {
     class Circle : public GeometryObject {
         public:
             Circle();

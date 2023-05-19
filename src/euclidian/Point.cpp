@@ -13,7 +13,7 @@
 #include <QPointF>
 #include <QJsonObject>
 
-namespace euclidian {
+namespace euclidian::impl {
     Point::Point()
       : Point(0, 0)
     {}

@@ -6,7 +6,7 @@
 
 using namespace euclidian;
 
-namespace euclidian {
+namespace euclidian::impl {
     void Transformation::scroll(const QPointF& delta) {
         center += delta * scrollSpeed / scale;
     }

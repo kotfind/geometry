@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/AbstractGeometry.h"
-
 #include "Transformation.h"
+
+#include "core/AbstractGeometry.h"
 #include "core/SectionMaster.h"
 
 #include <memory>
@@ -25,7 +25,7 @@ namespace euclidian {
             // Is defined in EFunctionList.cpp
             SectionMaster* makeSectionMaster() const;
 
-            std::unique_ptr<Transformation> transformation;
+            std::unique_ptr<impl::Transformation> transformation;
             std::unique_ptr<SectionMaster> sectionMaster;
     };
 }

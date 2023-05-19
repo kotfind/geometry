@@ -15,6 +15,8 @@
 #include <stdexcept>
 
 namespace euclidian {
+    using namespace impl;
+
     Geometry::Geometry()
       : transformation(
             std::make_unique<Transformation>()
