@@ -8,22 +8,24 @@
 #include <memory>
 #include <QPointF>
 
-class Geometry : public AbstractGeometry {
-    public:
-        Geometry();
+namespace euclidian {
+    class Geometry : public AbstractGeometry {
+        public:
+            Geometry();
 
-        AbstractPoint* makePoint(const QPointF& pos = QPointF()) const override;
+            AbstractPoint* makePoint(const QPointF& pos = QPointF()) const override;
 
-        const SectionMaster* getSectionMaster() const override;
-        AbstractTransformation* getTransformation() const override;
+            const SectionMaster* getSectionMaster() const override;
+            AbstractTransformation* getTransformation() const override;
 
-        QString typeName(int) const override;
+            QString typeName(int) const override;
 
-    private:
-        // Is called from c'tor
-        // Is defined in EFunctionList.cpp
-        SectionMaster* makeSectionMaster() const;
+        private:
+            // Is called from c'tor
+            // Is defined in EFunctionList.cpp
+            SectionMaster* makeSectionMaster() const;
 
-        std::unique_ptr<Transformation> transformation;
-        std::unique_ptr<SectionMaster> sectionMaster;
-};
+            std::unique_ptr<Transformation> transformation;
+            std::unique_ptr<SectionMaster> sectionMaster;
+    };
+}

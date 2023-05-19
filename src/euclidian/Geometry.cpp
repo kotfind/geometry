@@ -14,31 +14,33 @@
 #include <QString>
 #include <stdexcept>
 
-Geometry::Geometry()
-  : transformation(
-        std::make_unique<Transformation>()
-    ),
-    sectionMaster(makeSectionMaster())
-{}
+namespace euclidian {
+    Geometry::Geometry()
+      : transformation(
+            std::make_unique<Transformation>()
+        ),
+        sectionMaster(makeSectionMaster())
+    {}
 
-AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
-    return new Point(pos);
-}
+    AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
+        return new Point(pos);
+    }
 
-const SectionMaster* Geometry::getSectionMaster() const {
-    return sectionMaster.get();
-}
+    const SectionMaster* Geometry::getSectionMaster() const {
+        return sectionMaster.get();
+    }
 
-AbstractTransformation* Geometry::getTransformation() const {
-    return transformation.get();
-}
+    AbstractTransformation* Geometry::getTransformation() const {
+        return transformation.get();
+    }
 
-QString Geometry::typeName(int t) const {
-    switch (t) {
-        case Real::Type: return TR("Real");
-        case Point::Type: return TR("Point");
-        case Line::Type: return TR("Line");
-        case Circle::Type: return TR("Circle");
-        default: throw std::invalid_argument("Wrong or complex type");
+    QString Geometry::typeName(int t) const {
+        switch (t) {
+            case Real::Type: return TR("Real");
+            case Point::Type: return TR("Point");
+            case Line::Type: return TR("Line");
+            case Circle::Type: return TR("Circle");
+            default: throw std::invalid_argument("Wrong or complex type");
+        }
     }
 }

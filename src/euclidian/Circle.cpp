@@ -12,80 +12,86 @@
 #include <memory>
 #include <math.h>
 
-Circle::Circle() : Circle(Point(), 1) {}
-Circle::Circle(const QPointF& o, double r)
-  : o(o),
-    r(r)
-{}
-Circle::Circle(const Point& o, double r)
-  : Circle(o.getPos(), r)
-{}
+namespace euclidian {
+    Circle::Circle()
+      : Circle(Point(), 1)
+    {}
 
-Object* Circle::clone() const {
-    return new Circle(*this);
-}
+    Circle::Circle(const QPointF& o, double r)
+      : o(o),
+        r(r)
+    {}
 
-void Circle::paint(QPainter* qp, const QColor& color) const {
-    auto pen = qp->pen();
-    pen.setWidthF(paintWidth);
-    pen.setStyle(Qt::SolidLine);
-    pen.setColor(color);
-    qp->setPen(pen);
+    Circle::Circle(const Point& o, double r)
+      : Circle(o.getPos(), r)
+    {}
 
-    qp->drawEllipse(getRect(o, r));
-}
+    Object* Circle::clone() const {
+        return new Circle(*this);
+    }
 
-QRectF Circle::boundingRect() const {
-    return getRect(o, r + paintWidth);
-}
+    void Circle::paint(QPainter* qp, const QColor& color) const {
+        auto pen = qp->pen();
+        pen.setWidthF(paintWidth);
+        pen.setStyle(Qt::SolidLine);
+        pen.setColor(color);
+        qp->setPen(pen);
 
-QPainterPath Circle::shape() const {
-    QPainterPath path;
-    path.addEllipse(getRect(o, r + paintWidth));
-    path.addEllipse(getRect(o, r - paintWidth));
-    return path;
-}
+        qp->drawEllipse(getRect(o, r));
+    }
 
-GeometryObject* Circle::transformed(const AbstractTransformation* t) const {
-    auto p = o + QPointF(r, 0);
+    QRectF Circle::boundingRect() const {
+        return getRect(o, r + paintWidth);
+    }
 
-    auto o_ = t->transform(o);
-    auto p_ = t->transform(p);
-    return new Circle(
-        o_,
-        dist(o_, p_)
-    );
-}
+    QPainterPath Circle::shape() const {
+        QPainterPath path;
+        path.addEllipse(getRect(o, r + paintWidth));
+        path.addEllipse(getRect(o, r - paintWidth));
+        return path;
+    }
 
-QPointF Circle::calcNearestPoint(const QPointF& pos) const {
-    auto p = Point(pos);
-    auto o_ = Point(o);
-    auto op = p - o_;
-    return (o_ + norm(op) * r).getPos();
-}
+    GeometryObject* Circle::transformed(const AbstractTransformation* t) const {
+        auto p = o + QPointF(r, 0);
 
-double Circle::pointToPosValue(const QPointF& p) const {
-    auto op = p - o;
-    return atan2(op.y(), op.x());
-}
+        auto o_ = t->transform(o);
+        auto p_ = t->transform(p);
+        return new Circle(
+            o_,
+            dist(o_, p_)
+        );
+    }
 
-QPointF Circle::posValueToPoint(double val) const {
-    return o + r * QPointF(cos(val), sin(val));
-}
+    QPointF Circle::calcNearestPoint(const QPointF& pos) const {
+        auto p = Point(pos);
+        auto o_ = Point(o);
+        auto op = p - o_;
+        return (o_ + norm(op) * r).getPos();
+    }
 
-Point Circle::getO() const {
-    return Point(o);
-}
+    double Circle::pointToPosValue(const QPointF& p) const {
+        auto op = p - o;
+        return atan2(op.y(), op.x());
+    }
 
-double Circle::getR() const {
-    return r;
-}
+    QPointF Circle::posValueToPoint(double val) const {
+        return o + r * QPointF(cos(val), sin(val));
+    }
 
-QRectF Circle::getRect(const QPointF& center, double radius) {
-    return QRectF(
-        center.x() - radius,
-        center.y() - radius,
-        radius * 2,
-        radius * 2
-    );
+    Point Circle::getO() const {
+        return Point(o);
+    }
+
+    double Circle::getR() const {
+        return r;
+    }
+
+    QRectF Circle::getRect(const QPointF& center, double radius) {
+        return QRectF(
+            center.x() - radius,
+            center.y() - radius,
+            radius * 2,
+            radius * 2
+        );
+    }
 }

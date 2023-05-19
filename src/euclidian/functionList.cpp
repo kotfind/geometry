@@ -20,6 +20,8 @@
 #define DO [=](const QList<const Object*>& objs) -> QList<Object*>
 #define ARGS QList<ArgumentInfo>
 
+using namespace euclidian;
+
 SectionMaster* Geometry::makeSectionMaster() const {
     auto* master = new SectionMaster;
 
