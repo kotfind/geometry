@@ -16,7 +16,7 @@
 #include <stdexcept>
 #include <QJsonArray>
 
-Generator::Generator(const Geometry* geom, std::unique_ptr<Object> obj)
+Generator::Generator(const AbstractGeometry* geom, std::unique_ptr<Object> obj)
   : Generator(
         std::make_unique<FreeCalculator>(
             geom,
@@ -26,7 +26,7 @@ Generator::Generator(const Geometry* geom, std::unique_ptr<Object> obj)
 {}
 
 Generator::Generator(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const Function* func,
     const QList<Generator*>& args,
     int funcResNum
@@ -40,7 +40,7 @@ Generator::Generator(
     )
 {}
 
-Generator::Generator(const Geometry* geom, GeometryGenerator* restrictor, double posValue)
+Generator::Generator(const AbstractGeometry* geom, GeometryGenerator* restrictor, double posValue)
   : Generator(
         std::make_unique<RestrictedCalculator>(
             geom,
@@ -120,7 +120,7 @@ QJsonObject Generator::toJson(const QHash<Generator*, int>& ids) const {
 }
 
 Generator* Generator::fromJson(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const QJsonObject& json,
     const QList<Generator*>& gens
 ) {

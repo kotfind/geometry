@@ -3,9 +3,9 @@
 #include <QPointF>
 #include <QJsonObject>
 
-class Transformation {
+class AbstractTransformation {
     public:
-        virtual ~Transformation() {}
+        virtual ~AbstractTransformation() {}
 
         virtual void scroll(const QPointF& delta) = 0;
         virtual void move(const QPointF& delta) = 0;

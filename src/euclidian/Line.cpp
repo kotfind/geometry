@@ -2,7 +2,7 @@
 
 #include "Point.h"
 
-#include "core/Transformation.h"
+#include "core/AbstractTransformation.h"
 
 #include "util/math.h"
 
@@ -63,7 +63,7 @@ QPainterPath Line::shape() const {
     return path;
 }
 
-GeometryObject* Line::transformed(const Transformation* t) const {
+GeometryObject* Line::transformed(const AbstractTransformation* t) const {
     return new Line(
         t->transform(p1),
         t->transform(p2)

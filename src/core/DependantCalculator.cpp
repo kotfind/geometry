@@ -3,14 +3,14 @@
 #include "Generator.h"
 #include "Function.h"
 #include "SectionMaster.h"
-#include "Geometry.h"
+#include "AbstractGeometry.h"
 
 #include "util/getOrThrow.h"
 
 #include <QJsonArray>
 
 DependantCalculator::DependantCalculator(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const Function* func,
     const QList<Generator*>& args,
     int funcResNum
@@ -66,7 +66,7 @@ QJsonObject DependantCalculator::toJson(const QHash<Generator*, int>& ids, bool 
 }
 
 DependantCalculator* DependantCalculator::fromJson(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const QJsonObject& json,
     const QList<Generator*>& gens
 ) {

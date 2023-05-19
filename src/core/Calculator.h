@@ -7,7 +7,7 @@
 
 class Object;
 class Generator;
-class Geometry;
+class AbstractGeometry;
 
 class Calculator {
     public:
@@ -29,14 +29,14 @@ class Calculator {
 
         virtual QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const = 0;
         static Calculator* fromJson(
-            const Geometry* geom,
+            const AbstractGeometry* geom,
             const QJsonObject& json,
             const QList<Generator*>& gens,
             bool isReal
         );
 
     protected:
-        Calculator(const Geometry* geom);
+        Calculator(const AbstractGeometry* geom);
 
-        const Geometry* geom;
+        const AbstractGeometry* geom;
 };

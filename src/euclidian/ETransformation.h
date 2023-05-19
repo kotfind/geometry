@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/Transformation.h"
+#include "core/AbstractTransformation.h"
 
-class ETransformation : public Transformation {
+class ETransformation : public AbstractTransformation {
     public:
         void scroll(const QPointF& delta) override;
         void move(const QPointF& delta) override;

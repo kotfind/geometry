@@ -8,13 +8,13 @@ class QTreeView;
 class ArgumentInfoModel;
 class QSize;
 class EditMode;
-class Geometry;
+class AbstractGeometry;
 
 class ToolInfoWidget : public QWidget {
     Q_OBJECT
 
     public:
-        ToolInfoWidget(const Geometry* geom, QWidget* parent = nullptr);
+        ToolInfoWidget(const AbstractGeometry* geom, QWidget* parent = nullptr);
 
     private:
         void createUi();

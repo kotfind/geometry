@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Geometry.h"
+#include "core/AbstractGeometry.h"
 
 #include "ETransformation.h"
 #include "core/SectionMaster.h"
@@ -8,14 +8,14 @@
 #include <memory>
 #include <QPointF>
 
-class EGeometry : public Geometry {
+class EGeometry : public AbstractGeometry {
     public:
         EGeometry();
 
         AbstractPoint* makePoint(const QPointF& pos = QPointF()) const override;
 
         const SectionMaster* getSectionMaster() const override;
-        Transformation* getTransformation() const override;
+        AbstractTransformation* getTransformation() const override;
 
         QString typeName(int) const override;
 

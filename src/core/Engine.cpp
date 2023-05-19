@@ -10,7 +10,7 @@
 #include "EditMode.h"
 #include "Function.h"
 #include "VariableDialog.h"
-#include "Transformation.h"
+#include "AbstractTransformation.h"
 
 #include "util/getOrThrow.h"
 #include "util/IOError.h"
@@ -31,7 +31,7 @@
 #include <functional>
 #include <QMessageBox>
 
-Engine::Engine(std::unique_ptr<Geometry> geom, QObject* parent)
+Engine::Engine(std::unique_ptr<AbstractGeometry> geom, QObject* parent)
   : QObject(parent),
     geom(std::move(geom))
 {}
@@ -189,7 +189,7 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 void Engine::fromJson(const QJsonObject& json) {
     // FIXME
     /*
-    transformation = Transformation::fromJson(
+    transformation = AbstractTransformation::fromJson(
         getOrThrow(json["transformation"]).toObject()
     );
     */
@@ -378,6 +378,6 @@ void Engine::processRealFuncArg(QGraphicsScene* scene) {
     selectFuncArg(var, scene);
 }
 
-const Geometry* Engine::getGeometry() const {
+const AbstractGeometry* Engine::getGeometry() const {
     return geom.get();
 }

@@ -5,9 +5,9 @@
 
 #include <QApplication>
 
-class Geometry;
+class AbstractGeometry;
 
-int run(int argc, char** argv, std::unique_ptr<Geometry> geom) {
+int run(int argc, char** argv, std::unique_ptr<AbstractGeometry> geom) {
     QApplication app(argc, argv);
 
     Engine engine(std::move(geom));

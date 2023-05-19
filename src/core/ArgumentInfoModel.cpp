@@ -2,12 +2,12 @@
 
 #include "Function.h"
 #include "ArgumentInfo.h"
-#include "Geometry.h"
+#include "AbstractGeometry.h"
 
 #include <QColor>
 #include <QStringList>
 
-ArgumentInfoModel::ArgumentInfoModel(const Geometry* geom, QObject* parent)
+ArgumentInfoModel::ArgumentInfoModel(const AbstractGeometry* geom, QObject* parent)
   : QAbstractListModel(parent),
     geom(geom)
 {}

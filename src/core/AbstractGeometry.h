@@ -4,18 +4,18 @@
 #include <QStringList>
 
 class AbstractPoint;
-class Transformation;
+class AbstractTransformation;
 class SectionMaster;
 class QString;
 
-class Geometry {
+class AbstractGeometry {
     public:
-        virtual ~Geometry() {}
+        virtual ~AbstractGeometry() {}
 
         virtual AbstractPoint* makePoint(const QPointF& pos = QPointF()) const = 0;
 
         virtual const SectionMaster* getSectionMaster() const = 0;
-        virtual Transformation* getTransformation() const = 0;
+        virtual AbstractTransformation* getTransformation() const = 0;
 
         virtual QString typeName(int) const = 0;
         QStringList complexTypeName(int) const;

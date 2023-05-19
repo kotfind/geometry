@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Geometry.h"
+#include "AbstractGeometry.h"
 
 #include <QRectF>
 #include <QList>
@@ -22,7 +22,7 @@ class Engine : public QObject {
     Q_OBJECT
 
     public:
-        Engine(std::unique_ptr<Geometry> geom, QObject* parent = nullptr);
+        Engine(std::unique_ptr<AbstractGeometry> geom, QObject* parent = nullptr);
         ~Engine();
 
         template<typename GenT, typename... Args>
@@ -87,7 +87,7 @@ class Engine : public QObject {
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
-        const Geometry* getGeometry() const;
+        const AbstractGeometry* getGeometry() const;
 
     private:
         QList<Generator*> getGeneratorRecalcOrder();
@@ -109,7 +109,7 @@ class Engine : public QObject {
         const Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
 
-        std::unique_ptr<Geometry> geom;
+        std::unique_ptr<AbstractGeometry> geom;
 
     signals:
         void generatorChanged(Generator*);

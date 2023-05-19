@@ -9,7 +9,7 @@ class GeometryGenerator;
 class RestrictedCalculator : public Calculator {
     public:
         RestrictedCalculator(
-            const Geometry* geom,
+            const AbstractGeometry* geom,
             GeometryGenerator* restrictor,
             double posValue
         );
@@ -27,7 +27,7 @@ class RestrictedCalculator : public Calculator {
     private:
         // Is called from Calculator::fromJson(...)
         static RestrictedCalculator* fromJson(
-            const Geometry* geom,
+            const AbstractGeometry* geom,
             const QJsonObject& json,
             const QList<Generator*>& gens
         );

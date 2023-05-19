@@ -2,11 +2,11 @@
 
 #include "Real.h"
 #include "AbstractPoint.h"
-#include "Geometry.h"
+#include "AbstractGeometry.h"
 
 #include "util/getOrThrow.h"
 
-FreeCalculator::FreeCalculator(const Geometry* geom, std::unique_ptr<Object> obj)
+FreeCalculator::FreeCalculator(const AbstractGeometry* geom, std::unique_ptr<Object> obj)
   : Calculator(geom),
     obj(std::move(obj))
 {}
@@ -46,7 +46,7 @@ QJsonObject FreeCalculator::toJson(const QHash<Generator*, int>& ids, bool isRea
 }
 
 FreeCalculator* FreeCalculator::fromJson(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const QJsonObject& json,
     bool isReal
 ) {

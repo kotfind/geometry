@@ -1,6 +1,6 @@
-#include "Geometry.h"
+#include "AbstractGeometry.h"
 
-QStringList Geometry::complexTypeName(int type) const {
+QStringList AbstractGeometry::complexTypeName(int type) const {
     QStringList ans;
     for (int i = 0; i < sizeof(int); ++i) {
         auto t = 1 << i;

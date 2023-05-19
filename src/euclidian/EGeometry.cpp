@@ -29,7 +29,7 @@ const SectionMaster* EGeometry::getSectionMaster() const {
     return sectionMaster.get();
 }
 
-Transformation* EGeometry::getTransformation() const {
+AbstractTransformation* EGeometry::getTransformation() const {
     return transformation.get();
 }
 

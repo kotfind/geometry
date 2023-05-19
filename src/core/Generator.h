@@ -13,7 +13,7 @@ class Function;
 class Engine;
 class SectionMaster;
 class GeometryGenerator;
-class Geometry;
+class AbstractGeometry;
 
 class Generator {
     public:
@@ -39,7 +39,7 @@ class Generator {
 
         virtual QJsonObject toJson(const QHash<Generator*, int>& ids) const;
         static Generator* fromJson(
-            const Geometry* geom,
+            const AbstractGeometry* geom,
             const QJsonObject& json,
             const QList<Generator*>& gens
         );
@@ -47,12 +47,12 @@ class Generator {
     protected:
         // Constructs Free Generator.
         // Is called from Engine::makeGenerator.
-        Generator(const Geometry* geom, std::unique_ptr<Object> obj);
+        Generator(const AbstractGeometry* geom, std::unique_ptr<Object> obj);
 
         // Constructs Dependant Generator.
         // Is called from Engine::makeGenerator.
         Generator(
-            const Geometry* geom,
+            const AbstractGeometry* geom,
             const Function* func,
             const QList<Generator*>& args,
             int funcResNum = 0
@@ -60,7 +60,7 @@ class Generator {
 
         // Constructs Restricted Generator.
         // Is called from Engine::makeGenerator.
-        Generator(const Geometry* geom, GeometryGenerator* restrictor, double posValue = 0);
+        Generator(const AbstractGeometry* geom, GeometryGenerator* restrictor, double posValue = 0);
 
         // Basic Generator c'tor.
         // Is used by other c'tors and fromJson function

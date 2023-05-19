@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <QJsonArray>
 
-Calculator::Calculator(const Geometry* geom)
+Calculator::Calculator(const AbstractGeometry* geom)
   : geom(geom)
 {}
 
@@ -22,7 +22,7 @@ void Calculator::setPos(const QPointF& pos) {
 }
 
 Calculator* Calculator::fromJson(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const QJsonObject& json,
     const QList<Generator*>& gens,
     bool isReal

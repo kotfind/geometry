@@ -4,10 +4,10 @@
 
 #include "core/AbstractPoint.h"
 #include "core/GeometryGenerator.h"
-#include "core/Geometry.h"
+#include "core/AbstractGeometry.h"
 
 RestrictedCalculator::RestrictedCalculator(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     GeometryGenerator* restrictor,
     double posValue
 ) : Calculator(geom),
@@ -49,7 +49,7 @@ QJsonObject RestrictedCalculator::toJson(const QHash<Generator*, int>& ids, bool
 }
 
 RestrictedCalculator* RestrictedCalculator::fromJson(
-    const Geometry* geom,
+    const AbstractGeometry* geom,
     const QJsonObject& json,
     const QList<Generator*>& gens
 ) {

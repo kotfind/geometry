@@ -1,6 +1,6 @@
 #include "Point.h"
 
-#include "core/Transformation.h"
+#include "core/AbstractTransformation.h"
 
 #include "util/math.h"
 #include "util/getOrThrow.h"
@@ -71,11 +71,11 @@ void Point::fromJson(const QJsonObject& json) {
     y = getOrThrow(json["y"]).toDouble();
 }
 
-GeometryObject* Point::transformed(const Transformation* t) const {
+GeometryObject* Point::transformed(const AbstractTransformation* t) const {
     return new Point(t->transform(getPos()));
 }
 
-Point* Point::untransformed(const Transformation* t) const {
+Point* Point::untransformed(const AbstractTransformation* t) const {
     return new Point(t->untransform(getPos()));
 }
 

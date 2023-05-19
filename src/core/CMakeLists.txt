@@ -10,8 +10,8 @@ target_sources(core
         Object.h
         GeometryObject.h
 
-        Geometry.h
-        Transformation.h
+        AbstractGeometry.h
+        AbstractTransformation.h
 
         AbstractPoint.h
 
@@ -19,7 +19,7 @@ target_sources(core
         run.cpp
         MainWindow.cpp
         Engine.cpp
-        Geometry.cpp
+        AbstractGeometry.cpp
         EditMode.cpp
 
         Calculator.cpp

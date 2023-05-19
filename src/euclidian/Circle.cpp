@@ -1,6 +1,6 @@
 #include "Circle.h"
 
-#include "core/Transformation.h"
+#include "core/AbstractTransformation.h"
 
 #include "util/math.h"
 
@@ -46,7 +46,7 @@ QPainterPath Circle::shape() const {
     return path;
 }
 
-GeometryObject* Circle::transformed(const Transformation* t) const {
+GeometryObject* Circle::transformed(const AbstractTransformation* t) const {
     auto p = o + QPointF(r, 0);
 
     auto o_ = t->transform(o);

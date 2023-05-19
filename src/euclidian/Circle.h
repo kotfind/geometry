@@ -19,7 +19,7 @@ class Circle : public GeometryObject {
         QRectF boundingRect() const override;
         QPainterPath shape() const override;
 
-        GeometryObject* transformed(const Transformation*) const override;
+        GeometryObject* transformed(const AbstractTransformation*) const override;
 
         QPointF calcNearestPoint(const QPointF& pos) const override;
 

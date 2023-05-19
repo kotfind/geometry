@@ -10,7 +10,7 @@
 #include <cassert>
 #include <QSize>
 
-ToolInfoWidget::ToolInfoWidget(const Geometry* geom, QWidget* parent)
+ToolInfoWidget::ToolInfoWidget(const AbstractGeometry* geom, QWidget* parent)
   : QWidget(parent)
 {
     setEnabled(false);
