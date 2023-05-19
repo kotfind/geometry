@@ -9,8 +9,6 @@
 #include "util/math.h"
 #include "util/TR.h"
 
-#include <stdexcept>
-
 namespace hyperbolic {
     using namespace impl;
 
@@ -22,11 +20,9 @@ namespace hyperbolic {
     {}
 
     AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
-        try {
-            return new Point(pos);
-        } catch (const std::invalid_argument&) {
-            return nullptr;
-        }
+        return le(len(pos), 1)
+            ? new Point(pos)
+            : nullptr;
     }
 
     const SectionMaster* Geometry::getSectionMaster() const {

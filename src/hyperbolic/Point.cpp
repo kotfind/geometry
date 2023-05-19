@@ -10,7 +10,6 @@
 #include <QPainterPath>
 #include <QPointF>
 #include <QJsonObject>
-#include <stdexcept>
 
 namespace hyperbolic::impl {
     Point::Point()
@@ -20,21 +19,14 @@ namespace hyperbolic::impl {
     Point::Point(double x, double y)
       : x(x),
         y(y)
-    {
-        if (geq(hypot(x, y), 1)) {
-            throw std::invalid_argument(
-                "Wrong coordinates!"
-                "Hyperbolic point's should be in unit circle."
-            );
-        }
-    }
+    {}
 
     Point::Point(const QPointF& pos)
       : Point(pos.x(), pos.y())
     {}
 
     Point::Point(const std::complex<double>& z)
-      : Point(std::real(x), std::imag(z))
+      : Point(std::real(z), std::imag(z))
     {}
 
     Object* Point::clone() const {

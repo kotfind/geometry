@@ -137,7 +137,7 @@ namespace hyperbolic::impl {
         Point& o,
         double& r
     ) const {
-        if (eq(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos()), 0)) {
+        if (abs(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos())) < 0.05 /* XXX */) {
             isLine = true;
 
             auto p = p1.getPos();
@@ -173,6 +173,7 @@ namespace hyperbolic::impl {
             // ---------------------------------------------------------------
                         (p * std::conj(q) - q * std::conj(p))
             );
+
             r = dist(o.getPos(), p1.getPos());
         }
     }
