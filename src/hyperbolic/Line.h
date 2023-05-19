@@ -1,17 +1,17 @@
 #pragma once
 
+#include "Point.h"
+
 #include "core/GeometryObject.h"
 
-#include <tuple>
 #include <QPointF>
 
-namespace euclidian::impl {
+namespace hyperbolic::impl {
     class Point;
 
     class Line : public GeometryObject {
         public:
             Line();
-            Line(const QPointF& p1, const QPointF& p2);
             Line(const Point& p1, const Point& p2);
 
             enum { Type = 1 << 2 };
@@ -30,29 +30,33 @@ namespace euclidian::impl {
             double pointToPosValue(const QPointF& pos) const override;
             QPointF posValueToPoint(double val) const override;
 
-            std::pair<Point, Point> getTwoPoints() const;
-
-            // Returns (A, B, C) for line equation: Ax + By + C = 0
-            std::tuple<double, double, double> getABC() const;
-
-            QPointF getDir() const;
-
-            QPointF getNorm() const;
-
-            double getDist(const QPointF&) const;
-
         private:
-            std::pair<QPointF, QPointF> getTwoBoundingPoints() const;
+            // If this line is represented as line
+            // in the Poincare disk, then
+            //  * isLine is set to true;
+            //  * a, b are set to intersection points of this line
+            //    and absolute.
+            // 
+            // If this line is represented as circle
+            // in the Poincare disk, then
+            //  * isLine is set to false;
+            //  * o is set to the center of the circle;
+            //  * r is set to the radius of the circle.
+            void getEuclidian(
+                bool& isLine,
 
-            QPointF p1;
-            QPointF p2;
+                // For line
+                Point& a,
+                Point& b,
+
+                // For circle
+                Point& o,
+                double& r
+            ) const;
+
+            Point p1;
+            Point p2;
 
             static constexpr double paintWidth = 3e-3;
     };
-
-    double dist(const Line& l, const Point& p);
-    double dist(const Point& p, const Line& l);
-
-    Point norm(const Line& l);
-    Point dir(const Line& l);
 }

@@ -32,8 +32,6 @@ namespace euclidian::impl {
             double getR() const;
             
         private:
-            static QRectF getRect(const QPointF& center, double radius);
-
             QPointF o;
             double r;
 

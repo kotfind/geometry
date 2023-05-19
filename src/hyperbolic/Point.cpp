@@ -10,8 +10,9 @@
 #include <QPainterPath>
 #include <QPointF>
 #include <QJsonObject>
+#include <stdexcept>
 
-namespace euclidian::impl {
+namespace hyperbolic::impl {
     Point::Point()
       : Point(0, 0)
     {}
@@ -19,10 +20,21 @@ namespace euclidian::impl {
     Point::Point(double x, double y)
       : x(x),
         y(y)
-    {}
+    {
+        if (geq(hypot(x, y), 1)) {
+            throw std::invalid_argument(
+                "Wrong coordinates!"
+                "Hyperbolic point's should be in unit circle."
+            );
+        }
+    }
 
     Point::Point(const QPointF& pos)
       : Point(pos.x(), pos.y())
+    {}
+
+    Point::Point(const std::complex<double>& z)
+      : Point(std::real(x), std::imag(z))
     {}
 
     Object* Point::clone() const {
@@ -100,6 +112,7 @@ namespace euclidian::impl {
     }
 
     bool operator==(const Point& p1, const Point& p2) {
+        // TODO: Use hyperbolic metrics
         return eq(p1.x, p2.x) && eq(p1.y, p2.y);
     }
 
@@ -155,30 +168,12 @@ namespace euclidian::impl {
         return ans;
     }
 
-    double dist(const Point& p1, const Point& p2) {
-        return len(p1 - p2);
+    void Point::setComplex(const std::complex<double>& z) {
+        x = std::real(z);
+        y = std::imag(z);
     }
 
-    double len(const Point& v) {
-        return len(v.getPos());
-    }
-
-    Point rot(const Point& v, double sin_a, double cos_a) {
-        return Point(
-            v.x*cos_a - v.y*sin_a,
-            v.y*cos_a + v.x*sin_a
-        );
-    }
-
-    Point rot(const Point& v, double a) {
-        return rot(v, sin(a), cos(a));
-    }
-
-    Point norm(const Point& v) {
-        return v / len(v);
-    }
-
-    Point perp(const Point& v) {
-        return {-v.y, v.x};
+    std::complex<double> Point::getComplex() const {
+        return std::complex<double>(x, y);
     }
 }

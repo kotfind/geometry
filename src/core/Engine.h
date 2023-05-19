@@ -99,7 +99,7 @@ class Engine : public QObject {
         void createGeneratorFromSelectedFuncArgs(QGraphicsScene*);
         void processRealFuncArg(QGraphicsScene*);
 
-        QRectF sceneRect = QRect(-0.5, -0.5, 1, 1);
+        QRectF sceneRect = QRect(-1, -1, 2, 2);
 
         QList<Generator*> gens;
 

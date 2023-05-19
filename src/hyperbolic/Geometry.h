@@ -6,9 +6,8 @@
 #include "core/SectionMaster.h"
 
 #include <memory>
-#include <QPointF>
 
-namespace euclidian {
+namespace hyperbolic {
     class Geometry : public AbstractGeometry {
         public:
             Geometry();

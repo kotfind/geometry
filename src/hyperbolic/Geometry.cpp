@@ -3,17 +3,15 @@
 #include "Transformation.h"
 #include "Point.h"
 #include "Line.h"
-#include "Circle.h"
 
-#include "core/AbstractPoint.h"
 #include "core/Real.h"
 
+#include "util/math.h"
 #include "util/TR.h"
 
-#include <QString>
 #include <stdexcept>
 
-namespace euclidian {
+namespace hyperbolic {
     using namespace impl;
 
     Geometry::Geometry()
@@ -24,7 +22,11 @@ namespace euclidian {
     {}
 
     AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
-        return new Point(pos);
+        try {
+            return new Point(pos);
+        } catch (const std::invalid_argument&) {
+            return nullptr;
+        }
     }
 
     const SectionMaster* Geometry::getSectionMaster() const {
@@ -40,7 +42,7 @@ namespace euclidian {
             case Real::Type: return TR("Real");
             case Point::Type: return TR("Point");
             case Line::Type: return TR("Line");
-            case Circle::Type: return TR("Circle");
+            // case Circle::Type: return TR("Circle");
             default: throw std::invalid_argument("Wrong or complex type");
         }
     }

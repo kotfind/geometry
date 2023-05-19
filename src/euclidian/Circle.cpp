@@ -37,17 +37,17 @@ namespace euclidian::impl {
         pen.setColor(color);
         qp->setPen(pen);
 
-        qp->drawEllipse(getRect(o, r));
+        qp->drawEllipse(getCircleRect(o, r));
     }
 
     QRectF Circle::boundingRect() const {
-        return getRect(o, r + paintWidth);
+        return getCircleRect(o, r + paintWidth);
     }
 
     QPainterPath Circle::shape() const {
         QPainterPath path;
-        path.addEllipse(getRect(o, r + paintWidth));
-        path.addEllipse(getRect(o, r - paintWidth));
+        path.addEllipse(getCircleRect(o, r + paintWidth));
+        path.addEllipse(getCircleRect(o, r - paintWidth));
         return path;
     }
 
@@ -84,14 +84,5 @@ namespace euclidian::impl {
 
     double Circle::getR() const {
         return r;
-    }
-
-    QRectF Circle::getRect(const QPointF& center, double radius) {
-        return QRectF(
-            center.x() - radius,
-            center.y() - radius,
-            radius * 2,
-            radius * 2
-        );
     }
 }

@@ -15,8 +15,9 @@ find_package(Qt6 REQUIRED
 qt_standard_project_setup()
 
 add_subdirectory(core)
-add_subdirectory(euclidian)
 add_subdirectory(util)
+add_subdirectory(euclidian)
+add_subdirectory(hyperbolic)
 
 add_executable(geometry)
 
@@ -27,6 +28,7 @@ target_sources(geometry PRIVATE
 target_link_libraries(geometry PRIVATE
     core
     euclidian
+    hyperbolic
 )
 
 find_package(Doxygen)
