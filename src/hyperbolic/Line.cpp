@@ -137,7 +137,7 @@ namespace hyperbolic::impl {
         Point& o,
         double& r
     ) const {
-        if (abs(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos())) < 0.05 /* XXX */) {
+        if (abs(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos())) < 0.01 /* XXX */) {
             isLine = true;
 
             auto p = p1.getPos();
@@ -152,7 +152,7 @@ namespace hyperbolic::impl {
             double t1, t2;
             solveSqEq(
                 sq(d.x()) + sq(d.y()), // a
-                d.x() * p.x() + d.y() * p.y(),  // b
+                2 * (d.x() * p.x() + d.y() * p.y()),  // b
                 sq(p.x()) + sq(p.y()) - 1, // c
                 n,
                 t1,
