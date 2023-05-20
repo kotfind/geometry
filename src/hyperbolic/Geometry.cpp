@@ -9,6 +9,9 @@
 #include "util/math.h"
 #include "util/TR.h"
 
+#include <QGraphicsEllipseItem>
+#include <QPen>
+
 namespace hyperbolic {
     using namespace impl;
 
@@ -17,7 +20,15 @@ namespace hyperbolic {
             std::make_unique<Transformation>()
         ),
         sectionMaster(makeSectionMaster())
-    {}
+    {
+        absoluteCircleItem = new QGraphicsEllipseItem(-1, -1, 2, 2);
+        auto pen = absoluteCircleItem->pen();
+        pen.setWidth(2);
+        pen.setCosmetic(true);
+        pen.setStyle(Qt::PenStyle::SolidLine);
+        pen.setColor(Qt::red);
+        absoluteCircleItem->setPen(pen);
+    }
 
     AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
         return le(len(pos), 1)
@@ -41,5 +52,9 @@ namespace hyperbolic {
             // case Circle::Type: return TR("Circle");
             default: throw std::invalid_argument("Wrong or complex type");
         }
+    }
+
+    QGraphicsItem* Geometry::getGraphicsItem() const {
+        return absoluteCircleItem;
     }
 }

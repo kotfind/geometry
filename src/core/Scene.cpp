@@ -20,6 +20,10 @@ Scene::Scene(Engine* engine, QObject* parent)
     engine(engine)
 {
     setSceneRect(engine->getSceneRect());
+
+    if (auto* item = engine->getGeometry()->getGraphicsItem()) {
+        addItem(item);
+    }
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
@@ -138,6 +142,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
 GeometryGenerator* Scene::getFreeOrRestrictedGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
+        if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
         auto* item = static_cast<GeometryItem*>(item_);
         if (item->isHidden()) continue;
 
@@ -152,6 +157,7 @@ GeometryGenerator* Scene::getFreeOrRestrictedGeneratorAt(const QPointF& pos) con
 GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
+        if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
         auto* item = static_cast<GeometryItem*>(item_);
         if (item->isHidden()) continue;
 
@@ -166,6 +172,7 @@ GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
 GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, int type, bool allowHidden) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
+        if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
         auto* item = static_cast<GeometryItem*>(item_);
         if (item->isHidden() && !allowHidden) continue;
 

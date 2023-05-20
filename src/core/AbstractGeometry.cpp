@@ -10,3 +10,7 @@ QStringList AbstractGeometry::complexTypeName(int type) const {
     }
     return ans;
 }
+
+QGraphicsItem* AbstractGeometry::getGraphicsItem() const {
+    return nullptr;
+}

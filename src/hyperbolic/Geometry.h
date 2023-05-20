@@ -7,6 +7,8 @@
 
 #include <memory>
 
+class QGraphicsEllipseItem;
+
 namespace hyperbolic {
     class Geometry : public AbstractGeometry {
         public:
@@ -19,6 +21,8 @@ namespace hyperbolic {
 
             QString typeName(int) const override;
 
+            QGraphicsItem* getGraphicsItem() const override;
+
         private:
             // Is called from c'tor
             // Is defined in functionList.cpp
@@ -26,5 +30,7 @@ namespace hyperbolic {
 
             std::unique_ptr<impl::Transformation> transformation;
             std::unique_ptr<SectionMaster> sectionMaster;
+
+            QGraphicsEllipseItem* absoluteCircleItem;
     };
 }

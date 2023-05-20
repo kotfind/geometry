@@ -7,6 +7,7 @@ class AbstractPoint;
 class AbstractTransformation;
 class SectionMaster;
 class QString;
+class QGraphicsItem;
 
 class AbstractGeometry {
     public:
@@ -19,4 +20,6 @@ class AbstractGeometry {
 
         virtual QString typeName(int) const = 0;
         QStringList complexTypeName(int) const;
+
+        virtual QGraphicsItem* getGraphicsItem() const;
 };
