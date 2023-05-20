@@ -1,12 +1,12 @@
-#include <QApplication>
+#include "core/run.h"
 
-#include "MainWindow.h"
+#include "euclidian/Geometry.h"
+#include "hyperbolic/Geometry.h"
 
 int main(int argc, char** argv) {
-    QApplication app(argc, argv);
-
-    MainWindow master;
-    master.show();
-
-    return app.exec();
+    return run(
+        argc,
+        argv,
+        std::make_unique<hyperbolic::Geometry>()
+    );
 }

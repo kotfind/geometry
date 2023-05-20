@@ -1,0 +1,40 @@
+#pragma once
+
+#include "Point.h"
+
+#include "core/GeometryObject.h"
+
+namespace euclidian::impl {
+    class Circle : public GeometryObject {
+        public:
+            Circle();
+            Circle(const QPointF& o, double r);
+            Circle(const Point& o, double r);
+
+            enum { Type = 1 << 3 };
+            int getType() const override { return Type; }
+
+            Object* clone() const override;
+
+            void paint(QPainter* painter, const QColor& color) const override;
+            QRectF boundingRect() const override;
+            QPainterPath shape() const override;
+
+            GeometryObject* transformed(const AbstractTransformation*) const override;
+
+            QPointF calcNearestPoint(const QPointF& pos) const override;
+
+            // posValue for Circle is angle
+            double pointToPosValue(const QPointF& pos) const override;
+            QPointF posValueToPoint(double val) const override;
+
+            Point getO() const;
+            double getR() const;
+            
+        private:
+            QPointF o;
+            double r;
+
+            static constexpr double paintWidth = 3e-3;
+    };
+}
