@@ -57,6 +57,6 @@ namespace hyperbolic::impl {
             Point p1;
             Point p2;
 
-            static constexpr double paintWidth = 3e-3;
+            static constexpr double paintWidth = 7e-3;
     };
 }
