@@ -351,6 +351,7 @@ void MainWindow::closeEvent(QCloseEvent* e) {
             onSaveActionTriggered();
 
         case QMessageBox::Discard:
+            engine->clear();
             e->accept();
             break;
 
