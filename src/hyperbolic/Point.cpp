@@ -74,26 +74,6 @@ namespace hyperbolic::impl {
         y = getOrThrow(json["y"]).toDouble();
     }
 
-    GeometryObject* Point::transformed(const AbstractTransformation* t) const {
-        return new Point(t->transform(getPos()));
-    }
-
-    Point* Point::untransformed(const AbstractTransformation* t) const {
-        return new Point(t->untransform(getPos()));
-    }
-
-    QPointF Point::calcNearestPoint(const QPointF& pos) const {
-        throw std::logic_error("Cannot call calcNearestPoint for Point.");
-    }
-
-    double Point::pointToPosValue(const QPointF& pos) const {
-        throw std::logic_error("Cannot call pointToPosValue for Point.");
-    }
-
-    QPointF Point::posValueToPoint(double val) const {
-        throw std::logic_error("Cannot call posValueToPoint for Point.");
-    }
-
     void Point::setPos(const QPointF& pos) {
         x = pos.x();
         y = pos.y();

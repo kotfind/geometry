@@ -11,8 +11,8 @@ namespace hyperbolic::impl {
 
             void clear() override;
 
-            QPointF transform(const QPointF&) const override;
-            QPointF untransform(const QPointF&) const override;
+            void transform(AbstractPoint*) const override;
+            void untransform(AbstractPoint*) const override;
 
             QJsonObject toJson() const override;
             void fromJson(const QJsonObject& json) override;

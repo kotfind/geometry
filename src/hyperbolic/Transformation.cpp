@@ -29,13 +29,11 @@ namespace hyperbolic::impl {
         // FIXME
     }
 
-    QPointF Transformation::transform(const QPointF& p) const {
+    void Transformation::transform(AbstractPoint* p) const {
         // FIXME
-        return p;
     }
 
-    QPointF Transformation::untransform(const QPointF& p) const {
+    void Transformation::untransform(AbstractPoint* p) const {
         // FIXME
-        return p;
     }
 }

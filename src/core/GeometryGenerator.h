@@ -16,7 +16,7 @@ class GeometryGenerator : public Generator {
 
         const GeometryObject* getGeometryObject() const;
 
-        void setPos(const QPointF&);
+        void setPos(const AbstractPoint*);
 
     protected:
         template<typename... Args>

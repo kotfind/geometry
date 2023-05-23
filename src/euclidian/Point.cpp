@@ -70,26 +70,6 @@ namespace euclidian::impl {
         y = getOrThrow(json["y"]).toDouble();
     }
 
-    GeometryObject* Point::transformed(const AbstractTransformation* t) const {
-        return new Point(t->transform(getPos()));
-    }
-
-    Point* Point::untransformed(const AbstractTransformation* t) const {
-        return new Point(t->untransform(getPos()));
-    }
-
-    QPointF Point::calcNearestPoint(const QPointF& pos) const {
-        throw std::logic_error("Cannot call calcNearestPoint for Point.");
-    }
-
-    double Point::pointToPosValue(const QPointF& pos) const {
-        throw std::logic_error("Cannot call pointToPosValue for Point.");
-    }
-
-    QPointF Point::posValueToPoint(double val) const {
-        throw std::logic_error("Cannot call posValueToPoint for Point.");
-    }
-
     void Point::setPos(const QPointF& pos) {
         x = pos.x();
         y = pos.y();
@@ -153,6 +133,10 @@ namespace euclidian::impl {
         auto ans = lhs;
         ans /= rhs;
         return ans;
+    }
+
+    double dot(const Point& lhs, const Point& rhs) {
+        return lhs.x * rhs.x + lhs.y * rhs.y;
     }
 
     double dist(const Point& p1, const Point& p2) {

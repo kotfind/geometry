@@ -4,7 +4,6 @@
 #include "Object.h"
 
 #include <memory>
-#include <QPointF>
 #include <QJsonObject>
 
 class FreeCalculator : public Calculator {
@@ -17,7 +16,7 @@ class FreeCalculator : public Calculator {
 
         QList<Generator*> getArgs() const override;
 
-        void setPos(const QPointF& pos) override;
+        void setPos(const AbstractPoint* pos) override;
 
         void setValue(double);
 

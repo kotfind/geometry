@@ -2,8 +2,6 @@
 
 #include "Calculator.h"
 
-#include <QPointF>
-
 class GeometryGenerator;
 
 class RestrictedCalculator : public Calculator {
@@ -20,7 +18,7 @@ class RestrictedCalculator : public Calculator {
 
         QList<Generator*> getArgs() const override;
 
-        void setPos(const QPointF& pos) override;
+        void setPos(const AbstractPoint* pos) override;
 
         QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const override;
 

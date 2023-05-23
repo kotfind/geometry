@@ -25,7 +25,7 @@ bool GeometryGenerator::checkObjectType() const {
     return true;
 }
 
-void GeometryGenerator::setPos(const QPointF& pos) {
+void GeometryGenerator::setPos(const AbstractPoint* pos) {
     assert(isFree() || isRestricted());
 
     calc->setPos(pos);

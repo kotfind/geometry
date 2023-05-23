@@ -24,14 +24,6 @@ namespace euclidian::impl {
             QJsonObject toJson() const override;
             void fromJson(const QJsonObject& json) override;
 
-            GeometryObject* transformed(const AbstractTransformation*) const override;
-            Point* untransformed(const AbstractTransformation*) const;
-
-            QPointF calcNearestPoint(const QPointF& pos) const override;
-
-            double pointToPosValue(const QPointF& pos) const override;
-            QPointF posValueToPoint(double val) const override;
-
             void setPos(const QPointF& pos) override;
 
             QPointF getPos() const override;
@@ -54,6 +46,8 @@ namespace euclidian::impl {
     Point operator*(const Point& lhs, double rhs);
     Point operator*(double lhs, const Point& rhs);
     Point operator/(const Point& lhs, double rhs);
+
+    double dot(const Point& lhs, const Point& rhs);
 
     double dist(const Point& p1, const Point& p2);
     double len(const Point& v);

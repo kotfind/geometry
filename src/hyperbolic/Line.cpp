@@ -59,14 +59,7 @@ namespace hyperbolic::impl {
         getEuclidian(isLine, a, b, o, r);
 
         if (isLine) {
-            auto [x1, y1] = a.getPos();
-            auto [x2, y2] = b.getPos();
-            return QRectF(
-                std::min(x1, x2) - paintWidth,
-                std::min(y1, y2) - paintWidth,
-                abs(x1 - x2)     + paintWidth * 2,
-                abs(y1 - y2)     + paintWidth * 2
-            );
+            return QRectF(a.getPos(), b.getPos()).normalized();
         } else {
             return getCircleRect(o.getPos(), r + paintWidth);
         }
@@ -106,24 +99,23 @@ namespace hyperbolic::impl {
         }
     }
 
-    GeometryObject* Line::transformed(const AbstractTransformation*) const {
+    void Line::transform(const AbstractTransformation*) {
         // FIXME
-        return static_cast<GeometryObject*>(clone());
     }
 
-    QPointF Line::calcNearestPoint(const QPointF& pos) const {
+    AbstractPoint* Line::calcNearestPoint(const AbstractPoint* pos) const {
         // FIXME
-        return QPointF();
+        return new Point();
     }
 
-    double Line::pointToPosValue(const QPointF& pos) const {
+    double Line::pointToPosValue(const AbstractPoint* pos) const {
         // FIXME
         return 0;
     }
 
-    QPointF Line::posValueToPoint(double val) const {
+    AbstractPoint* Line::posValueToPoint(double val) const {
         // FIXME
-        return QPointF();
+        return new Point();
     }
 
     void Line::getEuclidian(

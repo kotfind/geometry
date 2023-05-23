@@ -8,7 +8,6 @@ namespace euclidian::impl {
     class Circle : public GeometryObject {
         public:
             Circle();
-            Circle(const QPointF& o, double r);
             Circle(const Point& o, double r);
 
             enum { Type = 1 << 3 };
@@ -20,21 +19,18 @@ namespace euclidian::impl {
             QRectF boundingRect() const override;
             QPainterPath shape() const override;
 
-            GeometryObject* transformed(const AbstractTransformation*) const override;
+            void transform(const AbstractTransformation*) override;
 
-            QPointF calcNearestPoint(const QPointF& pos) const override;
+            AbstractPoint* calcNearestPoint(const AbstractPoint* pos) const override;
 
             // posValue for Circle is angle
-            double pointToPosValue(const QPointF& pos) const override;
-            QPointF posValueToPoint(double val) const override;
+            double pointToPosValue(const AbstractPoint* pos) const override;
+            AbstractPoint* posValueToPoint(double val) const override;
 
-            Point getO() const;
-            double getR() const;
+            Point o;
+            double r;
             
         private:
-            QPointF o;
-            double r;
-
             static constexpr double paintWidth = 3e-3;
     };
 }

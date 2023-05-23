@@ -17,13 +17,9 @@
 namespace euclidian::impl {
     Line::Line() {}
 
-    Line::Line(const QPointF& p1, const QPointF& p2)
+    Line::Line(const Point& p1, const Point& p2)
       : p1(p1),
         p2(p2)
-    {}
-
-    Line::Line(const Point& p1, const Point& p2)
-      : Line(p1.getPos(), p2.getPos())
     {}
 
     Object* Line::clone() const {
@@ -37,79 +33,70 @@ namespace euclidian::impl {
         qp->setPen(pen);
 
         auto [p1, p2] = getTwoBoundingPoints();
-        qp->drawLine(p1, p2);
+        qp->drawLine(p1.getPos(), p2.getPos());
     }
 
     QRectF Line::boundingRect() const {
         auto [p1, p2] = getTwoBoundingPoints();
-        auto [x1, y1] = p1;
-        auto [x2, y2] = p2;
-        return QRectF(
-            std::min(x1, x2) - paintWidth,
-            std::min(y1, y2) - paintWidth,
-            abs(x1 - x2)     + paintWidth * 2,
-            abs(y1 - y2)     + paintWidth * 2
-        );
+        return QRectF(p1.getPos(), p2.getPos()).normalized();
     }
 
     QPainterPath Line::shape() const {
-        auto d = getNorm() * paintWidth;
+        auto d = norm(*this) * paintWidth;
         auto [p1, p2] = getTwoBoundingPoints();
 
         QPainterPath path;
-        path.moveTo(p1 - d);
-        path.lineTo(p1 + d);
-        path.lineTo(p2 + d);
-        path.moveTo(p2 - d);
+        path.moveTo((p1 - d).getPos());
+        path.lineTo((p1 + d).getPos());
+        path.lineTo((p2 + d).getPos());
+        path.moveTo((p2 - d).getPos());
         return path;
     }
 
-    GeometryObject* Line::transformed(const AbstractTransformation* t) const {
-        return new Line(
-            t->transform(p1),
-            t->transform(p2)
-        );
+    void Line::transform(const AbstractTransformation* t) {
+        p1.transform(t);
+        p2.transform(t);
     }
 
-    QPointF Line::calcNearestPoint(const QPointF& p) const {
-        auto n = getNorm() * getDist(p);
+    AbstractPoint* Line::calcNearestPoint(const AbstractPoint* pt) const {
+        auto p = *static_cast<const Point*>(pt);
+        auto n = norm(*this) * dist(*this, p);
         auto ans = p + n;
-        if (!eq(getDist(ans), 0)) {
+        if (!eq(dist(*this, ans), 0)) {
             ans = p - n;
         }
-        return ans;
+        return new Point(ans);
     }
 
-    double Line::pointToPosValue(const QPointF& p) const {
+    double Line::pointToPosValue(const AbstractPoint* pt) const {
+        auto p = *static_cast<const Point*>(pt);
         auto p1p = p - p1;
         auto p1p2 = p2 - p1;
-        return QPointF::dotProduct(p1p, getDir()) / len(p1p2);
+        return dot(p1p, dir(*this)) / len(p1p2);
     }
 
-    QPointF Line::posValueToPoint(double val) const {
+    AbstractPoint* Line::posValueToPoint(double val) const {
         auto p1p2 = p2 - p1;
-        return p1 + val * len(p1p2) * getDir();
+        return new Point(
+            p1 + val * len(p1p2) * dir(*this)
+        );
     }
 
     std::tuple<double, double, double> Line::getABC() const {
         double a, b, c;
-        if (eq(p1.x(), p2.x())) {
+        if (eq(p1.x, p2.x)) {
             a = 1;
             b = 0;
-            c = -p1.x();
+            c = -p1.x;
         } else {
-            a = p2.y() - p1.y();
-            b = p1.x() - p2.x();
-            c = -(a * p1.x() + b * p1.y());
+            a = p2.y - p1.y;
+            b = p1.x - p2.x;
+            c = -(a * p1.x + b * p1.y);
         }
         return {a, b, c};
     }
 
-    std::pair<Point, Point> Line::getTwoPoints() const {
-        return {Point(p1), Point(p2)};
-    }
-
-    std::pair<QPointF, QPointF> Line::getTwoBoundingPoints() const {
+    std::pair<Point, Point> Line::getTwoBoundingPoints() const {
         auto [a, b, c] = getABC();
         if (eq(b, 0)) {
             double x = -c / a;
@@ -123,35 +110,23 @@ namespace euclidian::impl {
         }
     }
 
-    QPointF Line::getDir() const {
-        auto res = p2 - p1;
-        res /= len(res);
-        return res;
-    }
-
-    QPointF Line::getNorm() const {
-        auto dir = getDir();
-        return QPointF(dir.y(), -dir.x());
-    }
-
-    double Line::getDist(const QPointF& p) const {
-        auto [a, b, c] = getABC();
-        return abs(a * p.x() + b * p.y() + c) / hypot(a, b);
-    }
-
     double dist(const Line& l, const Point& p) {
-        return l.getDist(p.getPos());
+        auto [a, b, c] = l.getABC();
+        return abs(a * p.x + b * p.y + c) / hypot(a, b);
     }
 
     double dist(const Point& p, const Line& l) {
-        return l.getDist(p.getPos());
+        return dist(l, p);
     }
 
     Point norm(const Line& l) {
-        return Point(l.getNorm());
+        auto d = dir(l);
+        return Point(d.y, -d.x);
     }
 
     Point dir(const Line& l) {
-        return Point(l.getDir());
+        auto res = l.p2 - l.p1;
+        res /= len(res);
+        return res;
     }
 }

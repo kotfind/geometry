@@ -24,4 +24,5 @@ target_link_libraries(hyperbolic PRIVATE
 
     core
     util
+    euclidian
 )

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AbstractPoint.h"
+
 #include <QPointF>
 #include <QJsonObject>
 
@@ -13,8 +15,8 @@ class AbstractTransformation {
 
         virtual void clear() = 0;
 
-        virtual QPointF transform(const QPointF&) const = 0;
-        virtual QPointF untransform(const QPointF&) const = 0;
+        virtual void transform(AbstractPoint*) const = 0;
+        virtual void untransform(AbstractPoint*) const = 0;
 
         virtual QJsonObject toJson() const = 0;
         virtual void fromJson(const QJsonObject& json) = 0;

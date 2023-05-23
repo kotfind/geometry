@@ -25,16 +25,8 @@ namespace hyperbolic::impl {
             QJsonObject toJson() const override;
             void fromJson(const QJsonObject& json) override;
 
-            GeometryObject* transformed(const AbstractTransformation*) const override;
-            Point* untransformed(const AbstractTransformation*) const;
-
-            QPointF calcNearestPoint(const QPointF& pos) const override;
-
-            double pointToPosValue(const QPointF& pos) const override;
-            QPointF posValueToPoint(double val) const override;
-
-            void setPos(const QPointF& pos) override;
             QPointF getPos() const override;
+            void setPos(const QPointF& pos) override;
 
             void setComplex(const std::complex<double>& z);
             std::complex<double> getComplex() const;

@@ -8,17 +8,17 @@ using namespace euclidian;
 
 namespace euclidian::impl {
     void Transformation::scroll(const QPointF& delta) {
-        center += delta * scrollSpeed / scale;
+        center += Point(delta) * scrollSpeed / scale;
     }
 
     void Transformation::move(const QPointF& delta) {
-        center += delta / scale;
+        center += Point(delta) / scale;
     }
 
     void Transformation::zoom(double v, const QPointF& zoomCenter) {
         double s1 = scale;
         double s2 = s1 * std::pow(2., v * zoomSpeed);
-        center += zoomCenter * (1 / s2 - 1 / s1);
+        center += Point(zoomCenter) * (1 / s2 - 1 / s1);
         scale = s2;
     }
 
@@ -31,8 +31,8 @@ namespace euclidian::impl {
         QJsonObject json;
 
         QJsonObject centerJson;
-        centerJson["x"] = center.x();
-        centerJson["y"] = center.y();
+        centerJson["x"] = center.x;
+        centerJson["y"] = center.y;
         json["center"] = centerJson;
 
         json["scale"] = scale;
@@ -50,11 +50,13 @@ namespace euclidian::impl {
         scale = getOrThrow(json["scale"]).toDouble();
     }
 
-    QPointF Transformation::transform(const QPointF& p) const {
-        return (p + center) * scale;
+    void Transformation::transform(AbstractPoint* p) const {
+        auto& pt = *static_cast<Point*>(p);
+        pt = (pt + center) * scale;
     }
 
-    QPointF Transformation::untransform(const QPointF& p) const {
-        return p / scale - center;
+    void Transformation::untransform(AbstractPoint* p) const {
+        auto& pt = *static_cast<Point*>(p);
+        pt = pt / scale - center;
     }
 }

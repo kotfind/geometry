@@ -17,7 +17,7 @@ Calculator::Calculator(const AbstractGeometry* geom)
   : geom(geom)
 {}
 
-void Calculator::setPos(const QPointF& pos) {
+void Calculator::setPos(const AbstractPoint* pos) {
     throw std::logic_error("This type of Calculator cannot be moved");
 }
 

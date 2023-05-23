@@ -23,12 +23,12 @@ namespace hyperbolic::impl {
             QRectF boundingRect() const override;
             QPainterPath shape() const override;
 
-            GeometryObject* transformed(const AbstractTransformation*) const override;
+            void transform(const AbstractTransformation*) override;
 
-            QPointF calcNearestPoint(const QPointF& pos) const override;
+            AbstractPoint* calcNearestPoint(const AbstractPoint* pos) const override;
 
-            double pointToPosValue(const QPointF& pos) const override;
-            QPointF posValueToPoint(double val) const override;
+            double pointToPosValue(const AbstractPoint* pos) const override;
+            AbstractPoint* posValueToPoint(double val) const override;
 
         private:
             // If this line is represented as line

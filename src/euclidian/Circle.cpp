@@ -17,13 +17,9 @@ namespace euclidian::impl {
       : Circle(Point(), 1)
     {}
 
-    Circle::Circle(const QPointF& o, double r)
+    Circle::Circle(const Point& o, double r)
       : o(o),
         r(r)
-    {}
-
-    Circle::Circle(const Point& o, double r)
-      : Circle(o.getPos(), r)
     {}
 
     Object* Circle::clone() const {
@@ -37,52 +33,42 @@ namespace euclidian::impl {
         pen.setColor(color);
         qp->setPen(pen);
 
-        qp->drawEllipse(getCircleRect(o, r));
+        qp->drawEllipse(getCircleRect(o.getPos(), r));
     }
 
     QRectF Circle::boundingRect() const {
-        return getCircleRect(o, r + paintWidth);
+        return getCircleRect(o.getPos(), r + paintWidth);
     }
 
     QPainterPath Circle::shape() const {
         QPainterPath path;
-        path.addEllipse(getCircleRect(o, r + paintWidth));
-        path.addEllipse(getCircleRect(o, r - paintWidth));
+        path.addEllipse(getCircleRect(o.getPos(), r + paintWidth));
+        path.addEllipse(getCircleRect(o.getPos(), r - paintWidth));
         return path;
     }
 
-    GeometryObject* Circle::transformed(const AbstractTransformation* t) const {
-        auto p = o + QPointF(r, 0);
+    void Circle::transform(const AbstractTransformation* t) {
+        auto p = o + Point(r, 0);
 
-        auto o_ = t->transform(o);
-        auto p_ = t->transform(p);
-        return new Circle(
-            o_,
-            dist(o_, p_)
-        );
+        o.transform(t);
+        p.transform(t);
+
+        r = dist(o, p);
     }
 
-    QPointF Circle::calcNearestPoint(const QPointF& pos) const {
-        auto p = Point(pos);
-        auto o_ = Point(o);
-        auto op = p - o_;
-        return (o_ + norm(op) * r).getPos();
-    }
-
-    double Circle::pointToPosValue(const QPointF& p) const {
+    AbstractPoint* Circle::calcNearestPoint(const AbstractPoint* pt) const {
+        auto p = *static_cast<Point*>(pt->clone());
         auto op = p - o;
-        return atan2(op.y(), op.x());
+        return new Point(o + norm(op) * r);
     }
 
-    QPointF Circle::posValueToPoint(double val) const {
-        return o + r * QPointF(cos(val), sin(val));
+    double Circle::pointToPosValue(const AbstractPoint* pt) const {
+        auto p = *static_cast<const Point*>(pt);
+        auto op = p - o;
+        return atan2(op.y, op.x);
     }
 
-    Point Circle::getO() const {
-        return Point(o);
-    }
-
-    double Circle::getR() const {
-        return r;
+    AbstractPoint* Circle::posValueToPoint(double val) const {
+        return new Point(o + r * Point(cos(val), sin(val)));
     }
 }

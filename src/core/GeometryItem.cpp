@@ -37,14 +37,16 @@ void GeometryItem::remove() {
 void GeometryItem::update() {
     prepareGeometryChange();
 
-    auto* object = gen->getGeometryObject();
     obj.reset(
-        object
-        ? object->transformed(
-                gen->getEngine()->getGeometry()->getTransformation()
-            )
-        : nullptr
+        static_cast<GeometryObject*>(
+            gen->getGeometryObject()->clone()
+        )
     );
+    if (obj) {
+        obj->transform(
+            gen->getEngine()->getGeometry()->getTransformation()
+        );
+    }
 }
 
 bool GeometryItem::isHidden() const {

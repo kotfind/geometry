@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Point.h"
+
 #include "core/GeometryObject.h"
 
 #include <tuple>
@@ -11,7 +13,6 @@ namespace euclidian::impl {
     class Line : public GeometryObject {
         public:
             Line();
-            Line(const QPointF& p1, const QPointF& p2);
             Line(const Point& p1, const Point& p2);
 
             enum { Type = 1 << 2 };
@@ -23,29 +24,21 @@ namespace euclidian::impl {
             QRectF boundingRect() const override;
             QPainterPath shape() const override;
 
-            GeometryObject* transformed(const AbstractTransformation*) const override;
+            void transform(const AbstractTransformation*) override;
 
-            QPointF calcNearestPoint(const QPointF& pos) const override;
+            AbstractPoint* calcNearestPoint(const AbstractPoint* pos) const override;
 
-            double pointToPosValue(const QPointF& pos) const override;
-            QPointF posValueToPoint(double val) const override;
-
-            std::pair<Point, Point> getTwoPoints() const;
+            double pointToPosValue(const AbstractPoint* pt) const override;
+            AbstractPoint* posValueToPoint(double val) const override;
 
             // Returns (A, B, C) for line equation: Ax + By + C = 0
             std::tuple<double, double, double> getABC() const;
 
-            QPointF getDir() const;
-
-            QPointF getNorm() const;
-
-            double getDist(const QPointF&) const;
+            Point p1;
+            Point p2;
 
         private:
-            std::pair<QPointF, QPointF> getTwoBoundingPoints() const;
-
-            QPointF p1;
-            QPointF p2;
+            std::pair<Point, Point> getTwoBoundingPoints() const;
 
             static constexpr double paintWidth = 3e-3;
     };

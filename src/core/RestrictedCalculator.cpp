@@ -18,7 +18,7 @@ RestrictedCalculator::RestrictedCalculator(
 Object* RestrictedCalculator::calc() const {
     auto* obj = restrictor->getGeometryObject();
     return obj
-        ? geom->makePoint(obj->posValueToPoint(posValue))
+        ? obj->posValueToPoint(posValue)
         : nullptr;
 }
 
@@ -30,7 +30,7 @@ QList<Generator*> RestrictedCalculator::getArgs() const {
     return { restrictor };
 }
 
-void RestrictedCalculator::setPos(const QPointF& pos) {
+void RestrictedCalculator::setPos(const AbstractPoint* pos) {
     auto* obj = restrictor->getGeometryObject();
     if (!obj) return;
 

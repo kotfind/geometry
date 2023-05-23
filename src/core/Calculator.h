@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QPointF>
 #include <QJsonObject>
 #include <QHash>
 #include <QList>
@@ -8,6 +7,7 @@
 class Object;
 class Generator;
 class AbstractGeometry;
+class AbstractPoint;
 
 class Calculator {
     public:
@@ -25,7 +25,7 @@ class Calculator {
 
         virtual QList<Generator*> getArgs() const = 0;
 
-        virtual void setPos(const QPointF& pos);
+        virtual void setPos(const AbstractPoint* pos);
 
         virtual QJsonObject toJson(const QHash<Generator*, int>& ids, bool isReal) const = 0;
         static Calculator* fromJson(

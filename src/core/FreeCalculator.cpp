@@ -23,10 +23,10 @@ QList<Generator*> FreeCalculator::getArgs() const {
     return {};
 }
 
-void FreeCalculator::setPos(const QPointF& pos) {
+void FreeCalculator::setPos(const AbstractPoint* pos) {
     assert(obj->isGeometry());
     assert(static_cast<GeometryObject*>(obj.get())->isPoint());
-    static_cast<AbstractPoint*>(obj.get())->setPos(pos);
+    obj.reset(pos->clone());
 }
 
 void FreeCalculator::setValue(double v) {

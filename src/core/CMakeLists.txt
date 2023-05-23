@@ -39,6 +39,7 @@ target_sources(core
 
         Object.cpp
         Real.cpp
+        AbstractPoint.cpp
 
         Scene.cpp
         View.cpp

@@ -103,10 +103,10 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 //  ---------
                 //      d
 
-                auto r1 = w1.getR();
-                auto r2 = w2.getR();
-                auto o1 = w1.getO();
-                auto o2 = w2.getO();
+                auto r1 = w1.r;
+                auto r2 = w2.r;
+                auto o1 = w1.o;
+                auto o2 = w2.o;
                 auto d = dist(o1, o2);
 
                 if (gr(abs(r1 - r2), d) || gr(d, r1 + r2))
@@ -143,8 +143,8 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 const auto& l = *lPtr;
                 const auto& w = *wPtr;
 
-                auto o = w.getO();
-                auto r = w.getR();
+                auto o = w.o;
+                auto r = w.r;
 
                 double d = dist(o, l);
                 if (gr(d, r))
@@ -253,8 +253,8 @@ SectionMaster* Geometry::makeSectionMaster() const {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& w = *static_cast<const Circle*>(objs[1]);
 
-            auto o = w.getO();
-            auto r = w.getR();
+            auto o = w.o;
+            auto r = w.r;
             auto d = dist(p, o);
 
             if (le(d, r))
@@ -290,15 +290,15 @@ SectionMaster* Geometry::makeSectionMaster() const {
             auto w1 = *static_cast<const Circle*>(objs[0]);
             auto w2 = *static_cast<const Circle*>(objs[1]);
 
-            if (gr(w1.getR(), w2.getR())) {
+            if (gr(w1.r, w2.r)) {
                 std::swap(w1, w2);
             }
 
             // r2 > r1
-            auto o1 = w1.getO();
-            auto o2 = w2.getO();
-            auto r1 = w1.getR();
-            auto r2 = w2.getR();
+            auto o1 = w1.o;
+            auto o2 = w2.o;
+            auto r1 = w1.r;
+            auto r2 = w2.r;
 
             if (gr(r2 - r1, dist(o1, o2))) {
                 return {};
@@ -326,7 +326,8 @@ SectionMaster* Geometry::makeSectionMaster() const {
             for (int i = 0; i < 2; ++i) {
                 const auto* lPtr = static_cast<const Line*>(tangs[i]);
                 const auto& l = *lPtr;
-                auto [p1, p2] = l.getTwoPoints();
+                auto p1 = l.p1;
+                auto p2 = l.p2;
 
                 auto d = norm(l) * r1;
                 auto L = Line(p1 + d, p2 + d);

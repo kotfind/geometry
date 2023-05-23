@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Point.h"
+
 #include "core/AbstractTransformation.h"
 
 namespace euclidian::impl {
@@ -11,14 +13,14 @@ namespace euclidian::impl {
 
             void clear() override;
 
-            QPointF transform(const QPointF&) const override;
-            QPointF untransform(const QPointF&) const override;
+            void transform(AbstractPoint*) const override;
+            void untransform(AbstractPoint*) const override;
 
             QJsonObject toJson() const override;
             void fromJson(const QJsonObject& json) override;
 
         private:
-            QPointF center{0, 0};
+            Point center{0, 0};
             double scale = 1;
 
             static constexpr double scrollSpeed = 0.01;

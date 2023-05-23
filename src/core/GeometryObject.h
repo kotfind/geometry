@@ -2,13 +2,12 @@
 
 #include "Object.h"
 
-#include <QPointF>
-#include <QColor>
-
 class QRectF;
 class QPainter;
 class QPainterPath;
 class AbstractTransformation;
+class AbstractPoint;
+class QColor;
 
 class GeometryObject : public Object {
     public:
@@ -22,12 +21,12 @@ class GeometryObject : public Object {
         virtual QRectF boundingRect() const = 0;
         virtual QPainterPath shape() const = 0;
 
-        virtual GeometryObject* transformed(const AbstractTransformation*) const = 0;
+        virtual void transform(const AbstractTransformation*) = 0;
 
-        virtual QPointF calcNearestPoint(const QPointF& pos) const = 0;
+        virtual AbstractPoint* calcNearestPoint(const AbstractPoint* pos) const = 0;
 
-        virtual double pointToPosValue(const QPointF& pos) const = 0;
-        virtual QPointF posValueToPoint(double val) const = 0;
+        virtual double pointToPosValue(const AbstractPoint* pos) const = 0;
+        virtual AbstractPoint* posValueToPoint(double val) const = 0;
         
     protected:
         GeometryObject() {}

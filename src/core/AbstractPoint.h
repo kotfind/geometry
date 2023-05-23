@@ -11,6 +11,14 @@ class AbstractPoint : public GeometryObject {
 
         bool isPoint() const override { return true; }
 
+        void transform(const AbstractTransformation*) override;
+        void untransform(const AbstractTransformation*);
+
+        AbstractPoint* calcNearestPoint(const AbstractPoint* pos) const override;
+
+        double pointToPosValue(const AbstractPoint* pos) const override;
+        AbstractPoint* posValueToPoint(double val) const override;
+
         virtual QPointF getPos() const = 0;
         virtual void setPos(const QPointF&) = 0;
 
