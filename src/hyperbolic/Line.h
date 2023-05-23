@@ -41,6 +41,7 @@ namespace hyperbolic::impl {
             Point p2;
 
         private:
-            std::variant<ECircle, ELine> getEuclidian() const;
+            // Retruns GeometryObject which is either ECircle or ELine
+            GeometryObject* getEuclidian() const;
     };
 }

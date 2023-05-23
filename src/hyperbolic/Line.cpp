@@ -26,33 +26,15 @@ namespace hyperbolic::impl {
     }
 
     void Line::paint(QPainter* qp, const QColor& color) const {
-        auto proj = getEuclidian();
-
-        if (std::holds_alternative<ELine>(proj)) {
-            std::get<ELine>(proj).paint(qp, color);
-        } else {
-            std::get<ECircle>(proj).paint(qp, color);
-        }
+        std::unique_ptr<GeometryObject>(getEuclidian())->paint(qp, color);
     }
 
     QRectF Line::boundingRect() const {
-        auto proj = getEuclidian();
-
-        if (std::holds_alternative<ELine>(proj)) {
-            return std::get<ELine>(proj).boundingRect();
-        } else {
-            return std::get<ECircle>(proj).boundingRect();
-        }
+        return std::unique_ptr<GeometryObject>(getEuclidian())->boundingRect();
     }
 
     QPainterPath Line::shape() const {
-        auto proj = getEuclidian();
-
-        if (std::holds_alternative<ELine>(proj)) {
-            return std::get<ELine>(proj).shape();
-        } else {
-            return std::get<ECircle>(proj).shape();
-        }
+        return std::unique_ptr<GeometryObject>(getEuclidian())->shape();
     }
 
     void Line::transform(const AbstractTransformation*) {
@@ -74,8 +56,7 @@ namespace hyperbolic::impl {
         return new Point();
     }
 
-    std::variant<ECircle, ELine> Line::getEuclidian() const
-    {
+    GeometryObject* Line::getEuclidian() const {
         // FIXME: QPointF -> Point ?
         if (abs(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos())) < 0.01 /* XXX */) {
             // Line
@@ -99,7 +80,7 @@ namespace hyperbolic::impl {
             );
             assert(n == 2);
 
-            return ELine(
+            return new ELine(
                 EPoint(p + t1 * d),
                 EPoint(p + t2 * d)
             );
@@ -116,7 +97,7 @@ namespace hyperbolic::impl {
             auto o = EPoint(std::real(o_), std::imag(o_));
             auto r = dist(o.getPos(), p1.getPos());
 
-            return ECircle(o, r);
+            return new ECircle(o, r);
         }
     }
 }
