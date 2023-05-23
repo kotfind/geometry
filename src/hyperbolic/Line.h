@@ -4,10 +4,17 @@
 
 #include "core/GeometryObject.h"
 
+#include "euclidian/Point.h"
+#include "euclidian/Line.h"
+#include "euclidian/Circle.h"
+
 #include <QPointF>
 
 namespace hyperbolic::impl {
     class Point;
+    using EPoint = euclidian::impl::Point;
+    using ELine = euclidian::impl::Line;
+    using ECircle = euclidian::impl::Circle;
 
     class Line : public GeometryObject {
         public:
@@ -30,33 +37,10 @@ namespace hyperbolic::impl {
             double pointToPosValue(const AbstractPoint* pos) const override;
             AbstractPoint* posValueToPoint(double val) const override;
 
-        private:
-            // If this line is represented as line
-            // in the Poincare disk, then
-            //  * isLine is set to true;
-            //  * a, b are set to intersection points of this line
-            //    and absolute.
-            // 
-            // If this line is represented as circle
-            // in the Poincare disk, then
-            //  * isLine is set to false;
-            //  * o is set to the center of the circle;
-            //  * r is set to the radius of the circle.
-            void getEuclidian(
-                bool& isLine,
-
-                // For line
-                Point& a,
-                Point& b,
-
-                // For circle
-                Point& o,
-                double& r
-            ) const;
-
             Point p1;
             Point p2;
 
-            static constexpr double paintWidth = 7e-3;
+        private:
+            std::variant<ECircle, ELine> getEuclidian() const;
     };
 }

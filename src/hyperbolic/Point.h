@@ -32,9 +32,6 @@ namespace hyperbolic::impl {
             std::complex<double> getComplex() const;
 
             double x, y;
-
-        private:
-            static constexpr double paintRadius = 1e-2;
     };
 
     bool operator==(const Point& p1, const Point& p2);

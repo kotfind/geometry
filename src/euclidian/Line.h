@@ -40,7 +40,7 @@ namespace euclidian::impl {
         private:
             std::pair<Point, Point> getTwoBoundingPoints() const;
 
-            static constexpr double paintWidth = 3e-3;
+            static constexpr double paintWidth = 7e-3;
     };
 
     double dist(const Line& l, const Point& p);

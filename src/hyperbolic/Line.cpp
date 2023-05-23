@@ -26,76 +26,32 @@ namespace hyperbolic::impl {
     }
 
     void Line::paint(QPainter* qp, const QColor& color) const {
-        auto pen = qp->pen();
-        pen.setWidthF(paintWidth);
-        pen.setStyle(Qt::SolidLine);
-        pen.setColor(color);
-        qp->setPen(pen);
+        auto proj = getEuclidian();
 
-        bool isLine;
-        // for line
-        Point a;
-        Point b;
-        // for circle
-        Point o;
-        double r;
-        getEuclidian(isLine, a, b, o, r);
-
-        if (isLine) {
-            qp->drawLine(a.getPos(), b.getPos());
+        if (std::holds_alternative<ELine>(proj)) {
+            std::get<ELine>(proj).paint(qp, color);
         } else {
-            qp->drawEllipse(getCircleRect(o.getPos(), r));
+            std::get<ECircle>(proj).paint(qp, color);
         }
     }
 
     QRectF Line::boundingRect() const {
-        bool isLine;
-        // for line
-        Point a;
-        Point b;
-        // for circle
-        Point o;
-        double r;
-        getEuclidian(isLine, a, b, o, r);
+        auto proj = getEuclidian();
 
-        if (isLine) {
-            return QRectF(a.getPos(), b.getPos()).normalized();
+        if (std::holds_alternative<ELine>(proj)) {
+            return std::get<ELine>(proj).boundingRect();
         } else {
-            return getCircleRect(o.getPos(), r + paintWidth);
+            return std::get<ECircle>(proj).boundingRect();
         }
     }
 
     QPainterPath Line::shape() const {
-        bool isLine;
-        // for line
-        Point a;
-        Point b;
-        // for circle
-        Point o;
-        double r;
-        getEuclidian(isLine, a, b, o, r);
+        auto proj = getEuclidian();
 
-        if (isLine) {
-            // TODO: put get norm into function
-            QPointF norm(
-                b.y - a.y,
-                a.x - b.x
-            );
-            norm /= len(norm);
-
-            auto d = norm * paintWidth;
-
-            QPainterPath path;
-            path.moveTo(a.getPos() - d);
-            path.lineTo(a.getPos() + d);
-            path.lineTo(b.getPos() + d);
-            path.moveTo(b.getPos() - d);
-            return path;
+        if (std::holds_alternative<ELine>(proj)) {
+            return std::get<ELine>(proj).shape();
         } else {
-            QPainterPath path;
-            path.addEllipse(getCircleRect(o.getPos(), r + paintWidth));
-            path.addEllipse(getCircleRect(o.getPos(), r - paintWidth));
-            return path;
+            return std::get<ECircle>(proj).shape();
         }
     }
 
@@ -118,20 +74,11 @@ namespace hyperbolic::impl {
         return new Point();
     }
 
-    void Line::getEuclidian(
-        bool& isLine,
-
-        // For line
-        Point& a,
-        Point& b,
-
-        // For circle
-        Point& o,
-        double& r
-    ) const {
+    std::variant<ECircle, ELine> Line::getEuclidian() const
+    {
+        // FIXME: QPointF -> Point ?
         if (abs(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos())) < 0.01 /* XXX */) {
-            isLine = true;
-
+            // Line
             auto p = p1.getPos();
             auto d = p2.getPos() - p1.getPos();
 
@@ -151,22 +98,25 @@ namespace hyperbolic::impl {
                 t2
             );
             assert(n == 2);
-            a = Point(p + t1 * d);
-            b = Point(p + t2 * d);
 
+            return ELine(
+                EPoint(p + t1 * d),
+                EPoint(p + t2 * d)
+            );
         } else {
-            isLine = false;
-
+            // Circle
             auto p = p1.getComplex();
             auto q = p2.getComplex();
 
-            o = Point(
+            auto o_ = 
                 (p * (q * std::conj(q) + 1.) - q * (p * std::conj(p) + 1.)) /
             // ---------------------------------------------------------------
-                        (p * std::conj(q) - q * std::conj(p))
-            );
+                        (p * std::conj(q) - q * std::conj(p));
 
-            r = dist(o.getPos(), p1.getPos());
+            auto o = EPoint(std::real(o_), std::imag(o_));
+            auto r = dist(o.getPos(), p1.getPos());
+
+            return ECircle(o, r);
         }
     }
 }

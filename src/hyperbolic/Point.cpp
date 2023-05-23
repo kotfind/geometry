@@ -5,11 +5,15 @@
 #include "util/math.h"
 #include "util/getOrThrow.h"
 
+#include "euclidian/Point.h"
+
 #include <QRectF>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPointF>
 #include <QJsonObject>
+
+using EPoint = euclidian::impl::Point;
 
 namespace hyperbolic::impl {
     Point::Point()
@@ -34,32 +38,15 @@ namespace hyperbolic::impl {
     }
 
     void Point::paint(QPainter* qp, const QColor& color) const {
-        auto pen = qp->pen();
-        pen.setWidth(0);
-        pen.setColor(color);
-        qp->setPen(pen);
-
-        auto brush = qp->brush();
-        brush.setColor(color);
-        brush.setStyle(Qt::SolidPattern);
-        qp->setBrush(brush);
-
-        qp->drawEllipse(boundingRect());
+        EPoint(x, y).paint(qp, color);
     }
 
     QRectF Point::boundingRect() const {
-        return QRectF(
-            x - paintRadius,
-            y - paintRadius,
-            paintRadius * 2,
-            paintRadius * 2
-        );
+        return EPoint(x, y).boundingRect();
     }
 
     QPainterPath Point::shape() const {
-        QPainterPath path;
-        path.addEllipse(boundingRect());
-        return path;
+        return EPoint(x, y).shape();
     }
 
     QJsonObject Point::toJson() const {

@@ -31,6 +31,6 @@ namespace euclidian::impl {
             double r;
             
         private:
-            static constexpr double paintWidth = 3e-3;
+            static constexpr double paintWidth = 7e-3;
     };
 }
