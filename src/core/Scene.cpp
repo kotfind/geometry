@@ -146,46 +146,39 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e) {
 }
 
 GeometryGenerator* Scene::getFreeOrRestrictedGeneratorAt(const QPointF& pos) const {
-    auto itemList = items(pos);
-    for (auto* item_ : itemList) {
-        if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
-        auto* item = static_cast<GeometryItem*>(item_);
-        if (item->isHidden()) continue;
-
-        auto* gen = item->getGeometryGenerator();
-        if (gen->isFree() || gen->isRestricted()) {
-            return gen;
-        }
-    }
-    return nullptr;
+    return getGeneratorAtHelper(pos, true, true, false, ~0, false);
 }
 
 GeometryGenerator* Scene::getDependantGeneratorAt(const QPointF& pos) const {
-    auto itemList = items(pos);
-    for (auto* item_ : itemList) {
-        if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
-        auto* item = static_cast<GeometryItem*>(item_);
-        if (item->isHidden()) continue;
-
-        auto* gen = item->getGeometryGenerator();
-        if (gen->isDependant()) {
-            return gen;
-        }
-    }
-    return nullptr;
+    return getGeneratorAtHelper(pos, false, false, true, ~0, false);
 }
 
 GeometryGenerator* Scene::getGeneratorAt(const QPointF& pos, int type, bool allowHidden) const {
+    return getGeneratorAtHelper(pos, true, true, true, type, allowHidden);
+}
+
+GeometryGenerator* Scene::getGeneratorAtHelper(
+    const QPointF& pos,
+    bool allowFree,
+    bool allowRestricted,
+    bool allowDependant,
+    int objectType,
+    bool allowHidden
+) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
         if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
+
         auto* item = static_cast<GeometryItem*>(item_);
         if (item->isHidden() && !allowHidden) continue;
 
         auto* gen = item->getGeometryGenerator();
-        if (gen->getObject()->is(type)) {
-            return gen;
-        }
+        if (gen->isFree() && !allowFree) continue;
+        if (gen->isRestricted() && !allowRestricted) continue;
+        if (gen->isDependant() && !allowDependant) continue;
+        if (!gen->getObject()->is(objectType)) continue;
+
+        return gen;
     }
     return nullptr;
 }
