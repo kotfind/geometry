@@ -57,11 +57,10 @@ namespace hyperbolic::impl {
     }
 
     GeometryObject* Line::getEuclidian() const {
-        // FIXME: QPointF -> Point ?
-        if (abs(cross(p1.getPos(), p2.getPos()) / dist(p1.getPos(), p2.getPos())) < 0.01 /* XXX */) {
+        if (collinear(p1, p2, Point(0, 0), 0.01)) {
             // Line
-            auto p = p1.getPos();
-            auto d = p2.getPos() - p1.getPos();
+            auto p = p1;
+            auto d = p2 - p1;
 
             // Solving equation system:
             // x^2 + y^2 = 1
@@ -71,9 +70,9 @@ namespace hyperbolic::impl {
             int n;
             double t1, t2;
             solveSqEq(
-                sq(d.x()) + sq(d.y()), // a
-                2 * (d.x() * p.x() + d.y() * p.y()),  // b
-                sq(p.x()) + sq(p.y()) - 1, // c
+                sq(d.x) + sq(d.y), // a
+                2 * (d.x * p.x + d.y * p.y),  // b
+                sq(p.x) + sq(p.y) - 1, // c
                 n,
                 t1,
                 t2
@@ -81,8 +80,8 @@ namespace hyperbolic::impl {
             assert(n == 2);
 
             return new ELine(
-                EPoint(p + t1 * d),
-                EPoint(p + t2 * d)
+                EPoint((p + t1 * d).getPos()),
+                EPoint((p + t2 * d).getPos())
             );
         } else {
             // Circle

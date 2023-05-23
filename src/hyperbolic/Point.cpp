@@ -70,6 +70,15 @@ namespace hyperbolic::impl {
         return QPointF(x, y);
     }
 
+    void Point::setComplex(const std::complex<double>& z) {
+        x = std::real(z);
+        y = std::imag(z);
+    }
+
+    std::complex<double> Point::getComplex() const {
+        return std::complex<double>(x, y);
+    }
+
     bool operator==(const Point& p1, const Point& p2) {
         // TODO: Use hyperbolic metrics
         return eq(p1.x, p2.x) && eq(p1.y, p2.y);
@@ -127,12 +136,7 @@ namespace hyperbolic::impl {
         return ans;
     }
 
-    void Point::setComplex(const std::complex<double>& z) {
-        x = std::real(z);
-        y = std::imag(z);
-    }
-
-    std::complex<double> Point::getComplex() const {
-        return std::complex<double>(x, y);
+    bool collinear(const Point& a, const Point& b, const Point& c, double epsilon) {
+        return abs((b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x)) < epsilon;
     }
 }

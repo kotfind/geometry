@@ -2,6 +2,8 @@
 
 #include "core/AbstractPoint.h"
 
+#include "util/math.h"
+
 #include <QPointF>
 #include <complex>
 
@@ -46,4 +48,11 @@ namespace hyperbolic::impl {
     Point operator*(const Point& lhs, double rhs);
     Point operator*(double lhs, const Point& rhs);
     Point operator/(const Point& lhs, double rhs);
+
+    bool collinear(
+        const Point& a,
+        const Point& b,
+        const Point& c,
+        double epsilon = eps
+    );
 }
