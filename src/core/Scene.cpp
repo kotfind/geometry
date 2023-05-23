@@ -46,6 +46,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             auto pt = std::unique_ptr<AbstractPoint>(
                 engine->getGeometry()->makePoint(pos)
             );
+            if (!pt) return;
+
             pt->untransform(
                 engine->getGeometry()->getTransformation()
             );
@@ -118,13 +120,12 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::Type::MOVE:
         {
             if (!currentFreeGenerator) break;
-            auto pt = std::unique_ptr<AbstractPoint>(
-                engine->getGeometry()->makePoint(pos)
-            );
-            pt->untransform(
-                engine->getGeometry()->getTransformation()
-            );
-            currentFreeGenerator->setPos(pt.get());
+            if (auto pt = std::unique_ptr<AbstractPoint>(engine->getGeometry()->makePoint(pos))) {
+                pt->untransform(
+                    engine->getGeometry()->getTransformation()
+                );
+                currentFreeGenerator->setPos(pt.get());
+            }
         }
         break;
     }
