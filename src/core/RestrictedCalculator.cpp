@@ -34,8 +34,10 @@ void RestrictedCalculator::setPos(const AbstractPoint* pos) {
     auto* obj = restrictor->getGeometryObject();
     if (!obj) return;
 
-    auto nearest = obj->calcNearestPoint(pos);
-    posValue = obj->pointToPosValue(nearest);
+    auto nearest = std::unique_ptr<AbstractPoint>(
+        obj->calcNearestPoint(pos)
+    );
+    posValue = obj->pointToPosValue(nearest.get());
 }
 
 QJsonObject RestrictedCalculator::toJson(const QHash<Generator*, int>& ids, bool isReal) const {
