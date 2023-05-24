@@ -37,8 +37,9 @@ namespace hyperbolic::impl {
         return std::unique_ptr<GeometryObject>(getEuclidian())->shape();
     }
 
-    void Line::transform(const AbstractTransformation*) {
-        // FIXME
+    void Line::transform(const AbstractTransformation* t) {
+        p1.transform(t);
+        p2.transform(t);
     }
 
     AbstractPoint* Line::calcNearestPoint(const AbstractPoint* pos) const {

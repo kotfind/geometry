@@ -89,10 +89,10 @@ void Engine::scroll(const QPointF& delta) {
     recalcAllItems();
 }
 
-void Engine::move(const QPointF& delta) {
+void Engine::move(const AbstractPoint* from, const AbstractPoint* to) {
     setChanged();
 
-    geom->getTransformation()->move(delta);
+    geom->getTransformation()->move(from, to);
 
     recalcAllItems();
 }

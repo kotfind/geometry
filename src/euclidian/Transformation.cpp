@@ -11,8 +11,9 @@ namespace euclidian::impl {
         center += Point(delta) * scrollSpeed / scale;
     }
 
-    void Transformation::move(const QPointF& delta) {
-        center += Point(delta) / scale;
+    void Transformation::move(const AbstractPoint* from, const AbstractPoint* to) {
+        auto delta = *static_cast<const Point*>(from) - *static_cast<const Point*>(to);
+        center += delta / scale;
     }
 
     void Transformation::zoom(double v, const QPointF& zoomCenter) {

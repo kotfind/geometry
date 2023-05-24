@@ -54,7 +54,7 @@ class Engine : public QObject {
         const QRectF& getSceneRect() const { return sceneRect; }
 
         void scroll(const QPointF& delta);
-        void move(const QPointF& delta);
+        void move(const AbstractPoint* from, const AbstractPoint* to);
         void zoom(double v, const QPointF& zoomCenter);
 
         QJsonObject toJson() const;

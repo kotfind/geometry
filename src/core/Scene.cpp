@@ -110,7 +110,23 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
     updateCursor(e);
 
     if (e->buttons() & Qt::MiddleButton) {
-        engine->move(delta);
+        auto from = std::unique_ptr<AbstractPoint>(
+            engine->getGeometry()->makePoint(e->lastScenePos())
+        );
+        if (!from) return;
+        from->untransform(
+            engine->getGeometry()->getTransformation()
+        );
+
+        auto to = std::unique_ptr<AbstractPoint>(
+            engine->getGeometry()->makePoint(e->scenePos())
+        );
+        if (!to) return;
+        to->untransform(
+            engine->getGeometry()->getTransformation()
+        );
+
+        engine->move(from.get(), to.get());
         update();
     }
 

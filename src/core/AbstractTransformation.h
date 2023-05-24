@@ -10,7 +10,7 @@ class AbstractTransformation {
         virtual ~AbstractTransformation() {}
 
         virtual void scroll(const QPointF& delta) = 0;
-        virtual void move(const QPointF& delta) = 0;
+        virtual void move(const AbstractPoint* from, const AbstractPoint* to) = 0;
         virtual void zoom(double, const QPointF& zoomCenter) = 0;
 
         virtual void clear() = 0;

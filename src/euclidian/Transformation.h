@@ -8,7 +8,7 @@ namespace euclidian::impl {
     class Transformation : public AbstractTransformation {
         public:
             void scroll(const QPointF& delta) override;
-            void move(const QPointF& delta) override;
+            void move(const AbstractPoint* from, const AbstractPoint* to) override;
             void zoom(double, const QPointF& zoomCenter) override;
 
             void clear() override;
