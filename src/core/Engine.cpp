@@ -381,3 +381,14 @@ void Engine::processRealFuncArg(QGraphicsScene* scene) {
 const AbstractGeometry* Engine::getGeometry() const {
     return geom.get();
 }
+
+AbstractPoint* Engine::makeUntransformedPoint(const QPointF& pos) {
+    auto pt = getGeometry()->makePoint(pos);
+    if (!pt) return nullptr;
+
+    pt->untransform(
+        getGeometry()->getTransformation()
+    );
+
+    return pt;
+}

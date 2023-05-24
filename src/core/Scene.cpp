@@ -44,13 +44,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
         {
             GeometryGenerator* gen;
             auto pt = std::unique_ptr<AbstractPoint>(
-                engine->getGeometry()->makePoint(pos)
+                engine->makeUntransformedPoint(pos)
             );
             if (!pt) return;
 
-            pt->untransform(
-                engine->getGeometry()->getTransformation()
-            );
             if (auto* restrictor = getDependantGeneratorAt(pos)) {
                 // Make Restrcted Generator
                 gen = engine->makeGeometryGenerator(
@@ -111,20 +108,14 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
 
     if (e->buttons() & Qt::MiddleButton) {
         auto from = std::unique_ptr<AbstractPoint>(
-            engine->getGeometry()->makePoint(e->lastScenePos())
+            engine->makeUntransformedPoint(e->lastScenePos())
         );
         if (!from) return;
-        from->untransform(
-            engine->getGeometry()->getTransformation()
-        );
 
         auto to = std::unique_ptr<AbstractPoint>(
-            engine->getGeometry()->makePoint(e->scenePos())
+            engine->makeUntransformedPoint(e->scenePos())
         );
         if (!to) return;
-        to->untransform(
-            engine->getGeometry()->getTransformation()
-        );
 
         engine->move(from.get(), to.get());
         update();
@@ -136,10 +127,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e) {
         case EditMode::Type::MOVE:
         {
             if (!currentFreeGenerator) break;
-            if (auto pt = std::unique_ptr<AbstractPoint>(engine->getGeometry()->makePoint(pos))) {
-                pt->untransform(
-                    engine->getGeometry()->getTransformation()
-                );
+            if (auto pt = std::unique_ptr<AbstractPoint>(engine->makeUntransformedPoint(pos))) {
                 currentFreeGenerator->setPos(pt.get());
             }
         }

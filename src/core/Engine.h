@@ -89,6 +89,8 @@ class Engine : public QObject {
 
         const AbstractGeometry* getGeometry() const;
 
+        AbstractPoint* makeUntransformedPoint(const QPointF& pos);
+
     private:
         QList<Generator*> getGeneratorRecalcOrder();
 
