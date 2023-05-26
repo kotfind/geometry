@@ -2,6 +2,8 @@
 
 #include "core/AbstractPoint.h"
 
+#include "util/math.h"
+
 class QPointF;
 class QJsonObject;
 
@@ -58,4 +60,11 @@ namespace euclidian::impl {
     Point norm(const Point& v);
 
     Point perp(const Point& v);
+
+    bool collinear(
+        const Point& a,
+        const Point& b,
+        const Point& c,
+        double epsilon = eps
+    );
 }

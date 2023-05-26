@@ -2,18 +2,17 @@
 
 #include "core/AbstractPoint.h"
 
-#include "util/math.h"
+#include "euclidian/Point.h"
 
 #include <QPointF>
-#include <complex>
 
 namespace hyperbolic::impl {
     class Point : public AbstractPoint {
         public:
             Point();
             Point(double x, double y);
+            // pos is in euclidian
             explicit Point(const QPointF& pos);
-            explicit Point(const std::complex<double>& z);
 
             enum { Type = 1 << 1 };
             int getType() const override { return Type; }
@@ -30,9 +29,10 @@ namespace hyperbolic::impl {
             QPointF getPos() const override;
             void setPos(const QPointF& pos) override;
 
-            void setComplex(const std::complex<double>& z);
-            std::complex<double> getComplex() const;
+            // Returns point representaion on Poincare disk
+            euclidian::impl::Point getEuclidian() const;
 
+            // In beltrami coordinates
             double x, y;
     };
 
@@ -48,11 +48,4 @@ namespace hyperbolic::impl {
     Point operator*(const Point& lhs, double rhs);
     Point operator*(double lhs, const Point& rhs);
     Point operator/(const Point& lhs, double rhs);
-
-    bool collinear(
-        const Point& a,
-        const Point& b,
-        const Point& c,
-        double epsilon = eps
-    );
 }

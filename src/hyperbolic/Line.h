@@ -8,7 +8,7 @@
 #include "euclidian/Line.h"
 #include "euclidian/Circle.h"
 
-#include <QPointF>
+#include <tuple>
 
 namespace hyperbolic::impl {
     class Point;
@@ -36,6 +36,10 @@ namespace hyperbolic::impl {
 
             double pointToPosValue(const AbstractPoint* pos) const override;
             AbstractPoint* posValueToPoint(double val) const override;
+
+            // Returns a, b, c from equation Ax + By + C = 0
+            // A^2 + B^2 > C^2
+            std::tuple<double, double, double> getABC() const;
 
             Point p1;
             Point p2;
