@@ -18,6 +18,44 @@
 using namespace hyperbolic;
 using namespace hyperbolic::impl;
 
+std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c) {
+    // Hs[0] and Hs[1] are intersections of line and unit circle
+    // OM is perpendicular from O(0, 0) on line
+    // Ans points are midpoins of M and Hs
+
+    auto M = Point(a, b) * (-c / (sq(a) + sq(b)));
+
+    Point Hs[2];
+
+    if (eq(b, 0)) {
+        auto x = Hs[0].x = Hs[1].x = -c / a;
+        Hs[0].y = sqrt(1 - sq(x));
+        Hs[1].y = -Hs[0].y;
+    } else {
+        int n;
+        solveSqEq(
+            sq(a) + sq(b),
+            2 * a * c,
+            sq(c) - sq(b),
+            n,
+            Hs[0].x,
+            Hs[1].x
+        );
+        if (n != 2) {
+            qDebug() << a << b << c;
+        }
+        assert(n == 2);
+        for (int i = 0; i < 2; ++i) {
+            Hs[i].y = -(a * Hs[i].x + c) / b;
+        }
+    }
+
+    return {
+        (Hs[0] + M) / 2,
+        (Hs[1] + M) / 2
+    };
+}
+
 SectionMaster* Geometry::makeSectionMaster() const {
     auto* master = new SectionMaster;
 
@@ -137,6 +175,40 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 return {};
 
             return {new Line(p1, p2)};
+        }
+    );
+
+    lineSection->makeFunction(
+        "Perpendicular",
+        QIcon(":none.svg"),
+        TR("Creates line perpendicular to current line through current point."),
+        ARGS {
+            {Point::Type, TR("Point")},
+            {Line::Type, TR("Line")},
+        },
+        1,
+        DO {
+            const auto& p = *static_cast<const Point*>(objs[0]);
+            const auto& l = *static_cast<const Line*>(objs[1]);
+
+            // Two lines with equations
+            //     Ax + By + C = 0
+            // and
+            //     Dx + Ey + F = 0
+            // are perpendicular when
+            //     AD + BE = CF
+
+            auto x = p.x;
+            auto y = p.y;
+            auto [a, b, c] = l.getABC();
+
+            auto d = c * y + b;
+            auto e = -(c * x + a);
+            auto f = -(d * x + e * y);
+
+            auto [p1, p2] = getTwoPointsOnLine(d, e, f);
+
+            return { new Line(p1, p2) };
         }
     );
 

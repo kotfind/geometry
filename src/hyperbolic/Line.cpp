@@ -117,6 +117,12 @@ namespace hyperbolic::impl {
             b = p1.x - p2.x;
             c = -(a * p1.x + b * p1.y);
         }
+
+        auto t = sq(a) + sq(b);
+        a /= t;
+        b /= t;
+        c /= t;
+
         return {a, b, c};
     }
 }
