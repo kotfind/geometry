@@ -18,19 +18,13 @@
 using namespace hyperbolic;
 using namespace hyperbolic::impl;
 
-std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c) {
-    // Hs[0] and Hs[1] are intersections of line and unit circle
-    // OM is perpendicular from O(0, 0) on line
-    // Ans points are midpoins of M and Hs
-
-    auto M = Point(a, b) * (-c / (sq(a) + sq(b)));
-
-    Point Hs[2];
+std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c) {
+    Point H1, H2;
 
     if (eq(b, 0)) {
-        auto x = Hs[0].x = Hs[1].x = -c / a;
-        Hs[0].y = sqrt(1 - sq(x));
-        Hs[1].y = -Hs[0].y;
+        auto x = H1.x = H2.x = -c / a;
+        H1.y = sqrt(1 - sq(x));
+        H2.y = -H1.y;
     } else {
         int n;
         solveSqEq(
@@ -38,21 +32,29 @@ std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c) {
             2 * a * c,
             sq(c) - sq(b),
             n,
-            Hs[0].x,
-            Hs[1].x
+            H1.x,
+            H2.x
         );
-        if (n != 2) {
-            qDebug() << a << b << c;
-        }
         assert(n == 2);
-        for (int i = 0; i < 2; ++i) {
-            Hs[i].y = -(a * Hs[i].x + c) / b;
-        }
+
+        H1.y = -(a * H1.x + c) / b;
+        H2.y = -(a * H2.x + c) / b;
     }
 
+    return {H1, H2};
+}
+
+std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c) {
+    // H1 and H2 are intersections of line and absolute
+    // OM is perpendicular from O(0, 0) on line
+    // Ans points are midpoins of M and Hs
+
+    auto M = Point(a, b) * (-c / (sq(a) + sq(b)));
+    auto [H1, H2] = getIntersectionsWithAbsolute(a, b, c);
+
     return {
-        (Hs[0] + M) / 2,
-        (Hs[1] + M) / 2
+        (H1 + M) / 2,
+        (H2 + M) / 2
     };
 }
 
