@@ -212,5 +212,39 @@ SectionMaster* Geometry::makeSectionMaster() const {
         }
     );
 
+    lineSection->makeFunction(
+        "Hyperparallel",
+        QIcon(":none.svg"),
+        TR("Creates lines hyperparallel to current line through current point."),
+        ARGS {
+            {Point::Type, TR("Point")},
+            {Line::Type, TR("Line")},
+        },
+        1,
+        DO {
+            const auto& p = *static_cast<const Point*>(objs[0]);
+            const auto& l = *static_cast<const Line*>(objs[1]);
+
+            // Two lines with equations
+            //     Ax + By + C = 0
+            // and
+            //     Dx + Ey + F = 0
+            // are hyperparallel when
+            //     A * E = D * B
+
+            auto x = p.x;
+            auto y = p.y;
+            auto [a, b, c] = l.getABC();
+
+            auto d = -a;
+            auto e = -b;
+            auto f = a * x + b * y;
+
+            auto [p1, p2] = getTwoPointsOnLine(d, e, f);
+
+            return { new Line(p1, p2) };
+        }
+    );
+
     return master;
 }
