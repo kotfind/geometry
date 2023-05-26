@@ -215,6 +215,35 @@ SectionMaster* Geometry::makeSectionMaster() const {
     );
 
     lineSection->makeFunction(
+        "Horoparallel",
+        QIcon(":none.svg"),
+        TR("Creates lines hyperparallel to current line through current point."),
+        ARGS {
+            {Point::Type, TR("Point")},
+            {Line::Type, TR("Line")},
+        },
+        2,
+        DO {
+            const auto& p = *static_cast<const Point*>(objs[0]);
+            const auto& l = *static_cast<const Line*>(objs[1]);
+
+            auto x = p.x;
+            auto y = p.y;
+            auto [a, b, c] = l.getABC();
+
+            auto [p1, p2] = getIntersectionsWithAbsolute(a, b, c);
+
+            auto a1 = (p1 + p) / 2;
+            auto a2 = (p2 + p) / 2;
+
+            return {
+                new Line(p, a1),
+                new Line(p, a2),
+            };
+        }
+    );
+
+    lineSection->makeFunction(
         "Hyperparallel",
         QIcon(":none.svg"),
         TR("Creates lines hyperparallel to current line through current point."),
