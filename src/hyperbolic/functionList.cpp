@@ -61,6 +61,34 @@ SectionMaster* Geometry::makeSectionMaster() const {
         QIcon(QIcon(":none.svg")),
         TR("Click on the canvas to create a point.")
     );
+
+    pointSection->makeFunction(
+        "Intersect",
+        QIcon(":none.svg"),
+        TR("Intersects two lines."),
+        ARGS {
+            {Line::Type, TR("First line")},
+            {Line::Type, TR("Second line")},
+        },
+        1,
+        DO {
+            const auto& l1 = *static_cast<const Line*>(objs[0]);
+            const auto& l2 = *static_cast<const Line*>(objs[1]);
+
+            auto [a1, b1, c1] = l1.getABC();
+            auto [a2, b2, c2] = l2.getABC();
+
+            auto cramerAns = cramer({
+                {a1, b1, -c1},
+                {a2, b2, -c2},
+            });
+
+            if (cramerAns.isEmpty())
+                return {};
+
+            return { new Point(cramerAns[0], cramerAns[1]) };
+        }
+    );
     
     pointSection->makeFunction(
         "Middle",

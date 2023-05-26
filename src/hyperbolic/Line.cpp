@@ -107,6 +107,16 @@ namespace hyperbolic::impl {
     }
 
     std::tuple<double, double, double> Line::getABC() const {
-        return ELine(p1.getEuclidian(), p2.getEuclidian()).getABC();
+        double a, b, c;
+        if (eq(p1.x, p2.x)) {
+            a = 1;
+            b = 0;
+            c = -p1.x;
+        } else {
+            a = p2.y - p1.y;
+            b = p1.x - p2.x;
+            c = -(a * p1.x + b * p1.y);
+        }
+        return {a, b, c};
     }
 }
