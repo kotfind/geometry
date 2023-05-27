@@ -12,6 +12,8 @@
 #include <QGraphicsEllipseItem>
 #include <QPen>
 
+using EPoint = euclidian::impl::Point;
+
 namespace hyperbolic {
     using namespace impl;
 
@@ -32,7 +34,7 @@ namespace hyperbolic {
 
     AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
         return le(len(pos), 1)
-            ? new Point(pos)
+            ? new Point(EPoint(pos))
             : nullptr;
     }
 

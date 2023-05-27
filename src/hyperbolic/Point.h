@@ -11,8 +11,8 @@ namespace hyperbolic::impl {
         public:
             Point();
             Point(double x, double y);
-            // pos is in euclidian
-            explicit Point(const QPointF& pos);
+            // p is in poincare
+            explicit Point(const euclidian::impl::Point& p);
 
             enum { Type = 1 << 1 };
             int getType() const override { return Type; }
@@ -30,7 +30,11 @@ namespace hyperbolic::impl {
             void setPos(const QPointF& pos) override;
 
             // Returns point representaion on Poincare disk
-            euclidian::impl::Point getEuclidian() const;
+            euclidian::impl::Point toPoincare() const;
+
+            // Calculates points' position from it's
+            // representaion on Poincare disk
+            void fromPoincare(const euclidian::impl::Point& p);
 
             // In beltrami coordinates
             double x, y;

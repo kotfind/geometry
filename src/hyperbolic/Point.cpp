@@ -25,12 +25,9 @@ namespace hyperbolic::impl {
         y(y)
     {}
 
-    Point::Point(const QPointF& pos)
+    Point::Point(const EPoint& p)
     {
-        auto [a, b] = pos;
-        auto t = 1 + sq(a) + sq(b);
-        x = 2 * a / t;
-        y = 2 * b / t;
+        fromPoincare(p);
     }
 
     Object* Point::clone() const {
@@ -38,15 +35,15 @@ namespace hyperbolic::impl {
     }
 
     void Point::paint(QPainter* qp, const QColor& color) const {
-        getEuclidian().paint(qp, color);
+        toPoincare().paint(qp, color);
     }
 
     QRectF Point::boundingRect() const {
-        return getEuclidian().boundingRect();
+        return toPoincare().boundingRect();
     }
 
     QPainterPath Point::shape() const {
-        return getEuclidian().shape();
+        return toPoincare().shape();
     }
 
     QJsonObject Point::toJson() const {
@@ -70,8 +67,16 @@ namespace hyperbolic::impl {
         return QPointF(x, y);
     }
 
-    EPoint Point::getEuclidian() const {
+    EPoint Point::toPoincare() const {
         return EPoint(x, y) / (1 + sqrt(1 - sq(x) - sq(y)));
+    }
+
+    void Point::fromPoincare(const EPoint& p) {
+        auto a = p.x;
+        auto b = p.y;
+        auto t = 1 + sq(a) + sq(b);
+        x = 2 * a / t;
+        y = 2 * b / t;
     }
 
     bool operator==(const Point& p1, const Point& p2) {

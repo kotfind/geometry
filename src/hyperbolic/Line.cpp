@@ -61,8 +61,8 @@ namespace hyperbolic::impl {
     }
 
     GeometryObject* Line::getEuclidian() const {
-        auto ep1 = p1.getEuclidian();
-        auto ep2 = p2.getEuclidian();
+        auto ep1 = p1.toPoincare();
+        auto ep2 = p2.toPoincare();
         if (collinear(ep1, ep2, EPoint(0, 0), 0.01)) {
             // Line
             auto p = ep1;
