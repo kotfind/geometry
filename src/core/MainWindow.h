@@ -20,25 +20,33 @@ class VariableModel;
 class Engine;
 class VariableWidget;
 class QActionGroup;
+class AbstractGeometry;
 
 class MainWindow : public QMainWindow {
     public:
         MainWindow(Engine* engine);
 
     private:
-        void createModeAndFuncActions();
-
         void createUi();
 
         void createFileMenu();
 
-        void createToolsMenu();
+        void initToolsMenu();
 
         void createDocks();
-
         void createDock(QWidget* widget, const QString& name, Qt::DockWidgetArea area);
 
         void updateTitle();
+
+        void setActiveGeometry(const AbstractGeometry* geom);
+        void getModeAndFunctionActions(
+            QHash<const EditMode*, QAction*>& modeToAction,
+            QHash<const Function*, QAction*>& funcToAction
+        );
+        QList<QMenu*> getToolMenus(
+            const QHash<const EditMode*, QAction*>& modeToAction,
+            const QHash<const Function*, QAction*>& funcToAction
+        );
 
         QMessageBox::StandardButton askForSave(bool addCancelButton);
 
@@ -51,12 +59,11 @@ class MainWindow : public QMainWindow {
         Scene* scene;
         View* view;
 
+        QAction* toolsMenuSeparators[2];
+        QActionGroup* toolActionGroup;
+
         ToolInfoWidget* toolInfoWidget;
         ToolWidget* toolWidget;
-
-        QActionGroup* toolActionGroup;
-        QHash<const EditMode*, QAction*> modeToAction;
-        QHash<const Function*, QAction*> funcToAction;
 
         VariableModel* varModel;
         VariableWidget* varWidget;

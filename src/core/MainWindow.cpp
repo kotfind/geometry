@@ -32,11 +32,9 @@ MainWindow::MainWindow(Engine* engine)
 {
     updateTitle();
 
-    createModeAndFuncActions();
-
     createUi();
     createFileMenu();
-    createToolsMenu();
+    initToolsMenu();
     createDocks();
 
     scene = new Scene(engine, this);
@@ -44,6 +42,10 @@ MainWindow::MainWindow(Engine* engine)
 
     varModel = new VariableModel(engine, this);
     varWidget->setModel(varModel);
+
+    toolActionGroup = new QActionGroup(this);
+    toolActionGroup->setExclusive(true);
+    toolActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
 
     connect(
         scene,
@@ -59,52 +61,7 @@ MainWindow::MainWindow(Engine* engine)
         &ToolInfoWidget::updateSelectedCount
     );
 
-    modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
-    engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
-    toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
-}
-
-void MainWindow::createModeAndFuncActions() {
-    toolActionGroup = new QActionGroup(this);
-    toolActionGroup->setExclusive(true);
-    toolActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
-
-    for (auto* section : engine->getActiveGeometry()->getSectionMaster()->getSections()) {
-        for (auto mode : section->getModes()) {
-            auto* action = new QAction(
-                mode->getIcon(),
-                mode->getName(),
-                this
-            );
-            action->setData(QVariant::fromValue(mode));
-            toolActionGroup->addAction(action);
-            action->setCheckable(true);
-            connect(
-                action,
-                &QAction::triggered,
-                this,
-                &MainWindow::onModeActionTriggered
-            );
-            modeToAction[mode] = action;
-        }
-        for (auto* func : section->getFunctions()) {
-            auto* action = new QAction(
-                func->getIcon(),
-                func->getSelfName(),
-                this
-            );
-            action->setData(QVariant::fromValue(func));
-            toolActionGroup->addAction(action);
-            action->setCheckable(true);
-            connect(
-                action,
-                &QAction::triggered,
-                this,
-                &MainWindow::onFunctionActionTriggered
-            );
-            funcToAction[func] = action;
-        }
-    }
+    setActiveGeometry(engine->getAllGeometries()[0]);
 }
 
 void MainWindow::createUi() {
@@ -163,33 +120,19 @@ void MainWindow::createFileMenu() {
     menu->addAction(openAction);
 }
 
-void MainWindow::createToolsMenu() {
-    menuBar()->addAction(new QAction("|", this)); // Separator
-
-    for (auto* section : engine->getActiveGeometry()->getSectionMaster()->getSections()) {
-        auto* menu = menuBar()->addMenu(section->getName());
-
-        for (auto mode : section->getModes()) {
-            menu->addAction(modeToAction[mode]);
-        }
-        for (auto* func : section->getFunctions()) {
-            menu->addAction(funcToAction[func]);
-        }
+void MainWindow::initToolsMenu() {
+    for (int i = 0; i < 2; ++i) {
+        menuBar()->addAction(
+            toolsMenuSeparators[i] = new QAction("|", this)
+        );
     }
-
-    menuBar()->addAction(new QAction("|", this)); // Separator
 }
 
 void MainWindow::createDocks() {
     toolInfoWidget = new ToolInfoWidget(engine->getActiveGeometry(), this);
     createDock(toolInfoWidget, tr("Tool Info"), Qt::LeftDockWidgetArea);
 
-    toolWidget = new ToolWidget(
-        modeToAction,
-        funcToAction,
-        engine->getActiveGeometry()->getSectionMaster(),
-        this
-    );
+    toolWidget = new ToolWidget(this);
     createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
 
     varWidget = new VariableWidget(this);
@@ -262,9 +205,7 @@ void MainWindow::onNewActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* geom = action->data().value<const AbstractGeometry*>();
 
-    scene->clear();
-    engine->clear();
-    engine->setActiveGeometry(geom);
+    setActiveGeometry(geom);
     openedFileName = "";
     updateTitle();
 }
@@ -371,3 +312,116 @@ void MainWindow::closeEvent(QCloseEvent* e) {
             break;
     }
 }
+
+void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
+    scene->clear();
+
+    engine->setActiveGeometry(geom);
+
+    // Actions
+    for (auto* action : toolActionGroup->actions()) {
+        action->deleteLater();
+    }
+
+    QHash<const EditMode*, QAction*> modeToAction;
+    QHash<const Function*, QAction*> funcToAction;
+    getModeAndFunctionActions(modeToAction, funcToAction);
+
+    // Menus
+    QList<QAction*> menusToDelete;
+    auto barActions = menuBar()->actions();
+    for (
+        int i = barActions.indexOf(toolsMenuSeparators[0]) + 1;
+        i < barActions.indexOf(toolsMenuSeparators[1]);
+        ++i
+    ) {
+        menuBar()->removeAction(barActions[i]);
+    }
+
+    auto menus = getToolMenus(modeToAction, funcToAction);
+    for (auto* menu : menus) {
+        menuBar()->insertMenu(
+            toolsMenuSeparators[1],
+            menu
+        );
+    }
+
+    // ToolWidget
+    toolWidget->update(
+        modeToAction,
+        funcToAction,
+        engine->getActiveGeometry()->getSectionMaster()
+    );
+
+    // Set move mode
+    modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
+    engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
+    toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
+}
+
+
+void MainWindow::getModeAndFunctionActions(
+    QHash<const EditMode*, QAction*>& modeToAction,
+    QHash<const Function*, QAction*>& funcToAction
+) {
+
+    for (auto* section : engine->getActiveGeometry()->getSectionMaster()->getSections()) {
+        for (auto mode : section->getModes()) {
+            auto* action = new QAction(
+                mode->getIcon(),
+                mode->getName(),
+                this
+            );
+            action->setData(QVariant::fromValue(mode));
+            toolActionGroup->addAction(action);
+            action->setCheckable(true);
+            connect(
+                action,
+                &QAction::triggered,
+                this,
+                &MainWindow::onModeActionTriggered
+            );
+            modeToAction[mode] = action;
+        }
+        for (auto* func : section->getFunctions()) {
+            auto* action = new QAction(
+                func->getIcon(),
+                func->getSelfName(),
+                this
+            );
+            action->setData(QVariant::fromValue(func));
+            toolActionGroup->addAction(action);
+            action->setCheckable(true);
+            connect(
+                action,
+                &QAction::triggered,
+                this,
+                &MainWindow::onFunctionActionTriggered
+            );
+            funcToAction[func] = action;
+        }
+    }
+}
+
+QList<QMenu*> MainWindow::getToolMenus(
+    const QHash<const EditMode*, QAction*>& modeToAction,
+    const QHash<const Function*, QAction*>& funcToAction
+) {
+    QList<QMenu*> menus;
+
+    for (auto* section : engine->getActiveGeometry()->getSectionMaster()->getSections()) {
+        auto* menu = menuBar()->addMenu(section->getName());
+
+        for (auto mode : section->getModes()) {
+            menu->addAction(modeToAction[mode]);
+        }
+        for (auto* func : section->getFunctions()) {
+            menu->addAction(funcToAction[func]);
+        }
+
+        menus << menu;
+    }
+
+    return menus;
+}
+

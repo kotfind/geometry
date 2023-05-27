@@ -89,7 +89,7 @@ class Engine : public QObject {
 
         const AbstractGeometry* getActiveGeometry() const;
         void setActiveGeometry(const QString& name);
-        void setActiveGeometry(const AbstractGeometry* g);
+        void setActiveGeometry(const AbstractGeometry* geom);
 
         QList<const AbstractGeometry*> getAllGeometries() const;
 
