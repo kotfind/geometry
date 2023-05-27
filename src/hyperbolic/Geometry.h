@@ -5,6 +5,8 @@
 #include "core/AbstractGeometry.h"
 #include "core/SectionMaster.h"
 
+#include "util/TR.h"
+
 #include <memory>
 
 class QGraphicsEllipseItem;
@@ -22,6 +24,8 @@ namespace hyperbolic {
             QString typeName(int) const override;
 
             QGraphicsItem* getGraphicsItem() const override;
+
+            QString getName() const override { return TR("Hyperbolic"); }
 
         private:
             // Is called from c'tor

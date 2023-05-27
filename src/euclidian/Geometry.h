@@ -5,6 +5,8 @@
 #include "core/AbstractGeometry.h"
 #include "core/SectionMaster.h"
 
+#include "util/TR.h"
+
 #include <memory>
 #include <QPointF>
 
@@ -19,6 +21,8 @@ namespace euclidian {
             AbstractTransformation* getTransformation() const override;
 
             QString typeName(int) const override;
+
+            QString getName() const override { return TR("Euclidian"); }
 
         private:
             // Is called from c'tor

@@ -22,4 +22,6 @@ class AbstractGeometry {
         QStringList complexTypeName(int) const;
 
         virtual QGraphicsItem* getGraphicsItem() const;
+
+        virtual QString getName() const = 0;
 };
