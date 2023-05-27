@@ -10,13 +10,15 @@
 
 using namespace std::complex_literals;
 
+using EPoint = euclidian::impl::Point;
+
 namespace hyperbolic::impl {
     void Transformation::scroll(const QPointF& delta) {
         // XXX: remeber about metrix
         z0 += std::complex<double>(delta.x(), delta.y()) * scrollSpeed;
     }
 
-    void Transformation::move(const AbstractPoint* from, const AbstractPoint* to) {
+    void Transformation::move(const AbstractPoint* from_, const AbstractPoint* to__) {
         // Solving equation:
         // q = exp(1i * phi) * (z - z0) / (1 - conj(z0) * z)
         //   where
@@ -35,12 +37,13 @@ namespace hyperbolic::impl {
         //
         // Getting equation system (in Re(z0) ans Im(z0))
 
-        auto z = static_cast<const Point*>(from)->getComplex();
-        auto to_ = std::unique_ptr<Point>(
-            static_cast<Point*>(to->clone())
-        );
-        transform(to_.get());
-        auto q = to_->getComplex();
+        auto from = static_cast<const Point*>(from_)->toPoincare();
+        auto z = from.x + 1i * from.y;
+
+        auto to_ = Point(*static_cast<const Point*>(to__));
+        to_.transform(this);
+        auto to = to_.toPoincare();
+        auto q = to.x + 1i * to.y;
 
         auto m = z - q * std::exp(-1i * phi);
         auto n = q * std::exp(-1i * phi) * z;
@@ -52,7 +55,7 @@ namespace hyperbolic::impl {
         });
         assert(!cramerAns.isEmpty());
 
-        z0 = std::complex<double>(cramerAns[0], cramerAns[1]);
+        z0 = cramerAns[0] + 1i * cramerAns[1];
     }
 
     void Transformation::zoom(double v, const QPointF& zoomCenter) {
@@ -72,20 +75,24 @@ namespace hyperbolic::impl {
         // FIXME
     }
 
-    void Transformation::transform(AbstractPoint* pt) const {
-        auto& p = *static_cast<Point*>(pt);
-        auto z = p.getComplex();
-        p.setComplex(
-            std::exp(phi * 1i) * (z - z0) / (1. - std::conj(z0) * z)
-        );
+    void Transformation::transform(AbstractPoint* pt_) const {
+        auto pt = static_cast<Point*>(pt_);
+        auto p = pt->toPoincare();
+
+        auto z = p.x + 1i * p.y;
+        z = std::exp(phi * 1i) * (z - z0) / (1. - std::conj(z0) * z);
+
+        pt->fromPoincare(EPoint(std::real(z), std::imag(z)));
     }
 
-    void Transformation::untransform(AbstractPoint* pt) const {
-        auto& p = *static_cast<Point*>(pt);
+    void Transformation::untransform(AbstractPoint* pt_) const {
+        auto pt = static_cast<Point*>(pt_);
+        auto p = pt->toPoincare();
+
         auto e = std::exp(-1i * phi);
-        auto z = p.getComplex();
-        p.setComplex(
-            (z * e + z0) / (z * std::conj(z0) * e + 1.)
-        );
+        auto z = p.x + 1i * p.y;
+        z = (z * e + z0) / (z * std::conj(z0) * e + 1.);
+
+        pt->fromPoincare(EPoint(std::real(z), std::imag(z)));
     }
 }

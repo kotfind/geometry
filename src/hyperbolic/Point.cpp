@@ -25,28 +25,25 @@ namespace hyperbolic::impl {
         y(y)
     {}
 
-    Point::Point(const QPointF& pos)
-      : Point(pos.x(), pos.y())
-    {}
-
-    Point::Point(const std::complex<double>& z)
-      : Point(std::real(z), std::imag(z))
-    {}
+    Point::Point(const EPoint& p)
+    {
+        fromPoincare(p);
+    }
 
     Object* Point::clone() const {
         return new Point(*this);
     }
 
     void Point::paint(QPainter* qp, const QColor& color) const {
-        EPoint(x, y).paint(qp, color);
+        toPoincare().paint(qp, color);
     }
 
     QRectF Point::boundingRect() const {
-        return EPoint(x, y).boundingRect();
+        return toPoincare().boundingRect();
     }
 
     QPainterPath Point::shape() const {
-        return EPoint(x, y).shape();
+        return toPoincare().shape();
     }
 
     QJsonObject Point::toJson() const {
@@ -70,13 +67,16 @@ namespace hyperbolic::impl {
         return QPointF(x, y);
     }
 
-    void Point::setComplex(const std::complex<double>& z) {
-        x = std::real(z);
-        y = std::imag(z);
+    EPoint Point::toPoincare() const {
+        return EPoint(x, y) / (1 + sqrt(1 - sq(x) - sq(y)));
     }
 
-    std::complex<double> Point::getComplex() const {
-        return std::complex<double>(x, y);
+    void Point::fromPoincare(const EPoint& p) {
+        auto a = p.x;
+        auto b = p.y;
+        auto t = 1 + sq(a) + sq(b);
+        x = 2 * a / t;
+        y = 2 * b / t;
     }
 
     bool operator==(const Point& p1, const Point& p2) {
@@ -134,9 +134,5 @@ namespace hyperbolic::impl {
         auto ans = lhs;
         ans /= rhs;
         return ans;
-    }
-
-    bool collinear(const Point& a, const Point& b, const Point& c, double epsilon) {
-        return abs((b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x)) < epsilon;
     }
 }

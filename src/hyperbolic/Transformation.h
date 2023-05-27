@@ -21,6 +21,8 @@ namespace hyperbolic::impl {
             void fromJson(const QJsonObject& json) override;
 
         private:
+            // Transformation is stored as mobius transformation
+            // for poincare disk
             double phi = 0;
             std::complex<double> z0 = 0;
 

@@ -10,6 +10,9 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPen>
+#include <complex>
+
+using namespace std::complex_literals;
 
 namespace hyperbolic::impl {
     Line::Line()
@@ -58,10 +61,12 @@ namespace hyperbolic::impl {
     }
 
     GeometryObject* Line::getEuclidian() const {
-        if (collinear(p1, p2, Point(0, 0), 0.01)) {
+        auto ep1 = p1.toPoincare();
+        auto ep2 = p2.toPoincare();
+        if (collinear(ep1, ep2, EPoint(0, 0), 0.01)) {
             // Line
-            auto p = p1;
-            auto d = p2 - p1;
+            auto p = ep1;
+            auto d = ep2 - ep1;
 
             // Solving equation system:
             // x^2 + y^2 = 1
@@ -86,8 +91,8 @@ namespace hyperbolic::impl {
             );
         } else {
             // Circle
-            auto p = p1.getComplex();
-            auto q = p2.getComplex();
+            auto p = ep1.x + 1i * ep1.y;
+            auto q = ep2.x + 1i * ep2.y;
 
             auto o_ = 
                 (p * (q * std::conj(q) + 1.) - q * (p * std::conj(p) + 1.)) /
@@ -95,9 +100,29 @@ namespace hyperbolic::impl {
                         (p * std::conj(q) - q * std::conj(p));
 
             auto o = EPoint(std::real(o_), std::imag(o_));
-            auto r = dist(o.getPos(), p1.getPos());
+            auto r = dist(o.getPos(), ep1.getPos());
 
             return new ECircle(o, r);
         }
+    }
+
+    std::tuple<double, double, double> Line::getABC() const {
+        double a, b, c;
+        if (eq(p1.x, p2.x)) {
+            a = 1;
+            b = 0;
+            c = -p1.x;
+        } else {
+            a = p2.y - p1.y;
+            b = p1.x - p2.x;
+            c = -(a * p1.x + b * p1.y);
+        }
+
+        auto t = sq(a) + sq(b);
+        a /= t;
+        b /= t;
+        c /= t;
+
+        return {a, b, c};
     }
 }

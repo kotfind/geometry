@@ -37,15 +37,18 @@ void GeometryItem::remove() {
 void GeometryItem::update() {
     prepareGeometryChange();
 
-    obj.reset(
-        static_cast<GeometryObject*>(
-            gen->getGeometryObject()->clone()
-        )
-    );
-    if (obj) {
+    if (auto genObj = gen->getGeometryObject()) {
+        obj.reset(
+            static_cast<GeometryObject*>(
+                genObj->clone()
+            )
+        );
+
         obj->transform(
             gen->getEngine()->getGeometry()->getTransformation()
         );
+    } else {
+        obj.reset(nullptr);
     }
 }
 
