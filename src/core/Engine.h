@@ -89,6 +89,9 @@ class Engine : public QObject {
 
         const AbstractGeometry* getActiveGeometry() const;
         void setActiveGeometry(const QString& name);
+        void setActiveGeometry(const AbstractGeometry* g);
+
+        QList<const AbstractGeometry*> getAllGeometries() const;
 
         AbstractPoint* makeUntransformedPoint(const QPointF& pos);
 

@@ -116,15 +116,21 @@ void MainWindow::createUi() {
 void MainWindow::createFileMenu() {
     auto* menu = menuBar()->addMenu(tr("File"));
 
-    auto* newAction = new QAction(tr("New"), this);
-    newAction->setShortcut(Qt::CTRL | Qt::Key_N);
-    connect(
-        newAction,
-        &QAction::triggered,
-        this,
-        &MainWindow::onNewActionTriggered
-    );
-    menu->addAction(newAction);
+    for (const auto* geom : engine->getAllGeometries()) {
+        auto* newAction = new QAction(
+            tr("New %1").arg(geom->getName()),
+            this
+        );
+        newAction->setData(QVariant::fromValue(geom));
+        // newAction->setShortcut(Qt::CTRL | Qt::Key_N);
+        connect(
+            newAction,
+            &QAction::triggered,
+            this,
+            &MainWindow::onNewActionTriggered
+        );
+        menu->addAction(newAction);
+    }
 
     auto* saveAction = new QAction(tr("Save"), this);
     saveAction->setShortcut(Qt::CTRL | Qt::Key_S);
@@ -253,7 +259,12 @@ void MainWindow::onNewActionTriggered() {
         onSaveActionTriggered();
     }
 
+    auto* action = static_cast<QAction*>(sender());
+    auto* geom = action->data().value<const AbstractGeometry*>();
+
+    scene->clear();
     engine->clear();
+    engine->setActiveGeometry(geom);
     openedFileName = "";
     updateTitle();
 }

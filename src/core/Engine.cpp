@@ -390,6 +390,20 @@ void Engine::setActiveGeometry(const QString& name) {
     throw std::runtime_error("Geometry " + name.toStdString() + " was not loaded.");
 }
 
+void Engine::setActiveGeometry(const AbstractGeometry* g) {
+    auto i = geoms.indexOf(g);
+    assert(i != -1);
+    geom = geoms[i];
+}
+
+QList<const AbstractGeometry*> Engine::getAllGeometries() const {
+    QList<const AbstractGeometry*> ans;
+    for (auto* g : geoms) {
+        ans << g;
+    }
+    return ans;
+}
+
 AbstractPoint* Engine::makeUntransformedPoint(const QPointF& pos) {
     auto pt = getActiveGeometry()->makePoint(pos);
     if (!pt) return nullptr;
