@@ -23,8 +23,8 @@ namespace hyperbolic::impl {
         private:
             // Transformation is stored as mobius transformation
             // for poincare disk
-            double phi = 0;
             std::complex<double> z0 = 0;
+            double phi = 0;
 
             static constexpr double scrollSpeed = 5e-3;
             static constexpr double rotationSpeed = 3e-3;

@@ -108,10 +108,7 @@ void Engine::zoom(double v, const QPointF& zoomCenter) {
 QJsonObject Engine::toJson() const {
     QJsonObject json;
 
-    // FIXME
-    /*
-    json["transformation"] = transformation.toJson();
-    */
+    json["transformation"] = geom->getTransformation()->toJson();
 
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
@@ -187,12 +184,9 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Engine::fromJson(const QJsonObject& json) {
-    // FIXME
-    /*
-    transformation = AbstractTransformation::fromJson(
+    geom->getTransformation()->fromJson(
         getOrThrow(json["transformation"]).toObject()
     );
-    */
 
     const auto& jsonGens = getOrThrow(json["gens"]).toArray();
     const auto order = getGeneratorLoadOrder(jsonGens);

@@ -7,6 +7,7 @@
 
 #include <math.h>
 #include <complex>
+#include <QJsonObject>
 
 using namespace std::complex_literals;
 
@@ -68,11 +69,21 @@ namespace hyperbolic::impl {
     }
 
     QJsonObject Transformation::toJson() const {
-        // FIXME
+        QJsonObject json;
+
+        json["Re_z0"] = std::real(z0);
+        json["Im_z0"] = std::imag(z0);
+        json["phi"] = phi;
+
+        return json;
     }
 
     void Transformation::fromJson(const QJsonObject& json) {
-        // FIXME
+        auto Re_z0 = getOrThrow(json["Re_z0"]).toDouble();
+        auto Im_z0 = getOrThrow(json["Im_z0"]).toDouble();
+        z0 = Re_z0 + 1i * Im_z0;
+
+        phi = getOrThrow(json["phi"]).toDouble();
     }
 
     void Transformation::transform(AbstractPoint* pt_) const {
