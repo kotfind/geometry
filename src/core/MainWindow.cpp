@@ -245,7 +245,7 @@ QMessageBox::StandardButton MainWindow::askForSave(bool addCancelButton) {
 }
 
 QString MainWindow::getFileNameFilter() const {
-    return tr("AbstractGeometry file (*%1)").arg(fileExtension);
+    return tr("Geometry file (*%1)").arg(fileExtension);
 }
 
 void MainWindow::onNewActionTriggered() {
