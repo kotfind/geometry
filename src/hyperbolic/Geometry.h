@@ -5,9 +5,10 @@
 #include "core/AbstractGeometry.h"
 #include "core/SectionMaster.h"
 
-#include <memory>
+#include "util/TR.h"
 
-class QGraphicsEllipseItem;
+#include <memory>
+#include <QGraphicsEllipseItem>
 
 namespace hyperbolic {
     class Geometry : public AbstractGeometry {
@@ -23,6 +24,8 @@ namespace hyperbolic {
 
             QGraphicsItem* getGraphicsItem() const override;
 
+            QString getName() const override { return TR("Hyperbolic"); }
+
         private:
             // Is called from c'tor
             // Is defined in functionList.cpp
@@ -31,6 +34,6 @@ namespace hyperbolic {
             std::unique_ptr<impl::Transformation> transformation;
             std::unique_ptr<SectionMaster> sectionMaster;
 
-            QGraphicsEllipseItem* absoluteCircleItem;
+            std::unique_ptr<QGraphicsEllipseItem> absoluteCircleItem;
     };
 }

@@ -69,38 +69,13 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     // -------------------- Special Section --------------------
 
-    specialSection->makeEditMode(
-        EditMode::Type::MOVE,
-        TR("Move"),
-        QIcon(QIcon(":none.svg")),
-        TR(
-            "Drag any free object with mouse to move it. "
-            "Use middle mouse button to move around scene."
-        )
-    );
-
-    specialSection->makeEditMode(
-        EditMode::Type::HIDE,
-        TR("Hide/Show"),
-        QIcon(QIcon(":none.svg")),
-        TR("Click on any object to toggle it's visibility.")
-    );
-
-    specialSection->makeEditMode(
-        EditMode::Type::REMOVE,
-        TR("Remove"),
-        QIcon(QIcon(":none.svg")),
-        TR("Click on any object to delete it.")
-    );
+    specialSection->addEditMode(EditMode::get(EditMode::Type::MOVE));
+    specialSection->addEditMode(EditMode::get(EditMode::Type::HIDE));
+    specialSection->addEditMode(EditMode::get(EditMode::Type::REMOVE));
 
     // -------------------- Point Section --------------------
 
-    pointSection->makeEditMode(
-        EditMode::Type::CREATE_POINT,
-        TR("Create"),
-        QIcon(QIcon(":none.svg")),
-        TR("Click on the canvas to create a point.")
-    );
+    pointSection->addEditMode(EditMode::get(EditMode::Type::CREATE_POINT));
 
     pointSection->makeFunction(
         "Intersect",

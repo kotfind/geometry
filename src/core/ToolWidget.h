@@ -12,20 +12,15 @@ class ToolWidget : public QTabWidget {
     Q_OBJECT
 
     public:
-        ToolWidget(
-            const QHash<const EditMode*, QAction*>& modeToAction,
-            const QHash<const Function*, QAction*>& funcToAction,
-            const SectionMaster* sectionMaster,
-            QWidget* parent = nullptr
-        );
+        ToolWidget(QWidget* parent = nullptr);
 
-    private:
-        void createUi(
+        void update(
             const QHash<const EditMode*, QAction*>& modeToAction,
             const QHash<const Function*, QAction*>& funcToAction,
             const SectionMaster* sectionMaster
         );
 
+    private:
         static const int iconWidth = 50;
         static const int buttonWidth = 100;
 };

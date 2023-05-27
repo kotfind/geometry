@@ -7,21 +7,22 @@
 #include <QGridLayout>
 #include <QToolButton>
 
-ToolWidget::ToolWidget(
-    const QHash<const EditMode*, QAction*>& modeToAction,
-    const QHash<const Function*, QAction*>& funcToAction,
-    const SectionMaster* sectionMaster,
-    QWidget* parent
-) : QTabWidget(parent)
-{
-    createUi(modeToAction, funcToAction, sectionMaster);
-}
+ToolWidget::ToolWidget(QWidget* parent)
+  : QTabWidget(parent)
+{}
 
-void ToolWidget::createUi(
+void ToolWidget::update(
     const QHash<const EditMode*, QAction*>& modeToAction,
     const QHash<const Function*, QAction*>& funcToAction,
     const SectionMaster* sectionMaster
 ) {
+    // Clear tabs
+    while (auto* tab = widget(0)) {
+        tab->deleteLater();
+        removeTab(0);
+    }
+
+    // Create tabs
     for (auto* section : sectionMaster->getSections()) {
         QList<QAction*> actions;
         for (auto mode : section->getModes()) {

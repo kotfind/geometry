@@ -18,6 +18,9 @@ class Scene : public QGraphicsScene {
     public:
         Scene(Engine* engine, QObject* parent = nullptr);
 
+        // Same as clear but items are not deleted
+        void detachAll();
+
     private:
         GeometryGenerator* getFreeOrRestrictedGeneratorAt(const QPointF& pos) const;
         GeometryGenerator* getDependantGeneratorAt(const QPointF& pos) const;

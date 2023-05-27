@@ -17,6 +17,13 @@ class EditMode {
             count
         };
 
+        EditMode(
+            Type type,
+            const QString& name,
+            const QIcon& icon,
+            const QString& description
+        );
+
         const QString& getName() const;
         const QIcon& getIcon() const;
         const QString& getDescription() const;
@@ -25,22 +32,12 @@ class EditMode {
         static EditMode* get(Type);
 
     private:
-        // Is called by Section::makeMode
-        EditMode(
-            Type type,
-            const QString& name,
-            const QIcon& icon,
-            const QString& description
-        );
-
         const QString name;
         const QIcon icon;
         const QString description;
         const Type type;
 
         static EditMode* modes[static_cast<int>(Type::count)];
-
-        static EditMode functionEditMode;
 
     friend Section;
 };

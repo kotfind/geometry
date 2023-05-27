@@ -22,7 +22,7 @@ class Engine : public QObject {
     Q_OBJECT
 
     public:
-        Engine(std::unique_ptr<AbstractGeometry> geom, QObject* parent = nullptr);
+        Engine(const QList<AbstractGeometry*>& geoms, QObject* parent = nullptr);
         ~Engine();
 
         template<typename GenT, typename... Args>
@@ -87,7 +87,11 @@ class Engine : public QObject {
         QList<RealGenerator*> getRealGenerators() const;
         QList<GeometryGenerator*> getGeomeryGenerators() const;
 
-        const AbstractGeometry* getGeometry() const;
+        const AbstractGeometry* getActiveGeometry() const;
+        void setActiveGeometry(const QString& name);
+        void setActiveGeometry(const AbstractGeometry* geom);
+
+        QList<const AbstractGeometry*> getAllGeometries() const;
 
         AbstractPoint* makeUntransformedPoint(const QPointF& pos);
 
@@ -111,7 +115,8 @@ class Engine : public QObject {
         const Function* activeFunction = nullptr;
         QList<Generator*> selectedFuncArgs;
 
-        std::unique_ptr<AbstractGeometry> geom;
+        QList<AbstractGeometry*> geoms;
+        AbstractGeometry* geom;
 
     signals:
         void generatorChanged(Generator*);
