@@ -13,7 +13,7 @@ namespace euclidian::impl {
 
     void Transformation::move(const AbstractPoint* from, const AbstractPoint* to) {
         auto delta = *static_cast<const Point*>(from) - *static_cast<const Point*>(to);
-        center += delta / scale;
+        center -= delta / scale;
     }
 
     void Transformation::zoom(double v, const QPointF& zoomCenter) {
