@@ -3,5 +3,6 @@
 #include "AbstractGeometry.h"
 
 #include <memory>
+#include <QList>
 
-int run(int argc, char** argv, std::unique_ptr<AbstractGeometry> geom);
+int run(int argc, char** argv, const QList<AbstractGeometry*>& geoms);

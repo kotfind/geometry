@@ -19,9 +19,7 @@ class Section {
             return func;
         }
 
-        template <typename... Args>
-        const EditMode* makeEditMode(Args&&... args) {
-            auto* mode = new EditMode(std::forward<Args>(args)...);
+        const EditMode* addEditMode(const EditMode* mode) {
             modes << mode;
             return mode;
         }

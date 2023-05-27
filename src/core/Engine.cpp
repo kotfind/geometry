@@ -31,9 +31,10 @@
 #include <functional>
 #include <QMessageBox>
 
-Engine::Engine(std::unique_ptr<AbstractGeometry> geom, QObject* parent)
+Engine::Engine(const QList<AbstractGeometry*>& geoms, QObject* parent)
   : QObject(parent),
-    geom(std::move(geom))
+    geoms(geoms),
+    geom(geoms[0])
 {}
 
 Engine::~Engine() {
@@ -84,7 +85,7 @@ void Engine::recalcAllItems() {
 void Engine::scroll(const QPointF& delta) {
     setChanged();
 
-    geom->getTransformation()->scroll(delta);
+    getActiveGeometry()->getTransformation()->scroll(delta);
 
     recalcAllItems();
 }
@@ -92,7 +93,7 @@ void Engine::scroll(const QPointF& delta) {
 void Engine::move(const AbstractPoint* from, const AbstractPoint* to) {
     setChanged();
 
-    geom->getTransformation()->move(from, to);
+    getActiveGeometry()->getTransformation()->move(from, to);
 
     recalcAllItems();
 }
@@ -100,7 +101,7 @@ void Engine::move(const AbstractPoint* from, const AbstractPoint* to) {
 void Engine::zoom(double v, const QPointF& zoomCenter) {
     setChanged();
 
-    geom->getTransformation()->zoom(v, zoomCenter);
+    getActiveGeometry()->getTransformation()->zoom(v, zoomCenter);
 
     recalcAllItems();
 }
@@ -108,7 +109,9 @@ void Engine::zoom(double v, const QPointF& zoomCenter) {
 QJsonObject Engine::toJson() const {
     QJsonObject json;
 
-    json["transformation"] = geom->getTransformation()->toJson();
+    // TODO: Save geom name
+
+    json["transformation"] = getActiveGeometry()->getTransformation()->toJson();
 
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
@@ -184,7 +187,7 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Engine::fromJson(const QJsonObject& json) {
-    geom->getTransformation()->fromJson(
+    getActiveGeometry()->getTransformation()->fromJson(
         getOrThrow(json["transformation"]).toObject()
     );
 
@@ -194,7 +197,7 @@ void Engine::fromJson(const QJsonObject& json) {
     gens.resize(jsonGens.size(), nullptr);
     for (int i : order) {
         gens[i] = Generator::fromJson(
-            geom.get(),
+            getActiveGeometry(),
             jsonGens[i].toObject(),
             gens
         );
@@ -218,7 +221,7 @@ void Engine::load(const QString& fileName) {
 }
 
 void Engine::clear() {
-    geom->getTransformation()->clear();
+    getActiveGeometry()->getTransformation()->clear();
 
     while (!gens.isEmpty()) {
         removeGenerator(gens.first());
@@ -338,7 +341,7 @@ void Engine::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
     auto* func = getActiveFunction();
     for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
         auto* gen = makeGeometryGenerator(
-            geom.get(),
+            getActiveGeometry(),
             func,
             selectedFuncArgs,
             funcResNum
@@ -372,16 +375,27 @@ void Engine::processRealFuncArg(QGraphicsScene* scene) {
     selectFuncArg(var, scene);
 }
 
-const AbstractGeometry* Engine::getGeometry() const {
-    return geom.get();
+const AbstractGeometry* Engine::getActiveGeometry() const {
+    return geom;
+}
+
+void Engine::setActiveGeometry(const QString& name) {
+    for (auto* g : geoms) {
+        if (g->getName() == name) {
+            geom = g;
+            return;
+        }
+    }
+
+    throw std::runtime_error("Geometry " + name.toStdString() + " was not loaded.");
 }
 
 AbstractPoint* Engine::makeUntransformedPoint(const QPointF& pos) {
-    auto pt = getGeometry()->makePoint(pos);
+    auto pt = getActiveGeometry()->makePoint(pos);
     if (!pt) return nullptr;
 
     pt->untransform(
-        getGeometry()->getTransformation()
+        getActiveGeometry()->getTransformation()
     );
 
     return pt;

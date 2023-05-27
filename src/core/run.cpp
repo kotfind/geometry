@@ -7,10 +7,10 @@
 
 class AbstractGeometry;
 
-int run(int argc, char** argv, std::unique_ptr<AbstractGeometry> geom) {
+int run(int argc, char** argv, const QList<AbstractGeometry*>& geoms) {
     QApplication app(argc, argv);
 
-    Engine engine(std::move(geom));
+    Engine engine(geoms);
 
     MainWindow master(&engine);
     master.show();

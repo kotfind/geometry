@@ -10,9 +10,6 @@ Section::~Section() {
     for (auto* func : functions) {
         delete func;
     }
-    for (auto* mode : modes) {
-        delete mode;
-    }
 }
 
 const QString& Section::getName() const {

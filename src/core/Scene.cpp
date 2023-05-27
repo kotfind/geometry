@@ -21,7 +21,7 @@ Scene::Scene(Engine* engine, QObject* parent)
 {
     setSceneRect(engine->getSceneRect());
 
-    if (auto* item = engine->getGeometry()->getGraphicsItem()) {
+    if (auto* item = engine->getActiveGeometry()->getGraphicsItem()) {
         addItem(item);
     }
 }
@@ -51,14 +51,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
             if (auto* restrictor = getDependantGeneratorAt(pos)) {
                 // Make Restrcted Generator
                 gen = engine->makeGeometryGenerator(
-                    engine->getGeometry(),
+                    engine->getActiveGeometry(),
                     restrictor
                 );
                 gen->setPos(pt.get());
             } else {
                 // Make Free Generator
                 gen = engine->makeGeometryGenerator(
-                    engine->getGeometry(),
+                    engine->getActiveGeometry(),
                     std::move(pt)
                 );
             }
@@ -171,7 +171,7 @@ GeometryGenerator* Scene::getGeneratorAtHelper(
 ) const {
     auto itemList = items(pos);
     for (auto* item_ : itemList) {
-        if (item_ == engine->getGeometry()->getGraphicsItem()) continue;
+        if (item_ == engine->getActiveGeometry()->getGraphicsItem()) continue;
 
         auto* item = static_cast<GeometryItem*>(item_);
         if (item->isHidden() && !allowHidden) continue;

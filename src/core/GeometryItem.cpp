@@ -45,7 +45,7 @@ void GeometryItem::update() {
         );
 
         obj->transform(
-            gen->getEngine()->getGeometry()->getTransformation()
+            gen->getEngine()->getActiveGeometry()->getTransformation()
         );
     } else {
         obj.reset(nullptr);

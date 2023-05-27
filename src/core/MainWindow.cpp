@@ -69,7 +69,7 @@ void MainWindow::createModeAndFuncActions() {
     toolActionGroup->setExclusive(true);
     toolActionGroup->setExclusionPolicy(QActionGroup::ExclusionPolicy::Exclusive);
 
-    for (auto* section : engine->getGeometry()->getSectionMaster()->getSections()) {
+    for (auto* section : engine->getActiveGeometry()->getSectionMaster()->getSections()) {
         for (auto mode : section->getModes()) {
             auto* action = new QAction(
                 mode->getIcon(),
@@ -160,7 +160,7 @@ void MainWindow::createFileMenu() {
 void MainWindow::createToolsMenu() {
     menuBar()->addAction(new QAction("|", this)); // Separator
 
-    for (auto* section : engine->getGeometry()->getSectionMaster()->getSections()) {
+    for (auto* section : engine->getActiveGeometry()->getSectionMaster()->getSections()) {
         auto* menu = menuBar()->addMenu(section->getName());
 
         for (auto mode : section->getModes()) {
@@ -175,13 +175,13 @@ void MainWindow::createToolsMenu() {
 }
 
 void MainWindow::createDocks() {
-    toolInfoWidget = new ToolInfoWidget(engine->getGeometry(), this);
+    toolInfoWidget = new ToolInfoWidget(engine->getActiveGeometry(), this);
     createDock(toolInfoWidget, tr("Tool Info"), Qt::LeftDockWidgetArea);
 
     toolWidget = new ToolWidget(
         modeToAction,
         funcToAction,
-        engine->getGeometry()->getSectionMaster(),
+        engine->getActiveGeometry()->getSectionMaster(),
         this
     );
     createDock(toolWidget, tr("Tools"), Qt::LeftDockWidgetArea);
