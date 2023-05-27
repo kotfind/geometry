@@ -20,10 +20,6 @@ Scene::Scene(Engine* engine, QObject* parent)
     engine(engine)
 {
     setSceneRect(engine->getSceneRect());
-
-    if (auto* item = engine->getActiveGeometry()->getGraphicsItem()) {
-        addItem(item);
-    }
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {

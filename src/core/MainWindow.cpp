@@ -26,6 +26,7 @@
 #include <QTreeView>
 #include <QTableView>
 #include <QActionGroup>
+#include <QGraphicsItem>
 
 MainWindow::MainWindow(Engine* engine)
   : engine(engine)
@@ -314,6 +315,14 @@ void MainWindow::closeEvent(QCloseEvent* e) {
 }
 
 void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
+    // Remove geometry graphics item from scene
+    // so it won't be deleted
+    if (auto* item = engine->getActiveGeometry()->getGraphicsItem()) {
+        if (item->scene()) {
+            scene->removeItem(item);
+        }
+    }
+
     scene->clear();
 
     engine->setActiveGeometry(geom);
@@ -357,6 +366,11 @@ void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
     modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
     engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
     toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
+
+    // Add geometry graphics item
+    if (auto* item = engine->getActiveGeometry()->getGraphicsItem()) {
+        scene->addItem(item);
+    }
 }
 
 
