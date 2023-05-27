@@ -9,7 +9,6 @@
 #include "util/math.h"
 #include "util/TR.h"
 
-#include <QGraphicsEllipseItem>
 #include <QPen>
 
 using EPoint = euclidian::impl::Point;
@@ -23,7 +22,7 @@ namespace hyperbolic {
         ),
         sectionMaster(makeSectionMaster())
     {
-        absoluteCircleItem = new QGraphicsEllipseItem(-1, -1, 2, 2);
+        absoluteCircleItem = std::make_unique<QGraphicsEllipseItem>(-1, -1, 2, 2);
         auto pen = absoluteCircleItem->pen();
         pen.setWidth(2);
         pen.setCosmetic(true);
@@ -61,6 +60,6 @@ namespace hyperbolic {
     }
 
     QGraphicsItem* Geometry::getGraphicsItem() const {
-        return absoluteCircleItem;
+        return absoluteCircleItem.get();
     }
 }

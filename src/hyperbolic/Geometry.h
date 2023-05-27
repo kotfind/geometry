@@ -8,8 +8,7 @@
 #include "util/TR.h"
 
 #include <memory>
-
-class QGraphicsEllipseItem;
+#include <QGraphicsEllipseItem>
 
 namespace hyperbolic {
     class Geometry : public AbstractGeometry {
@@ -35,6 +34,6 @@ namespace hyperbolic {
             std::unique_ptr<impl::Transformation> transformation;
             std::unique_ptr<SectionMaster> sectionMaster;
 
-            QGraphicsEllipseItem* absoluteCircleItem;
+            std::unique_ptr<QGraphicsEllipseItem> absoluteCircleItem;
     };
 }

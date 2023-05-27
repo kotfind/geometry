@@ -26,6 +26,8 @@ target_sources(geometry PRIVATE
 )
 
 target_link_libraries(geometry PRIVATE
+    Qt6::Widgets
+
     core
     euclidian
     hyperbolic

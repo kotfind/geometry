@@ -207,8 +207,9 @@ void MainWindow::onNewActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* geom = action->data().value<const AbstractGeometry*>();
 
-    openedFileName = "";
     setActiveGeometry(geom);
+    engine->setChanged(false);
+    openedFileName = "";
     updateTitle();
 }
 
@@ -301,6 +302,13 @@ void MainWindow::updateTitle() {
 
 void MainWindow::closeEvent(QCloseEvent* e) {
     if (!engine->isChanged()) {
+        // Clear scene becuase items are deleted by GeometryGenerators
+        // and geometryItem is deleted by Geometry
+        while (!scene->items().isEmpty()) {
+            auto* item = scene->items()[0];
+            scene->removeItem(item);
+        }
+        engine->clear();
         e->accept();
         return;
     }
@@ -310,6 +318,12 @@ void MainWindow::closeEvent(QCloseEvent* e) {
             onSaveActionTriggered();
 
         case QMessageBox::Discard:
+            // Clear scene becuase items are deleted by GeometryGenerators
+            // and geometryItem is deleted by Geometry
+            while (!scene->items().isEmpty()) {
+                auto* item = scene->items()[0];
+                scene->removeItem(item);
+            }
             engine->clear();
             e->accept();
             break;
@@ -321,14 +335,12 @@ void MainWindow::closeEvent(QCloseEvent* e) {
 }
 
 void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
-    // Remove geometry graphics item from scene
-    // so it won't be deleted
-    if (auto* item = geometryGraphicsItem) {
-        if (item->scene()) {
-            scene->removeItem(item);
-        }
+    // Clear scene becuase items are deleted by GeometryGenerators
+    // and geometryItem is deleted by Geometry
+    while (!scene->items().isEmpty()) {
+        auto* item = scene->items()[0];
+        scene->removeItem(item);
     }
-    scene->clear();
 
     engine->setActiveGeometry(geom);
     geometryGraphicsItem = engine->getActiveGeometry()->getGraphicsItem();
