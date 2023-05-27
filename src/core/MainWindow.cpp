@@ -265,6 +265,7 @@ void MainWindow::onOpenActionTriggered() {
         onSaveActionTriggered();
     }
 
+    scene->detachAll();
     engine->clear();
 
     auto fileName = QFileDialog::getOpenFileName(
@@ -302,12 +303,7 @@ void MainWindow::updateTitle() {
 
 void MainWindow::closeEvent(QCloseEvent* e) {
     if (!engine->isChanged()) {
-        // Clear scene becuase items are deleted by GeometryGenerators
-        // and geometryItem is deleted by Geometry
-        while (!scene->items().isEmpty()) {
-            auto* item = scene->items()[0];
-            scene->removeItem(item);
-        }
+        scene->detachAll();
         engine->clear();
         e->accept();
         return;
@@ -318,12 +314,7 @@ void MainWindow::closeEvent(QCloseEvent* e) {
             onSaveActionTriggered();
 
         case QMessageBox::Discard:
-            // Clear scene becuase items are deleted by GeometryGenerators
-            // and geometryItem is deleted by Geometry
-            while (!scene->items().isEmpty()) {
-                auto* item = scene->items()[0];
-                scene->removeItem(item);
-            }
+            scene->detachAll();
             engine->clear();
             e->accept();
             break;
@@ -335,13 +326,7 @@ void MainWindow::closeEvent(QCloseEvent* e) {
 }
 
 void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
-    // Clear scene becuase items are deleted by GeometryGenerators
-    // and geometryItem is deleted by Geometry
-    while (!scene->items().isEmpty()) {
-        auto* item = scene->items()[0];
-        scene->removeItem(item);
-    }
-
+    scene->detachAll();
     engine->setActiveGeometry(geom);
     geometryGraphicsItem = engine->getActiveGeometry()->getGraphicsItem();
 

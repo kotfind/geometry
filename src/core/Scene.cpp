@@ -22,6 +22,13 @@ Scene::Scene(Engine* engine, QObject* parent)
     setSceneRect(engine->getSceneRect());
 }
 
+void Scene::detachAll() {
+    while (!items().isEmpty()) {
+        auto* item = items()[0];
+        removeItem(item);
+    }
+}
+
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e) {
     auto pos = e->scenePos();
 
