@@ -9,6 +9,7 @@ namespace hyperbolic::impl {
         public:
             void scroll(const QPointF& delta) override;
             void move(const AbstractPoint* from, const AbstractPoint* to) override;
+            // Is actually used to rotate
             void zoom(double, const QPointF& zoomCenter) override;
 
             void clear() override;
@@ -18,5 +19,14 @@ namespace hyperbolic::impl {
 
             QJsonObject toJson() const override;
             void fromJson(const QJsonObject& json) override;
+
+        private:
+            // Transformation is stored as mobius transformation
+            // for poincare disk
+            double phi = 0;
+            std::complex<double> z0 = 0;
+
+            static constexpr double scrollSpeed = 5e-3;
+            static constexpr double rotationSpeed = 3e-3;
     };
 }
