@@ -21,6 +21,7 @@ class Engine;
 class VariableWidget;
 class QActionGroup;
 class AbstractGeometry;
+class QGraphicsItem;
 
 class MainWindow : public QMainWindow {
     public:
@@ -67,6 +68,8 @@ class MainWindow : public QMainWindow {
 
         VariableModel* varModel;
         VariableWidget* varWidget;
+
+        QGraphicsItem* geometryGraphicsItem = nullptr;
 
         static constexpr auto fileExtension = ".geom";
 

@@ -109,9 +109,8 @@ void Engine::zoom(double v, const QPointF& zoomCenter) {
 QJsonObject Engine::toJson() const {
     QJsonObject json;
 
-    // TODO: Save geom name
-
     json["transformation"] = getActiveGeometry()->getTransformation()->toJson();
+    json["geometryName"] = getActiveGeometry()->getName();
 
     QHash<Generator*, int> ids;
     for (int i = 0; i < gens.size(); ++i) {
@@ -187,6 +186,8 @@ static QList<int> getGeneratorLoadOrder(const QJsonArray& jsonGens) {
 }
 
 void Engine::fromJson(const QJsonObject& json) {
+    setActiveGeometry(getOrThrow(json["geometryName"]).toString());
+
     getActiveGeometry()->getTransformation()->fromJson(
         getOrThrow(json["transformation"]).toObject()
     );

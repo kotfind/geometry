@@ -63,6 +63,7 @@ MainWindow::MainWindow(Engine* engine)
     );
 
     setActiveGeometry(engine->getAllGeometries()[0]);
+    updateTitle();
 }
 
 void MainWindow::createUi() {
@@ -206,8 +207,8 @@ void MainWindow::onNewActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* geom = action->data().value<const AbstractGeometry*>();
 
-    setActiveGeometry(geom);
     openedFileName = "";
+    setActiveGeometry(geom);
     updateTitle();
 }
 
@@ -259,7 +260,11 @@ void MainWindow::onSaveAsActionTriggered() {
 }
 
 void MainWindow::onOpenActionTriggered() {
-    onNewActionTriggered();
+    if (engine->isChanged() && askForSave(false) == QMessageBox::Save) {
+        onSaveActionTriggered();
+    }
+
+    engine->clear();
 
     auto fileName = QFileDialog::getOpenFileName(
         this,
@@ -272,12 +277,13 @@ void MainWindow::onOpenActionTriggered() {
 
     try {
         engine->load(fileName);
+        setActiveGeometry(engine->getActiveGeometry()); // Geometry may have changed on load
         engine->populateScene(scene);
         openedFileName = fileName;
-
-        updateTitle();
         engine->setChanged(false);
+        updateTitle();
     } catch (const IOError& err) {
+        openedFileName = "";
         QMessageBox::critical(
             this,
             tr("Input/ Output error"),
@@ -317,15 +323,20 @@ void MainWindow::closeEvent(QCloseEvent* e) {
 void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
     // Remove geometry graphics item from scene
     // so it won't be deleted
-    if (auto* item = engine->getActiveGeometry()->getGraphicsItem()) {
+    if (auto* item = geometryGraphicsItem) {
         if (item->scene()) {
             scene->removeItem(item);
         }
     }
-
     scene->clear();
 
     engine->setActiveGeometry(geom);
+    geometryGraphicsItem = engine->getActiveGeometry()->getGraphicsItem();
+
+    // Add geometry graphics item (if needed)
+    if (auto* item = geometryGraphicsItem) {
+        scene->addItem(item);
+    }
 
     // Actions
     for (auto* action : toolActionGroup->actions()) {
@@ -366,13 +377,7 @@ void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
     modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
     engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
     toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
-
-    // Add geometry graphics item
-    if (auto* item = engine->getActiveGeometry()->getGraphicsItem()) {
-        scene->addItem(item);
-    }
 }
-
 
 void MainWindow::getModeAndFunctionActions(
     QHash<const EditMode*, QAction*>& modeToAction,
