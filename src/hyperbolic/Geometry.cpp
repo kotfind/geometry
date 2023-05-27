@@ -33,9 +33,13 @@ namespace hyperbolic {
     }
 
     AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
-        return le(len(pos), 1)
-            ? new Point(EPoint(pos))
-            : nullptr;
+        auto pt = EPoint(pos);
+
+        if (geq(len(pos), 0.999)) {
+            pt *= 0.999 / len(pos);
+        }
+
+        return new Point(pt);
     }
 
     const SectionMaster* Geometry::getSectionMaster() const {
