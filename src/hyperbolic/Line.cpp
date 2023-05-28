@@ -29,15 +29,15 @@ namespace hyperbolic::impl {
     }
 
     void Line::paint(QPainter* qp, const QColor& color) const {
-        std::unique_ptr<GeometryObject>(getEuclidian())->paint(qp, color);
+        toPoincare().paint(qp, color);
     }
 
     QRectF Line::boundingRect() const {
-        return std::unique_ptr<GeometryObject>(getEuclidian())->boundingRect();
+        return toPoincare().boundingRect();
     }
 
     QPainterPath Line::shape() const {
-        return std::unique_ptr<GeometryObject>(getEuclidian())->shape();
+        return toPoincare().shape();
     }
 
     void Line::transform(const AbstractTransformation* t) {
@@ -60,7 +60,7 @@ namespace hyperbolic::impl {
         return new Point();
     }
 
-    GeometryObject* Line::getEuclidian() const {
+    EArc Line::toPoincare() const {
         auto [a, b, c] = getABC();
         auto [p1_, p2_] = getIntersectionsWithAbsolute(a, b, c);
 
@@ -70,24 +70,17 @@ namespace hyperbolic::impl {
         auto ep1 = p1.toPoincare();
         auto ep2 = p2.toPoincare();
 
-        if (collinear(ep1, ep2, EPoint(0, 0), 0.01)) {
-            // Segment
-            return new ESegment(ansP1, ansP2);
-        } else {
-            // Arc
+        auto p = ep1.x + 1i * ep1.y;
+        auto q = ep2.x + 1i * ep2.y;
 
-            auto p = ep1.x + 1i * ep1.y;
-            auto q = ep2.x + 1i * ep2.y;
+        auto o_ = 
+            (p * (q * std::conj(q) + 1.) - q * (p * std::conj(p) + 1.)) /
+        // ---------------------------------------------------------------
+                    (p * std::conj(q) - q * std::conj(p));
 
-            auto o_ = 
-                (p * (q * std::conj(q) + 1.) - q * (p * std::conj(p) + 1.)) /
-            // ---------------------------------------------------------------
-                        (p * std::conj(q) - q * std::conj(p));
+        auto o = EPoint(std::real(o_), std::imag(o_));
 
-            auto o = EPoint(std::real(o_), std::imag(o_));
-
-            return new EArc(o, ansP1, ansP2);
-        }
+        return EArc(o, ansP1, ansP2);
     }
 
     std::tuple<double, double, double> Line::getABC() const {
