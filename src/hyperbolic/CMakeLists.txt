@@ -15,6 +15,7 @@ target_sources(hyperbolic
 
         Point.cpp
         Line.cpp
+        Circle.cpp
 )
 
 target_link_libraries(hyperbolic PRIVATE

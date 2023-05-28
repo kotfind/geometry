@@ -25,6 +25,10 @@ namespace hyperbolic::impl {
         y(y)
     {}
 
+    Point::Point(const QPointF& pos)
+      : Point(pos.x(), pos.y())
+    {}
+
     Point::Point(const EPoint& p)
     {
         fromPoincare(p);

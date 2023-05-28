@@ -11,6 +11,7 @@ namespace hyperbolic::impl {
         public:
             Point();
             Point(double x, double y);
+            Point(const QPointF& pos);
             // p is in poincare
             explicit Point(const euclidian::impl::Point& p);
 

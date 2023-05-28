@@ -2,10 +2,12 @@
 
 #include "Point.h"
 #include "Line.h"
+#include "Circle.h"
 
 #include "core/SectionMaster.h"
 #include "core/Section.h"
 #include "core/EditMode.h"
+#include "core/Real.h"
 
 #include "util/TR.h"
 #include "util/cramer.h"
@@ -26,6 +28,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
     auto* specialSection = master->makeSection(TR("Special"));
     auto* pointSection = master->makeSection(TR("Point"));
     auto* lineSection = master->makeSection(TR("Line"));
+    auto* circleSection = master->makeSection(TR("Circle"));
 
     // -------------------- Special Section --------------------
 
@@ -209,6 +212,28 @@ SectionMaster* Geometry::makeSectionMaster() const {
             auto [p1, p2] = getTwoPointsOnLine(d, e, f);
 
             return { new Line(p1, p2) };
+        }
+    );
+
+    // -------------------- Circle Section --------------------
+
+    circleSection->makeFunction(
+        "By Center And Radius",
+        QIcon(":none.svg"),
+        TR("Creates circle by its center and radius."),
+        ARGS {
+            {Point::Type, TR("Center")},
+            {Real::Type, TR("Radius")},
+        },
+        1,
+        DO {
+            const auto& o = *static_cast<const Point*>(objs[0]);
+            auto r = static_cast<const Real*>(objs[1])->value;
+
+            if (leq(r, 0))
+                return {};
+
+            return { new Circle(o, r) };
         }
     );
 
