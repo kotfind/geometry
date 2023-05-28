@@ -7,6 +7,7 @@
 #include "euclidian/Point.h"
 #include "euclidian/Line.h"
 #include "euclidian/Circle.h"
+#include "euclidian/Arc.h"
 
 #include <tuple>
 
@@ -15,6 +16,7 @@ namespace hyperbolic::impl {
     using EPoint = euclidian::impl::Point;
     using ELine = euclidian::impl::Line;
     using ECircle = euclidian::impl::Circle;
+    using EArc = euclidian::impl::Arc;
 
     class Line : public GeometryObject {
         public:
@@ -45,7 +47,11 @@ namespace hyperbolic::impl {
             Point p2;
 
         private:
-            // Retruns GeometryObject which is either ECircle or ELine
-            GeometryObject* getEuclidian() const;
+            // Retruns EArc which represents
+            // current line on poincare disk
+            EArc toPoincare() const;
     };
+
+    std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c);
+    std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c);
 }

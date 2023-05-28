@@ -50,6 +50,7 @@ namespace euclidian::impl {
     Point operator/(const Point& lhs, double rhs);
 
     double dot(const Point& lhs, const Point& rhs);
+    double cross(const Point& lhs, const Point& rhs);
 
     double dist(const Point& p1, const Point& p2);
     double len(const Point& v);

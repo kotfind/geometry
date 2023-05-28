@@ -139,6 +139,10 @@ namespace euclidian::impl {
         return lhs.x * rhs.x + lhs.y * rhs.y;
     }
 
+    double cross(const Point& lhs, const Point& rhs) {
+        return lhs.x * rhs.y - rhs.x * lhs.y;
+    }
+
     double dist(const Point& p1, const Point& p2) {
         return len(p1 - p2);
     }
