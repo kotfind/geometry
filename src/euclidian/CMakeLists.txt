@@ -16,6 +16,8 @@ target_sources(euclidian
         Point.cpp
         Line.cpp
         Circle.cpp
+        Segment.cpp
+        Arc.cpp
 )
 
 target_link_libraries(euclidian PRIVATE
