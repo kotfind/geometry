@@ -67,11 +67,18 @@ namespace euclidian::impl {
     }
 
     QPainterPath Arc::getPainterPath() const {
-        auto a = p1 - o;
-        auto b = p2 - o;
-        auto k = (4./3) * (sqrt(2) * len(a) * len(b) - sq(len(b))) / cross(a, b);
-        auto m1 = o + a + k * Point(-a.y, a.x);
-        auto m2 = o + b + k * Point(b.y, -b.x);
+        auto op1 = p1 - o;
+        auto op2 = p2 - o;
+
+        auto t1 = perp(norm(op1));
+        auto t2 = perp(norm(op2));
+
+        auto r = dist(o, p1);
+        auto a = atan2(cross(op1, op2), dot(op1, op2));
+        auto l = 4. / 3 * r * tan(a / 4);
+
+        auto m1 = p1 + l * t1;
+        auto m2 = p2 - l * t2;
 
         QPainterPath path;
         path.moveTo(
@@ -82,6 +89,7 @@ namespace euclidian::impl {
             m2.getPos(),
             p2.getPos()
         );
+
         return path;
     }
 }
