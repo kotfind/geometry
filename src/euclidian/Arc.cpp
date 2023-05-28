@@ -14,6 +14,7 @@
 #include <math.h>
 #include <QPointF>
 #include <memory>
+#include <QPainterPathStroker>
 
 namespace euclidian::impl {
     Arc::Arc() {}
@@ -42,8 +43,9 @@ namespace euclidian::impl {
     }
 
     QPainterPath Arc::shape() const {
-        // FIXME
-        return getPainterPath();
+        QPainterPathStroker stroker;
+        stroker.setWidth(paintWidth);
+        return stroker.createStroke(getPainterPath());
     }
 
     void Arc::transform(const AbstractTransformation* t) {
