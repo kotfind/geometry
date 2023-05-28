@@ -18,46 +18,6 @@
 using namespace hyperbolic;
 using namespace hyperbolic::impl;
 
-std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c) {
-    Point H1, H2;
-
-    if (eq(b, 0)) {
-        auto x = H1.x = H2.x = -c / a;
-        H1.y = sqrt(1 - sq(x));
-        H2.y = -H1.y;
-    } else {
-        int n;
-        solveSqEq(
-            sq(a) + sq(b),
-            2 * a * c,
-            sq(c) - sq(b),
-            n,
-            H1.x,
-            H2.x
-        );
-        assert(n == 2);
-
-        H1.y = -(a * H1.x + c) / b;
-        H2.y = -(a * H2.x + c) / b;
-    }
-
-    return {H1, H2};
-}
-
-std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c) {
-    // H1 and H2 are intersections of line and absolute
-    // OM is perpendicular from O(0, 0) on line
-    // Ans points are midpoins of M and Hs
-
-    auto M = Point(a, b) * (-c / (sq(a) + sq(b)));
-    auto [H1, H2] = getIntersectionsWithAbsolute(a, b, c);
-
-    return {
-        (H1 + M) / 2,
-        (H2 + M) / 2
-    };
-}
-
 SectionMaster* Geometry::makeSectionMaster() const {
     auto* master = new SectionMaster;
 
