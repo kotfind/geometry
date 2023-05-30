@@ -57,12 +57,12 @@ void solveSqEq(
 ) {
     double D = b * b - 4 * a * c;
 
-    if (le(D, 0)) {
+    if (D < -sq(eps)) {
         n = 0;
         return;
     }
 
-    if (eq(D, 0)) {
+    if (abs(D) < sq(eps)) {
         n = 1;
         x1 = - b / (2 * a);
         return;

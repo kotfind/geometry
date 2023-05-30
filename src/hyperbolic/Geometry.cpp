@@ -34,8 +34,8 @@ namespace hyperbolic {
     AbstractPoint* Geometry::makePoint(const QPointF& pos) const {
         auto pt = EPoint(pos);
 
-        if (geq(len(pos), 0.999)) {
-            pt *= 0.999 / len(pos);
+        if (geq(len(pos), 0.99)) {
+            pt *= 0.99 / len(pos);
         }
 
         return new Point(pt);
