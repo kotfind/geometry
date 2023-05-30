@@ -5,6 +5,7 @@
 #include "core/AbstractTransformation.h"
 
 #include "util/math.h"
+#include "util/cramer.h"
 
 #include <cassert>
 #include <QPainter>
@@ -141,5 +142,48 @@ namespace hyperbolic::impl {
             (H1 + M) / 2,
             (H2 + M) / 2
         };
+    }
+
+    Line perp(const Line& l, const Point& p) {
+        // Two lines with equations
+        //     Ax + By + C = 0
+        // and
+        //     Dx + Ey + F = 0
+        // are perpendicular when
+        //     AD + BE = CF
+
+        auto x = p.x;
+        auto y = p.y;
+        auto [a, b, c] = l.getABC();
+
+        auto d = c * y + b;
+        auto e = -(c * x + a);
+        auto f = -(d * x + e * y);
+
+        auto [p1, p2] = getTwoPointsOnLine(d, e, f);
+
+        return Line(p1, p2);
+    }
+
+    Line perp(const Point& p, const Line& l) {
+        return perp(l, p);
+    }
+
+    std::optional<Point> intersect(const Line& l1, const Line& l2) {
+        auto [a1, b1, c1] = l1.getABC();
+        auto [a2, b2, c2] = l2.getABC();
+
+        auto cramerAns = cramer({
+            {a1, b1, -c1},
+            {a2, b2, -c2},
+        });
+
+        if (cramerAns.isEmpty()) return std::nullopt;
+
+        auto pt = Point(cramerAns[0], cramerAns[1]);
+
+        if (geq(sq(pt.x) + sq(pt.y), 1)) return std::nullopt;
+
+        return pt;
     }
 }

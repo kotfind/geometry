@@ -53,21 +53,13 @@ SectionMaster* Geometry::makeSectionMaster() const {
             const auto& l1 = *static_cast<const Line*>(objs[0]);
             const auto& l2 = *static_cast<const Line*>(objs[1]);
 
-            auto [a1, b1, c1] = l1.getABC();
-            auto [a2, b2, c2] = l2.getABC();
+            auto ans = intersect(l1, l2);
 
-            auto cramerAns = cramer({
-                {a1, b1, -c1},
-                {a2, b2, -c2},
-            });
-
-            if (cramerAns.isEmpty()) return {};
-
-            auto pt = Point(cramerAns[0], cramerAns[1]);
-
-            if (geq(sq(pt.x) + sq(pt.y), 1)) return {};
-
-            return { pt.clone() };
+            if (ans.has_value()) {
+                return { ans->clone() };
+            } else {
+                return {};
+            }
         }
     );
     
@@ -134,24 +126,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& l = *static_cast<const Line*>(objs[1]);
 
-            // Two lines with equations
-            //     Ax + By + C = 0
-            // and
-            //     Dx + Ey + F = 0
-            // are perpendicular when
-            //     AD + BE = CF
-
-            auto x = p.x;
-            auto y = p.y;
-            auto [a, b, c] = l.getABC();
-
-            auto d = c * y + b;
-            auto e = -(c * x + a);
-            auto f = -(d * x + e * y);
-
-            auto [p1, p2] = getTwoPointsOnLine(d, e, f);
-
-            return { new Line(p1, p2) };
+            return { perp(l, p).clone() };
         }
     );
 

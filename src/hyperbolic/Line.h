@@ -10,6 +10,7 @@
 #include "euclidian/Arc.h"
 
 #include <tuple>
+#include <optional>
 
 namespace hyperbolic::impl {
     class Point;
@@ -54,4 +55,9 @@ namespace hyperbolic::impl {
 
     std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c);
     std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c);
+
+    Line perp(const Line& l, const Point& p);
+    Line perp(const Point& p, const Line& l);
+
+    std::optional<Point> intersect(const Line& l1, const Line& l2);
 }
