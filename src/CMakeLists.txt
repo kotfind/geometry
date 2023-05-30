@@ -34,7 +34,7 @@ target_link_libraries(geometry PRIVATE
 )
 
 find_package(Doxygen)
-if (DOXYGEN_FOUND)
+if (DOXYGEN_FOUND AND GENERATE_DOCS)
     set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in)
     set(DOXYFILE_OUT ${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.out)
 
@@ -47,6 +47,4 @@ if (DOXYGEN_FOUND)
         COMMENT "Generating documentation with Doxygen"
         VERBATIM
     )
-else (DOXYGEN_FOUND)
-    message("Doxygen not found")
-endif (DOXYGEN_FOUND)
+endif ()
