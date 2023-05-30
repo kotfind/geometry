@@ -218,6 +218,28 @@ SectionMaster* Geometry::makeSectionMaster() const {
     // -------------------- Circle Section --------------------
 
     circleSection->makeFunction(
+        "By Center And Point",
+        QIcon(":none.svg"),
+        TR("Creates circle by center and point on it."),
+        ARGS {
+            {Point::Type, TR("Center")},
+            {Point::Type, TR("Point on circle")},
+        },
+        1,
+        DO {
+            const auto& o = *static_cast<const Point*>(objs[0]);
+            const auto& p = *static_cast<const Point*>(objs[1]);
+
+            if (o == p)
+                return {};
+
+            auto r = dist(o, p);
+
+            return { new Circle(o, r) };
+        }
+    );
+
+    circleSection->makeFunction(
         "By Center And Radius",
         QIcon(":none.svg"),
         TR("Creates circle by its center and radius."),

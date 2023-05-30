@@ -53,4 +53,6 @@ namespace hyperbolic::impl {
     Point operator*(const Point& lhs, double rhs);
     Point operator*(double lhs, const Point& rhs);
     Point operator/(const Point& lhs, double rhs);
+
+    double dist(const Point&, const Point&);
 }
