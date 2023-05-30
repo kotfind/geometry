@@ -61,10 +61,13 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 {a2, b2, -c2},
             });
 
-            if (cramerAns.isEmpty())
-                return {};
+            if (cramerAns.isEmpty()) return {};
 
-            return { new Point(cramerAns[0], cramerAns[1]) };
+            auto pt = Point(cramerAns[0], cramerAns[1]);
+
+            if (geq(sq(pt.x) + sq(pt.y), 1)) return {};
+
+            return { pt.clone() };
         }
     );
     
