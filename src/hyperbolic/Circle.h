@@ -62,4 +62,12 @@ namespace hyperbolic::impl {
         Point& p1,
         Point& p2
     );
+
+    void intersect(
+        const Circle& w1,
+        const Circle& w2,
+        int& n,
+        Point& p1,
+        Point& p2
+    );
 }

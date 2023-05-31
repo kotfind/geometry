@@ -169,4 +169,25 @@ namespace hyperbolic::impl {
     ) {
         intersect(l, w, n, p1, p2);
     }
+
+    void intersect(
+        const Circle& w1,
+        const Circle& w2,
+        int& n,
+        Point& p1,
+        Point& p2
+    ) {
+        auto [a, b, c] = w1.getABC();
+        auto [d, e, f] = w2.getABC();
+
+        auto [lp1, lp2] = getTwoPointsOnLine(
+            d - a,
+            e - b,
+            f - c
+        );
+
+        auto l = Line(lp1, lp2);
+
+        intersect(w1, l, n, p1, p2);
+    }
 }

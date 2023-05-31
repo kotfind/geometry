@@ -65,8 +65,20 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 const auto& w1 = *static_cast<const Circle*>(objs[0]);
                 const auto& w2 = *static_cast<const Circle*>(objs[1]);
 
-                // TODO
+                int n;
+                Point p1, p2;
+                intersect(w1, w2, n, p1, p2);
 
+                switch (n) {
+                    case 2:
+                        return { new Point(p1), new Point(p2) };
+
+                    case 1:
+                        return { new Point(p1) };
+
+                    default:
+                        return {};
+                }
             } else {
                 const Line* lPtr;
                 const Circle* wPtr;
