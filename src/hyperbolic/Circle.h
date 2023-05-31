@@ -46,4 +46,20 @@ namespace hyperbolic::impl {
             // current circle on poincare disk
             ECircle toPoincare() const;
     };
+
+    void intersect(
+        const Line& l,
+        const Circle& w,
+        int& n,
+        Point& p1,
+        Point& p2
+    );
+
+    void intersect(
+        const Circle& w,
+        const Line& l,
+        int& n,
+        Point& p1,
+        Point& p2
+    );
 }

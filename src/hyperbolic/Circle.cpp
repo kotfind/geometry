@@ -109,4 +109,64 @@ namespace hyperbolic::impl {
             ans[2]
         };
     }
+
+    void intersect(
+        const Line& l,
+        const Circle& w,
+        int& n,
+        Point& p1,
+        Point& p2
+    ) {
+        auto [a, b, c] = l.getABC();
+        auto [d, e, f] = w.getABC();
+
+        if (eq(b, 0)) {
+            auto x = -c / a;
+            int N;
+            double y1;
+            double y2;
+
+            solveSqEq(
+                sq(a) * (sq(e) + 1),
+                2 * a * e * (a * f - d * c),
+                sq(a * f - d * c) - sq(a) + sq(c),
+                N,
+                y1,
+                y2
+            );
+
+            n = N;
+            p1 = Point(x, y1);
+            p2 = Point(x, y2);
+        } else {
+            int N;
+            double x1;
+            double x2;
+            solveSqEq(
+                sq(b * d - a * e) + sq(a) + sq(b),
+                2 * (a * c + (b * d - a * e) * (b * f - e * c)),
+                sq(b * f - e * c) - sq(b) + sq(c),
+                N,
+                x1,
+                x2
+            );
+
+            auto y1 = -(a * x1 + c) / b;
+            auto y2 = -(a * x2 + c) / b;
+
+            n = N;
+            p1 = Point(x1, y1);
+            p2 = Point(x2, y2);
+        }
+    }
+
+    void intersect(
+        const Circle& w,
+        const Line& l,
+        int& n,
+        Point& p1,
+        Point& p2
+    ) {
+        intersect(l, w, n, p1, p2);
+    }
 }

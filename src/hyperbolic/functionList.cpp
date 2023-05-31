@@ -43,22 +43,58 @@ SectionMaster* Geometry::makeSectionMaster() const {
     pointSection->makeFunction(
         "Intersect",
         QIcon(":none.svg"),
-        TR("Intersects two lines."),
+        TR("Intersects two objects."),
         ARGS {
-            {Line::Type, TR("First line")},
-            {Line::Type, TR("Second line")},
+            {Line::Type | Circle::Type, TR("First object")},
+            {Line::Type | Circle::Type, TR("Second object")},
         },
-        1,
+        2,
         DO {
-            const auto& l1 = *static_cast<const Line*>(objs[0]);
-            const auto& l2 = *static_cast<const Line*>(objs[1]);
+            if (objs[0]->is(Line::Type) && objs[1]->is(Line::Type)) {
+                const auto& l1 = *static_cast<const Line*>(objs[0]);
+                const auto& l2 = *static_cast<const Line*>(objs[1]);
 
-            auto ans = intersect(l1, l2);
+                auto ans = intersect(l1, l2);
 
-            if (ans.has_value()) {
-                return { ans->clone() };
+                if (ans.has_value()) {
+                    return { ans->clone() };
+                } else {
+                    return {};
+                }
+            } else if (objs[0]->is(Circle::Type) && objs[1]->is(Circle::Type)) {
+                const auto& w1 = *static_cast<const Circle*>(objs[0]);
+                const auto& w2 = *static_cast<const Circle*>(objs[1]);
+
+                // TODO
+
             } else {
-                return {};
+                const Line* lPtr;
+                const Circle* wPtr;
+                if (objs[0]->is(Line::Type)) {
+                    lPtr = static_cast<const Line*>(objs[0]);
+                    wPtr = static_cast<const Circle*>(objs[1]);
+                } else {
+                    lPtr = static_cast<const Line*>(objs[1]);
+                    wPtr = static_cast<const Circle*>(objs[0]);
+                }
+
+                const auto& l = *lPtr;
+                const auto& w = *wPtr;
+
+                int n;
+                Point p1, p2;
+                intersect(w, l, n, p1, p2);
+
+                switch (n) {
+                    case 2:
+                        return { new Point(p1), new Point(p2) };
+
+                    case 1:
+                        return { new Point(p1) };
+
+                    default:
+                        return {};
+                }
             }
         }
     );
