@@ -71,4 +71,13 @@ namespace euclidian::impl {
     AbstractPoint* Circle::posValueToPoint(double val) const {
         return new Point(o + r * Point(cos(val), sin(val)));
     }
+
+    std::tuple<Point, Point, Point> Circle::getThreePoints() const {
+        Point pts[3];
+        for (int i = 0; i < 3; ++i) {
+            auto a = 2 * M_PI / 3 * i;
+            pts[i] = o + r * Point(cos(a), sin(a));
+        }
+        return { pts[0], pts[1], pts[2] };
+    }
 }

@@ -4,6 +4,8 @@
 
 #include "core/GeometryObject.h"
 
+#include <tuple>
+
 namespace euclidian::impl {
     class Circle : public GeometryObject {
         public:
@@ -26,6 +28,8 @@ namespace euclidian::impl {
             // posValue for Circle is angle
             double pointToPosValue(const AbstractPoint* pos) const override;
             AbstractPoint* posValueToPoint(double val) const override;
+
+            std::tuple<Point, Point, Point> getThreePoints() const;
 
             Point o;
             double r;

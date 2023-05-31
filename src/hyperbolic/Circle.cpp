@@ -3,6 +3,7 @@
 #include "core/AbstractTransformation.h"
 
 #include "util/math.h"
+#include "util/cramer.h"
 
 #include <QRectF>
 #include <QPainterPath>
@@ -80,5 +81,32 @@ namespace hyperbolic::impl {
         auto R = dist(O, A);
 
         return ECircle(O, R);
+    }
+
+    std::tuple<Point, Point, Point> Circle::getThreePoints() const {
+        auto ew = toPoincare();
+        auto [ep1, ep2, ep3] = ew.getThreePoints();
+        return {
+            Point(ep1),
+            Point(ep2),
+            Point(ep3)
+        };
+    }
+
+    std::tuple<double, double, double> Circle::getABC() const {
+        auto [p1, p2, p3] = getThreePoints();
+        auto ans = cramer({
+            {p1.x, p1.y, 1, sqrt(1 - sq(p1.x) - sq(p1.y))},
+            {p2.x, p2.y, 1, sqrt(1 - sq(p2.x) - sq(p2.y))},
+            {p3.x, p3.y, 1, sqrt(1 - sq(p3.x) - sq(p3.y))},
+        });
+
+        assert(!ans.isEmpty());
+
+        return {
+            ans[0],
+            ans[1],
+            ans[2]
+        };
     }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Line.h"
 
 #include "euclidian/Circle.h"
 
@@ -30,6 +31,12 @@ namespace hyperbolic::impl {
 
             double pointToPosValue(const AbstractPoint* pos) const override;
             AbstractPoint* posValueToPoint(double val) const override;
+
+            std::tuple<Point, Point, Point> getThreePoints() const;
+
+            // Return a, b, c as in equation
+            //     sqrt(1 - x*x - y*y) = a*x + b*y + c
+            std::tuple<double, double, double> getABC() const;
 
             Point o;
             double r;
