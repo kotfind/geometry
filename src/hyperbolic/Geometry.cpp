@@ -3,6 +3,7 @@
 #include "Transformation.h"
 #include "Point.h"
 #include "Line.h"
+#include "Circle.h"
 
 #include "core/Real.h"
 
@@ -54,7 +55,7 @@ namespace hyperbolic {
             case Real::Type: return TR("Real");
             case Point::Type: return TR("Point");
             case Line::Type: return TR("Line");
-            // case Circle::Type: return TR("Circle");
+            case Circle::Type: return TR("Circle");
             default: throw std::invalid_argument("Wrong or complex type");
         }
     }
