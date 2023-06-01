@@ -3,6 +3,7 @@
 #include "Line.h"
 #include "Point.h"
 #include "Circle.h"
+#include "Segment.h"
 
 #include "core/SectionMaster.h"
 #include "core/Section.h"
@@ -177,7 +178,27 @@ SectionMaster* Geometry::makeSectionMaster() const {
             if (p1 == p2)
                 return {};
 
-            return {new Line(p1, p2)};
+            return { new Line(p1, p2) };
+        }
+    );
+
+    lineSection->makeFunction(
+        "Segment",
+        QIcon(":none.svg"),
+        TR("Creates segment by two points."),
+        ARGS {
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
+        },
+        1,
+        DO {
+            const auto& p1 = *static_cast<const Point*>(objs[0]);
+            const auto& p2 = *static_cast<const Point*>(objs[1]);
+
+            if (p1 == p2)
+                return {};
+
+            return { new Segment(p1, p2) };
         }
     );
 
