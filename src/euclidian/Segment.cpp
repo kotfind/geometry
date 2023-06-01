@@ -57,18 +57,25 @@ namespace euclidian::impl {
     }
 
     AbstractPoint* Segment::calcNearestPoint(const AbstractPoint* pt) const {
-        // FIXME
-        return new Point();
+        auto p = *static_cast<const Point*>(pt);
+
+        if (le(dot(p - p1, p2 - p1), 0)) {
+            return new Point(p1);
+        }
+
+        if (le(dot(p - p2, p1 - p2), 0)) {
+            return new Point(p2);
+        }
+
+        return toLine().calcNearestPoint(pt);
     }
 
     double Segment::pointToPosValue(const AbstractPoint* pt) const {
-        // FIXME
-        return 0;
+        return toLine().pointToPosValue(pt);
     }
 
     AbstractPoint* Segment::posValueToPoint(double val) const {
-        // FIXME
-        return new Point();
+        return toLine().posValueToPoint(val);
     }
 
     std::tuple<double, double, double> Segment::getABC() const {
