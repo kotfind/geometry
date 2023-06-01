@@ -72,7 +72,11 @@ namespace euclidian::impl {
     }
 
     std::tuple<double, double, double> Segment::getABC() const {
-        return Line(p1, p2).getABC();
+        return toLine().getABC();
+    }
+
+    Line Segment::toLine() const {
+        return Line(p1, p2);
     }
 
     Point norm(const Segment& l) {
