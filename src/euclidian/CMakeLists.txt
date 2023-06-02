@@ -29,9 +29,8 @@ target_link_libraries(euclidian PRIVATE
     util
 )
 
-qt_add_resources(euclidian "imgs"
+qt_add_resources(euclidian "euclidianImgs"
     PREFIX "/"
     BASE "img/"
     FILES
-        "img/none.svg"
 )

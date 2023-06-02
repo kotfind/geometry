@@ -58,3 +58,14 @@ target_link_libraries(core PRIVATE
     Qt6::Core
     Qt6::Widgets
 )
+
+qt_add_resources(core "coreImgs"
+    PREFIX "/"
+    BASE "img/"
+    FILES
+        "img/none.svg"
+        "img/create_point.svg"
+        "img/remove.svg"
+        "img/move.svg"
+        "img/hide.svg"
+)
