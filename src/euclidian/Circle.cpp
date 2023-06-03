@@ -57,7 +57,9 @@ namespace euclidian::impl {
     }
 
     AbstractPoint* Circle::calcNearestPoint(const AbstractPoint* pt) const {
-        auto p = *static_cast<Point*>(pt->clone());
+        auto p = *std::unique_ptr<Point>(
+            static_cast<Point*>(pt->clone())
+        );
         auto op = p - o;
         return new Point(o + norm(op) * r);
     }
