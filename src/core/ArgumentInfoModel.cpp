@@ -12,6 +12,10 @@ ArgumentInfoModel::ArgumentInfoModel(const AbstractGeometry* geom, QObject* pare
     geom(geom)
 {}
 
+void ArgumentInfoModel::setActiveGeometry(const AbstractGeometry* g) {
+    geom = g;
+}
+
 int ArgumentInfoModel::rowCount(const QModelIndex& parent) const {
     return func ? func->countArgs() : 0;
 }

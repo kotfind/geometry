@@ -11,6 +11,8 @@ class ArgumentInfoModel : public QAbstractListModel {
     public:
         ArgumentInfoModel(const AbstractGeometry* geom, QObject* parent = nullptr);
 
+        void setActiveGeometry(const AbstractGeometry* geom);
+
         int rowCount(const QModelIndex& parent = QModelIndex()) const override;
         int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 

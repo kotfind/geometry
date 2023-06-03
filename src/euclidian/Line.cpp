@@ -5,6 +5,7 @@
 #include "core/AbstractTransformation.h"
 
 #include "util/math.h"
+#include "util/cramer.h"
 
 #include <QRectF>
 #include <QPainter>
@@ -128,5 +129,22 @@ namespace euclidian::impl {
         auto res = l.p2 - l.p1;
         res /= len(res);
         return res;
+    }
+
+    void intersect(const Line& l1, const Line& l2, int& n, Point& p) {
+        auto [a1, b1, c1] = l1.getABC();
+        auto [a2, b2, c2] = l2.getABC();
+
+        auto ans = cramer({
+            {a1, b1, -c1},
+            {a2, b2, -c2},
+        });
+
+        if (ans.isEmpty()) {
+            n = 0;
+        } else {
+            n = 1;
+            p = Point(ans[0], ans[1]);
+        }
     }
 }

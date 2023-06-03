@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow {
         void updateTitle();
 
         void setActiveGeometry(const AbstractGeometry* geom);
+        void setActiveGeometry(const QString& geomName);
         void getModeAndFunctionActions(
             QHash<const EditMode*, QAction*>& modeToAction,
             QHash<const Function*, QAction*>& funcToAction

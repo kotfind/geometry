@@ -16,6 +16,8 @@ class ToolInfoWidget : public QWidget {
     public:
         ToolInfoWidget(const AbstractGeometry* geom, QWidget* parent = nullptr);
 
+        void setActiveGeometry(const AbstractGeometry* geom);
+
     private:
         void createUi();
 

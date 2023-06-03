@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Line.h"
 
 #include "core/GeometryObject.h"
 
@@ -10,7 +11,6 @@
 namespace euclidian::impl {
     class Point;
 
-    // XXX: is not fully supported
     class Segment : public GeometryObject {
         public:
             Segment();
@@ -34,6 +34,8 @@ namespace euclidian::impl {
 
             std::tuple<double, double, double> getABC() const;
 
+            Line toLine() const;
+
             Point p1;
             Point p2;
 
@@ -43,4 +45,6 @@ namespace euclidian::impl {
 
     Point norm(const Segment& l);
     Point dir(const Segment& l);
+
+    bool on(const Point& p, const Segment& s);
 }
