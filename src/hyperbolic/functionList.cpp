@@ -180,7 +180,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Horoparallel",
-        QIcon(":none.svg"),
+        QIcon(":line/Horoparallel.svg"),
         TR("Creates lines hyperparallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -209,7 +209,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Hyperparallel",
-        QIcon(":none.svg"),
+        QIcon(":line/Hyperparallel.svg"),
         TR("Creates lines hyperparallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},

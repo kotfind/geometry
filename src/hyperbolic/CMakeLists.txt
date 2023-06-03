@@ -37,6 +37,8 @@ qt_add_resources(hyperbolic "hyperbolicImgs"
 
         "img/line/ByTwoPoints.svg"
         "img/line/Perpendicular.svg"
+        "img/line/Hyperparallel.svg"
+        "img/line/Horoparallel.svg"
 
         "img/circle/ByCenterAndPoint.svg"
         "img/circle/ByCenterAndRadius.svg"

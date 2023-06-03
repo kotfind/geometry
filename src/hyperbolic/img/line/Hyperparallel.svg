@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <style>
+        * {
+            stroke: black;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        circle {
+            stroke: black;
+            fill-opacity: 0;
+        }
+
+        .pt {
+            stroke: white;
+            stroke-width: 0.8;
+            fill: black;
+            fill-opacity: 1;
+        }
+    </style>
+
+    <circle cx="-23" cy="-23" r="50" />
+    <circle cx="55" cy="55" r="50" />
+
+</svg>
