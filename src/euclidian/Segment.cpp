@@ -96,4 +96,13 @@ namespace euclidian::impl {
         res /= len(res);
         return res;
     }
+
+    bool on(const Point& p, const Segment& s) {
+        auto p1 = s.p1;
+        auto p2 = s.p2;
+
+        return
+            eq(cross(p2 - p1, p - p1), 0) &&
+            leq(dot(p1 - p, p2 - p), 0);
+    }
 }

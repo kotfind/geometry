@@ -45,4 +45,6 @@ namespace euclidian::impl {
 
     Point norm(const Segment& l);
     Point dir(const Segment& l);
+
+    bool on(const Point& p, const Segment& s);
 }
