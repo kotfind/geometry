@@ -42,7 +42,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     pointSection->makeFunction(
         "Intersect",
-        QIcon(":none.svg"),
+        QIcon(":point/Intersect.svg"),
         TR("Intersects two objects."),
         ARGS {
             {Line::Type | Circle::Type, TR("First object")},
@@ -113,7 +113,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
     
     pointSection->makeFunction(
         "Middle",
-        QIcon(":none.svg"),
+        QIcon(":point/Middle.svg"),
         TR("Creates point between two current."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -143,7 +143,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "By Two Points",
-        QIcon(":none.svg"),
+        QIcon(":line/ByTwoPoints.svg"),
         TR("Creates line by two points."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -163,7 +163,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Perpendicular",
-        QIcon(":none.svg"),
+        QIcon(":line/Perpendicular.svg"),
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -180,7 +180,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Horoparallel",
-        QIcon(":none.svg"),
+        QIcon(":line/Horoparallel.svg"),
         TR("Creates lines hyperparallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -209,7 +209,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Hyperparallel",
-        QIcon(":none.svg"),
+        QIcon(":line/Hyperparallel.svg"),
         TR("Creates lines hyperparallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -245,7 +245,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Center And Point",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByCenterAndPoint.svg"),
         TR("Creates circle by center and point on it."),
         ARGS {
             {Point::Type, TR("Center")},
@@ -267,7 +267,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Center And Radius",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByCenterAndRadius.svg"),
         TR("Creates circle by its center and radius."),
         ARGS {
             {Point::Type, TR("Center")},
