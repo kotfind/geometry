@@ -370,6 +370,9 @@ void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
         engine->getActiveGeometry()->getSectionMaster()
     );
 
+    // ToolInfoWidget
+    toolInfoWidget->setActiveGeometry(geom);
+
     // Set move mode
     modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
     engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
