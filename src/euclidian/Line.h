@@ -48,4 +48,6 @@ namespace euclidian::impl {
 
     Point norm(const Line& l);
     Point dir(const Line& l);
+
+    void intersect(const Line& l1, const Line& l2, int& n, Point& p);
 }

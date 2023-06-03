@@ -57,53 +57,26 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 const auto& l1 = *static_cast<const Line*>(objs[0]);
                 const auto& l2 = *static_cast<const Line*>(objs[1]);
 
-                auto [a1, b1, c1] = l1.getABC();
-                auto [a2, b2, c2] = l2.getABC();
+                int n;
+                Point p;
+                intersect(l1, l2, n, p);
 
-                auto cramerAns = cramer({
-                    {a1, b1, -c1},
-                    {a2, b2, -c2},
-                });
+                if (!n) return {};
+                return { new Point(p) };
 
-                if (cramerAns.isEmpty())
-                    return {};
-
-                return {new Point(cramerAns[0], cramerAns[1])};
             } else if (objs[0]->is(Circle::Type) && objs[1]->is(Circle::Type)) {
                 const auto& w1 = *static_cast<const Circle*>(objs[0]);
                 const auto& w2 = *static_cast<const Circle*>(objs[1]);
 
-                //    /\
-                // r1/   \ r2
-                //  /a     \
-                //  ---------
-                //      d
+                int n;
+                Point p1, p2;
 
-                auto r1 = w1.r;
-                auto r2 = w2.r;
-                auto o1 = w1.o;
-                auto o2 = w2.o;
-                auto d = dist(o1, o2);
+                intersect(w1, w2, n, p1, p2);
 
-                if (gr(abs(r1 - r2), d) || gr(d, r1 + r2))
-                    return {};
-
-                if (eq(abs(r1 - r2), d) || eq(d, r1 + r2)) {
-                    return { new Point(norm(o2 - o1) * r1 + o1) };
-                }
-
-                auto cos_a = (sq(r1) + sq(d) - sq(r2)) /
-                          // ---------------------
-                                 (2 * r1 * d);
-
-                auto sin_a = sqrt(1 - cos_a*cos_a);
-
-                auto v = norm(o2 - o1) * r1;
-
-                return {
-                    new Point(rot(v, +sin_a, cos_a) + o1),
-                    new Point(rot(v, -sin_a, cos_a) + o1),
-                };
+                QList<Object*> ans;
+                if (n >= 1) ans << new Point(p1);
+                if (n >= 2) ans << new Point(p2);
+                return ans;
 
             } else {
                 const Line* lPtr;
@@ -119,26 +92,15 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 const auto& l = *lPtr;
                 const auto& w = *wPtr;
 
-                auto o = w.o;
-                auto r = w.r;
+                int n;
+                Point p1, p2;
 
-                double d = dist(o, l);
-                if (gr(d, r))
-                    return {};
+                intersect(l, w, n, p1, p2);
 
-                auto h = o + norm(l) * d;
-                if (!eq(dist(h, l), 0)) {
-                    h = o - norm(l) * d;
-                }
-                if (eq(d, r))
-                    return {new Point(h)};
-
-                auto x = sqrt(sq(r) - sq(d)) * dir(l);
-
-                return {
-                    new Point(h + x),
-                    new Point(h - x),
-                };
+                QList<Object*> ans;
+                if (n >= 1) ans << new Point(p1);
+                if (n >= 2) ans << new Point(p2);
+                return ans;
             }
         }
     );
