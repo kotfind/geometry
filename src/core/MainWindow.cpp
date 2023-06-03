@@ -27,6 +27,7 @@
 #include <QTableView>
 #include <QActionGroup>
 #include <QGraphicsItem>
+#include <QSettings>
 
 MainWindow::MainWindow(Engine* engine)
   : engine(engine)
@@ -62,7 +63,12 @@ MainWindow::MainWindow(Engine* engine)
         &ToolInfoWidget::updateSelectedCount
     );
 
-    setActiveGeometry(engine->getAllGeometries()[0]);
+    QSettings settings;
+    if (settings.contains("activeGeometryName")) {
+        setActiveGeometry(settings.value("activeGeometryName").toString());
+    } else {
+        setActiveGeometry(engine->getAllGeometries()[0]);
+    }
     updateTitle();
 }
 
@@ -377,6 +383,21 @@ void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {
     modeToAction[EditMode::get(EditMode::Type::MOVE)]->setChecked(true);
     engine->setEditMode(EditMode::get(EditMode::Type::MOVE));
     toolInfoWidget->setMode(EditMode::get(EditMode::Type::MOVE));
+
+    // Save to settings
+    QSettings settings;
+    settings.setValue("activeGeometryName", geom->getName());
+}
+
+void MainWindow::setActiveGeometry(const QString& geomName) {
+    for (auto* geom : engine->getAllGeometries()) {
+        if (geom->getName() == geomName) {
+            setActiveGeometry(geom);
+            return;
+        }
+    }
+
+    throw std::runtime_error("Geometry " + geomName.toStdString() + " was not loaded.");
 }
 
 void MainWindow::getModeAndFunctionActions(
