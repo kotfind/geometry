@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <style>
+        * {
+            stroke: black;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        circle {
+            stroke: black;
+            fill-opacity: 0;
+        }
+    </style>
+
+    <!-- rotate vector (1, 1) by 0.416 rad -->
+    <circle cx="22" cy="22" r="8" />
+    <line x1="18.21" y1="34.38" x2="2.89" y2="-5.19" />
+    <line x1="34.38" y1="18.21" x2="-5.19" y2="2.89" />
+
+</svg>

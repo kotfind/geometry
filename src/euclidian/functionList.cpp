@@ -45,7 +45,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     pointSection->makeFunction(
         "Intersect",
-        QIcon(":none.svg"),
+        QIcon(":point/Intersect.svg"),
         TR("Intersects two objects."),
         ARGS {
             {Line::Type | Segment::Type | Circle::Type, TR("First object")},
@@ -179,7 +179,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
     
     pointSection->makeFunction(
         "Middle",
-        QIcon(":none.svg"),
+        QIcon(":point/Middle.svg"),
         TR("Creates point between two current."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -198,7 +198,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "By Two Points",
-        QIcon(":none.svg"),
+        QIcon(":line/ByTwoPoints.svg"),
         TR("Creates line by two points."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -218,7 +218,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Segment",
-        QIcon(":none.svg"),
+        QIcon(":line/Segment.svg"),
         TR("Creates segment by two points."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -238,7 +238,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Perpendicular",
-        QIcon(":none.svg"),
+        QIcon(":line/Perpendicular.svg"),
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -257,7 +257,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Parallel",
-        QIcon(":none.svg"),
+        QIcon(":line/Parallel.svg"),
         TR("Creates line parallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -274,9 +274,39 @@ SectionMaster* Geometry::makeSectionMaster() const {
         }
     );
 
+    lineSection->makeFunction(
+        "Bisector",
+        QIcon(":line/Bisector.svg"),
+        TR("Creates bisector line of angle formed by three points."),
+        ARGS {
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Angle vertex")},
+            {Point::Type, TR("Second point")},
+        },
+        1,
+        DO {
+            const auto& a = *static_cast<const Point*>(objs[0]);
+            const auto& o = *static_cast<const Point*>(objs[1]);
+            const auto& b = *static_cast<const Point*>(objs[2]);
+
+            auto oa = a - o;
+            auto ob = b - o;
+
+            auto l1 = len(oa);
+            auto l2 = len(ob);
+
+            oa *= l2;
+            ob *= l1;
+
+            auto oc = oa + ob;
+
+            return { new Line(o, o + oc) };
+        }
+    );
+
     auto* tangents = lineSection->makeFunction(
         "Tangents",
-        QIcon(":none.svg"),
+        QIcon(":line/Tangents.svg"),
         TR("Creates tangents to circle from point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -312,8 +342,8 @@ SectionMaster* Geometry::makeSectionMaster() const {
     );
 
     lineSection->makeFunction(
-        "Common Tangent",
-        QIcon(":none.svg"),
+        "Common Tangents",
+        QIcon(":line/CommonTangents.svg"),
         TR("Creates common tangents for two circle."),
         ARGS {
             {Circle::Type, TR("Fistt circle")},
@@ -376,41 +406,11 @@ SectionMaster* Geometry::makeSectionMaster() const {
         }
     );
 
-    lineSection->makeFunction(
-        "Bisector",
-        QIcon(":none.svg"),
-        TR("Creates bisector line of angle formed by three points."),
-        ARGS {
-            {Point::Type, TR("First point")},
-            {Point::Type, TR("Angle vertex")},
-            {Point::Type, TR("Second point")},
-        },
-        1,
-        DO {
-            const auto& a = *static_cast<const Point*>(objs[0]);
-            const auto& o = *static_cast<const Point*>(objs[1]);
-            const auto& b = *static_cast<const Point*>(objs[2]);
-
-            auto oa = a - o;
-            auto ob = b - o;
-
-            auto l1 = len(oa);
-            auto l2 = len(ob);
-
-            oa *= l2;
-            ob *= l1;
-
-            auto oc = oa + ob;
-
-            return { new Line(o, o + oc) };
-        }
-    );
-
     // -------------------- Circle Section --------------------
 
     circleSection->makeFunction(
         "By Center And Point",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByCenterAndPoint.svg"),
         TR("Creates circle by center and point on it."),
         ARGS {
             {Point::Type, TR("Center")},
@@ -432,7 +432,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Center And Radius",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByCenterAndRadius.svg"),
         TR("Creates circle by its center and radius."),
         ARGS {
             {Point::Type, TR("Center")},
@@ -452,7 +452,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Three Points",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByThreePoints.svg"),
         TR("Creates circle by three points on it."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -491,7 +491,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "Incircle",
-        QIcon(":none.svg"),
+        QIcon(":circle/Incircle.svg"),
         TR("Incircle by three vertexes of triangle."),
         ARGS {
             {Point::Type, TR("First point")},

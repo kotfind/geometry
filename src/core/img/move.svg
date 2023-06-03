@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+    <style>
+        path {
+            stroke: black;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+
+    <path d="
+        M 10.5 5
+        v 15
+        l 5 -3
+        l 4.8 8
+        l -4.8 -8
+        l 5 -3
+        Z
+    "/>
+</svg>

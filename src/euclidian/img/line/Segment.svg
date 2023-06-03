@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <style>
+        * {
+            stroke: black;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        circle {
+            stroke: white;
+            stroke-width: 0.8;
+            fill: black;
+        }
+    </style>
+
+    <line x1="24" y1="10" x2="8" y2="22" />
+    <circle cx="24" cy="10" r="2.3" />
+    <circle cx="8" cy="22" r="2.3" />
+
+</svg>

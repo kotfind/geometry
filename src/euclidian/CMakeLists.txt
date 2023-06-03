@@ -29,9 +29,23 @@ target_link_libraries(euclidian PRIVATE
     util
 )
 
-qt_add_resources(euclidian "imgs"
+qt_add_resources(euclidian "euclidianImgs"
     PREFIX "/"
     BASE "img/"
     FILES
-        "img/none.svg"
+        "img/point/Intersect.svg"
+        "img/point/Middle.svg"
+
+        "img/line/ByTwoPoints.svg"
+        "img/line/Segment.svg"
+        "img/line/Perpendicular.svg"
+        "img/line/Parallel.svg"
+        "img/line/Bisector.svg"
+        "img/line/Tangents.svg"
+        "img/line/CommonTangents.svg"
+
+        "img/circle/ByCenterAndPoint.svg"
+        "img/circle/ByCenterAndRadius.svg"
+        "img/circle/ByThreePoints.svg"
+        "img/circle/Incircle.svg"
 )
