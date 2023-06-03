@@ -410,7 +410,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Center And Point",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByCenterAndPoint.svg"),
         TR("Creates circle by center and point on it."),
         ARGS {
             {Point::Type, TR("Center")},
@@ -432,7 +432,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Center And Radius",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByCenterAndRadius.svg"),
         TR("Creates circle by its center and radius."),
         ARGS {
             {Point::Type, TR("Center")},
@@ -452,7 +452,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "By Three Points",
-        QIcon(":none.svg"),
+        QIcon(":circle/ByThreePoints.svg"),
         TR("Creates circle by three points on it."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -491,7 +491,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     circleSection->makeFunction(
         "Incircle",
-        QIcon(":none.svg"),
+        QIcon(":circle/Incircle.svg"),
         TR("Incircle by three vertexes of triangle."),
         ARGS {
             {Point::Type, TR("First point")},

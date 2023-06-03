@@ -43,4 +43,9 @@ qt_add_resources(euclidian "euclidianImgs"
         "img/line/Bisector.svg"
         "img/line/Tangents.svg"
         "img/line/CommonTangents.svg"
+
+        "img/circle/ByCenterAndPoint.svg"
+        "img/circle/ByCenterAndRadius.svg"
+        "img/circle/ByThreePoints.svg"
+        "img/circle/Incircle.svg"
 )
