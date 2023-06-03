@@ -306,7 +306,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     auto* tangents = lineSection->makeFunction(
         "Tangents",
-        QIcon(":none.svg"),
+        QIcon(":line/Tangents.svg"),
         TR("Creates tangents to circle from point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -342,8 +342,8 @@ SectionMaster* Geometry::makeSectionMaster() const {
     );
 
     lineSection->makeFunction(
-        "Common Tangent",
-        QIcon(":none.svg"),
+        "Common Tangents",
+        QIcon(":line/CommonTangents.svg"),
         TR("Creates common tangents for two circle."),
         ARGS {
             {Circle::Type, TR("Fistt circle")},

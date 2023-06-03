@@ -41,4 +41,6 @@ qt_add_resources(euclidian "euclidianImgs"
         "img/line/Perpendicular.svg"
         "img/line/Parallel.svg"
         "img/line/Bisector.svg"
+        "img/line/Tangents.svg"
+        "img/line/CommonTangents.svg"
 )
