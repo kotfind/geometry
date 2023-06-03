@@ -242,12 +242,14 @@ SectionMaster* Geometry::makeSectionMaster() const {
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
-            {Line::Type, TR("Line")},
+            {Line::Type | Segment::Type, TR("Line")},
         },
         1,
         DO {
-            const auto& a = *static_cast<const Point*>(objs[0]);
-            const auto& l = *static_cast<const Line*>(objs[1]);
+            auto a = *static_cast<const Point*>(objs[0]);
+            auto l = objs[1]->is(Segment::Type)
+                ? static_cast<const Segment*>(objs[1])->toLine()
+                : *static_cast<const Line*>(objs[1]);
 
             return { new Line(a, a + norm(l)) };
         }
@@ -259,12 +261,14 @@ SectionMaster* Geometry::makeSectionMaster() const {
         TR("Creates line parallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
-            {Line::Type, TR("Line")},
+            {Line::Type | Segment::Type, TR("Line")},
         },
         1,
         DO {
-            const auto& a = *static_cast<const Point*>(objs[0]);
-            const auto& l = *static_cast<const Line*>(objs[1]);
+            auto a = *static_cast<const Point*>(objs[0]);
+            auto l = objs[1]->is(Segment::Type)
+                ? static_cast<const Segment*>(objs[1])->toLine()
+                : *static_cast<const Line*>(objs[1]);
 
             return { new Line(a, a + dir(l)) };
         }
