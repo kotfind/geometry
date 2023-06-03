@@ -34,4 +34,8 @@ qt_add_resources(euclidian "euclidianImgs"
     BASE "img/"
     FILES
         "img/line/ByTwoPoints.svg"
+        "img/line/Segment.svg"
+        "img/line/Perpendicular.svg"
+        "img/line/Parallel.svg"
+        "img/line/Bisector.svg"
 )

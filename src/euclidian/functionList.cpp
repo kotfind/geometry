@@ -218,7 +218,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Segment",
-        QIcon(":none.svg"),
+        QIcon(":line/Segment.svg"),
         TR("Creates segment by two points."),
         ARGS {
             {Point::Type, TR("First point")},
@@ -238,7 +238,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Perpendicular",
-        QIcon(":none.svg"),
+        QIcon(":line/Perpendicular.svg"),
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -257,7 +257,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "Parallel",
-        QIcon(":none.svg"),
+        QIcon(":line/Parallel.svg"),
         TR("Creates line parallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
@@ -271,6 +271,36 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 : *static_cast<const Line*>(objs[1]);
 
             return { new Line(a, a + dir(l)) };
+        }
+    );
+
+    lineSection->makeFunction(
+        "Bisector",
+        QIcon(":line/Bisector.svg"),
+        TR("Creates bisector line of angle formed by three points."),
+        ARGS {
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Angle vertex")},
+            {Point::Type, TR("Second point")},
+        },
+        1,
+        DO {
+            const auto& a = *static_cast<const Point*>(objs[0]);
+            const auto& o = *static_cast<const Point*>(objs[1]);
+            const auto& b = *static_cast<const Point*>(objs[2]);
+
+            auto oa = a - o;
+            auto ob = b - o;
+
+            auto l1 = len(oa);
+            auto l2 = len(ob);
+
+            oa *= l2;
+            ob *= l1;
+
+            auto oc = oa + ob;
+
+            return { new Line(o, o + oc) };
         }
     );
 
@@ -373,36 +403,6 @@ SectionMaster* Geometry::makeSectionMaster() const {
                 delete lPtr;
             }
             return ans;
-        }
-    );
-
-    lineSection->makeFunction(
-        "Bisector",
-        QIcon(":none.svg"),
-        TR("Creates bisector line of angle formed by three points."),
-        ARGS {
-            {Point::Type, TR("First point")},
-            {Point::Type, TR("Angle vertex")},
-            {Point::Type, TR("Second point")},
-        },
-        1,
-        DO {
-            const auto& a = *static_cast<const Point*>(objs[0]);
-            const auto& o = *static_cast<const Point*>(objs[1]);
-            const auto& b = *static_cast<const Point*>(objs[2]);
-
-            auto oa = a - o;
-            auto ob = b - o;
-
-            auto l1 = len(oa);
-            auto l2 = len(ob);
-
-            oa *= l2;
-            ob *= l1;
-
-            auto oc = oa + ob;
-
-            return { new Line(o, o + oc) };
         }
     );
 
