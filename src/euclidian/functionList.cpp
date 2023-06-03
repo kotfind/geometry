@@ -163,7 +163,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     lineSection->makeFunction(
         "By Two Points",
-        QIcon(":none.svg"),
+        QIcon(":line/ByTwoPoints.svg"),
         TR("Creates line by two points."),
         ARGS {
             {Point::Type, TR("First point")},

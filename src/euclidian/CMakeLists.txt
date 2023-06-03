@@ -33,4 +33,5 @@ qt_add_resources(euclidian "euclidianImgs"
     PREFIX "/"
     BASE "img/"
     FILES
+        "img/line/ByTwoPoints.svg"
 )
