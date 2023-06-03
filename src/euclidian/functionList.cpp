@@ -3,6 +3,7 @@
 #include "Line.h"
 #include "Point.h"
 #include "Circle.h"
+#include "Segment.h"
 
 #include "core/SectionMaster.h"
 #include "core/Section.h"
@@ -47,97 +48,131 @@ SectionMaster* Geometry::makeSectionMaster() const {
         QIcon(":none.svg"),
         TR("Intersects two objects."),
         ARGS {
-            {Line::Type | Circle::Type, TR("First object")},
-            {Line::Type | Circle::Type, TR("Second object")},
+            {Line::Type | Segment::Type | Circle::Type, TR("First object")},
+            {Line::Type | Segment::Type | Circle::Type, TR("Second object")},
         },
         2,
         DO {
             if (objs[0]->is(Line::Type) && objs[1]->is(Line::Type)) {
-                const auto& l1 = *static_cast<const Line*>(objs[0]);
-                const auto& l2 = *static_cast<const Line*>(objs[1]);
+                auto l1 = *static_cast<const Line*>(objs[0]);
+                auto l2 = *static_cast<const Line*>(objs[1]);
 
-                auto [a1, b1, c1] = l1.getABC();
-                auto [a2, b2, c2] = l2.getABC();
+                int n;
+                Point p;
+                intersect(l1, l2, n, p);
 
-                auto cramerAns = cramer({
-                    {a1, b1, -c1},
-                    {a2, b2, -c2},
-                });
+                if (!n) return {};
+                return { new Point(p) };
 
-                if (cramerAns.isEmpty())
-                    return {};
+            } else if (objs[0]->is(Line::Type) && objs[1]->is(Segment::Type)) {
+                auto l = *static_cast<const Line*>(objs[0]);
+                auto s = *static_cast<const Segment*>(objs[1]);
 
-                return {new Point(cramerAns[0], cramerAns[1])};
+                int n;
+                Point p;
+                intersect(l, s.toLine(), n, p);
+
+                if (!n) return {};
+                if (!on(p, s)) return {};
+
+                return { new Point(p) };
+
+            } else if (objs[0]->is(Line::Type) && objs[1]->is(Circle::Type)) {
+                auto l = *static_cast<const Line*>(objs[0]);
+                auto w = *static_cast<const Circle*>(objs[1]);
+
+                int n;
+                Point p1, p2;
+
+                intersect(l, w, n, p1, p2);
+
+                QList<Object*> ans;
+                if (n >= 1) ans << new Point(p1);
+                if (n >= 2) ans << new Point(p2);
+                return ans;
+            } else if (objs[0]->is(Segment::Type) && objs[1]->is(Line::Type)) {
+                auto s = *static_cast<const Segment*>(objs[0]);
+                auto l = *static_cast<const Line*>(objs[1]);
+
+                int n;
+                Point p;
+                intersect(l, s.toLine(), n, p);
+
+                if (!n) return {};
+                if (!on(p, s)) return {};
+
+                return { new Point(p) };
+
+            } else if (objs[0]->is(Segment::Type) && objs[1]->is(Segment::Type)) {
+                auto s1 = *static_cast<const Segment*>(objs[0]);
+                auto s2 = *static_cast<const Segment*>(objs[1]);
+
+                int n;
+                Point p;
+                intersect(s1.toLine(), s2.toLine(), n, p);
+
+                if (!n) return {};
+                if (!on(p, s1)) return {};
+                if (!on(p, s2)) return {};
+
+                return { new Point(p) };
+
+            } else if (objs[0]->is(Segment::Type) && objs[1]->is(Circle::Type)) {
+                auto s = *static_cast<const Segment*>(objs[0]);
+                auto w = *static_cast<const Circle*>(objs[1]);
+
+                int n;
+                Point p1, p2;
+
+                intersect(s.toLine(), w, n, p1, p2);
+
+                QList<Object*> ans;
+                if (n >= 1 && on(p1, s)) ans << new Point(p1);
+                if (n >= 2 && on(p2, s)) ans << new Point(p2);
+                return ans;
+            } else if (objs[0]->is(Circle::Type) && objs[1]->is(Line::Type)) {
+                auto w = *static_cast<const Circle*>(objs[0]);
+                auto l = *static_cast<const Line*>(objs[1]);
+
+                int n;
+                Point p1, p2;
+
+                intersect(w, l, n, p1, p2);
+
+                QList<Object*> ans;
+                if (n >= 1) ans << new Point(p1);
+                if (n >= 2) ans << new Point(p2);
+                return ans;
+
+            } else if (objs[0]->is(Circle::Type) && objs[1]->is(Segment::Type)) {
+                auto w = *static_cast<const Circle*>(objs[0]);
+                auto s = *static_cast<const Segment*>(objs[1]);
+
+                int n;
+                Point p1, p2;
+
+                intersect(w, s.toLine(), n, p1, p2);
+
+                QList<Object*> ans;
+                if (n >= 1 && on(p1, s)) ans << new Point(p1);
+                if (n >= 2 && on(p2, s)) ans << new Point(p2);
+                return ans;
+
             } else if (objs[0]->is(Circle::Type) && objs[1]->is(Circle::Type)) {
                 const auto& w1 = *static_cast<const Circle*>(objs[0]);
                 const auto& w2 = *static_cast<const Circle*>(objs[1]);
 
-                //    /\
-                // r1/   \ r2
-                //  /a     \
-                //  ---------
-                //      d
+                int n;
+                Point p1, p2;
 
-                auto r1 = w1.r;
-                auto r2 = w2.r;
-                auto o1 = w1.o;
-                auto o2 = w2.o;
-                auto d = dist(o1, o2);
+                intersect(w1, w2, n, p1, p2);
 
-                if (gr(abs(r1 - r2), d) || gr(d, r1 + r2))
-                    return {};
-
-                if (eq(abs(r1 - r2), d) || eq(d, r1 + r2)) {
-                    return { new Point(norm(o2 - o1) * r1 + o1) };
-                }
-
-                auto cos_a = (sq(r1) + sq(d) - sq(r2)) /
-                          // ---------------------
-                                 (2 * r1 * d);
-
-                auto sin_a = sqrt(1 - cos_a*cos_a);
-
-                auto v = norm(o2 - o1) * r1;
-
-                return {
-                    new Point(rot(v, +sin_a, cos_a) + o1),
-                    new Point(rot(v, -sin_a, cos_a) + o1),
-                };
-
+                QList<Object*> ans;
+                if (n >= 1) ans << new Point(p1);
+                if (n >= 2) ans << new Point(p2);
+                return ans;
             } else {
-                const Line* lPtr;
-                const Circle* wPtr;
-                if (objs[0]->is(Line::Type)) {
-                    lPtr = static_cast<const Line*>(objs[0]);
-                    wPtr = static_cast<const Circle*>(objs[1]);
-                } else {
-                    lPtr = static_cast<const Line*>(objs[1]);
-                    wPtr = static_cast<const Circle*>(objs[0]);
-                }
-
-                const auto& l = *lPtr;
-                const auto& w = *wPtr;
-
-                auto o = w.o;
-                auto r = w.r;
-
-                double d = dist(o, l);
-                if (gr(d, r))
-                    return {};
-
-                auto h = o + norm(l) * d;
-                if (!eq(dist(h, l), 0)) {
-                    h = o - norm(l) * d;
-                }
-                if (eq(d, r))
-                    return {new Point(h)};
-
-                auto x = sqrt(sq(r) - sq(d)) * dir(l);
-
-                return {
-                    new Point(h + x),
-                    new Point(h - x),
-                };
+                assert(false);
             }
         }
     );
@@ -177,7 +212,27 @@ SectionMaster* Geometry::makeSectionMaster() const {
             if (p1 == p2)
                 return {};
 
-            return {new Line(p1, p2)};
+            return { new Line(p1, p2) };
+        }
+    );
+
+    lineSection->makeFunction(
+        "Segment",
+        QIcon(":none.svg"),
+        TR("Creates segment by two points."),
+        ARGS {
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
+        },
+        1,
+        DO {
+            const auto& p1 = *static_cast<const Point*>(objs[0]);
+            const auto& p2 = *static_cast<const Point*>(objs[1]);
+
+            if (p1 == p2)
+                return {};
+
+            return { new Segment(p1, p2) };
         }
     );
 
@@ -187,12 +242,14 @@ SectionMaster* Geometry::makeSectionMaster() const {
         TR("Creates line perpendicular to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
-            {Line::Type, TR("Line")},
+            {Line::Type | Segment::Type, TR("Line")},
         },
         1,
         DO {
-            const auto& a = *static_cast<const Point*>(objs[0]);
-            const auto& l = *static_cast<const Line*>(objs[1]);
+            auto a = *static_cast<const Point*>(objs[0]);
+            auto l = objs[1]->is(Segment::Type)
+                ? static_cast<const Segment*>(objs[1])->toLine()
+                : *static_cast<const Line*>(objs[1]);
 
             return { new Line(a, a + norm(l)) };
         }
@@ -204,12 +261,14 @@ SectionMaster* Geometry::makeSectionMaster() const {
         TR("Creates line parallel to current line through current point."),
         ARGS {
             {Point::Type, TR("Point")},
-            {Line::Type, TR("Line")},
+            {Line::Type | Segment::Type, TR("Line")},
         },
         1,
         DO {
-            const auto& a = *static_cast<const Point*>(objs[0]);
-            const auto& l = *static_cast<const Line*>(objs[1]);
+            auto a = *static_cast<const Point*>(objs[0]);
+            auto l = objs[1]->is(Segment::Type)
+                ? static_cast<const Segment*>(objs[1])->toLine()
+                : *static_cast<const Line*>(objs[1]);
 
             return { new Line(a, a + dir(l)) };
         }

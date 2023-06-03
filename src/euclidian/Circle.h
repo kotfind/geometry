@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Line.h"
 
 #include "core/GeometryObject.h"
 
@@ -37,4 +38,28 @@ namespace euclidian::impl {
         private:
             static constexpr double paintWidth = 7e-3;
     };
+
+    void intersect(
+        const Circle& w1,
+        const Circle& w2,
+        int& n,
+        Point& p1,
+        Point& p2
+    );
+
+    void intersect(
+        const Line& l,
+        const Circle& w,
+        int& n,
+        Point& p1,
+        Point& p2
+    );
+
+    void intersect(
+        const Circle& w,
+        const Line& l,
+        int& n,
+        Point& p1,
+        Point& p2
+    );
 }

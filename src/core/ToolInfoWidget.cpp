@@ -21,6 +21,10 @@ ToolInfoWidget::ToolInfoWidget(const AbstractGeometry* geom, QWidget* parent)
     argsView->setSelectionMode(QTreeView::SelectionMode::NoSelection);
 }
 
+void ToolInfoWidget::setActiveGeometry(const AbstractGeometry* geom) {
+    argsModel->setActiveGeometry(geom);
+}
+
 void ToolInfoWidget::createUi() {
     auto* vbox = new QVBoxLayout(this);
     setLayout(vbox);

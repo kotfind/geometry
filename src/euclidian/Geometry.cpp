@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Line.h"
 #include "Circle.h"
+#include "Segment.h"
 
 #include "core/AbstractPoint.h"
 #include "core/Real.h"
@@ -41,6 +42,7 @@ namespace euclidian {
             case Point::Type: return TR("Point");
             case Line::Type: return TR("Line");
             case Circle::Type: return TR("Circle");
+            case Segment::Type: return TR("Segment");
             default: throw std::invalid_argument("Wrong or complex type");
         }
     }
