@@ -4,8 +4,8 @@
 #include "hyperbolic/Geometry.h"
 
 int main(int argc, char** argv) {
-    hyperbolic::Geometry hGeom;
     euclidian::Geometry eGeom;
+    hyperbolic::Geometry hGeom;
 
-    return run(argc, argv, { &hGeom, &eGeom });
+    return run(argc, argv, { &eGeom, &hGeom });
 }
