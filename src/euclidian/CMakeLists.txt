@@ -33,6 +33,9 @@ qt_add_resources(euclidian "euclidianImgs"
     PREFIX "/"
     BASE "img/"
     FILES
+        "img/point/Intersect.svg"
+        "img/point/Middle.svg"
+
         "img/line/ByTwoPoints.svg"
         "img/line/Segment.svg"
         "img/line/Perpendicular.svg"

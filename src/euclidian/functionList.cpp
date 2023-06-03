@@ -45,7 +45,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
     pointSection->makeFunction(
         "Intersect",
-        QIcon(":none.svg"),
+        QIcon(":point/Intersect.svg"),
         TR("Intersects two objects."),
         ARGS {
             {Line::Type | Segment::Type | Circle::Type, TR("First object")},
@@ -179,7 +179,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
     
     pointSection->makeFunction(
         "Middle",
-        QIcon(":none.svg"),
+        QIcon(":point/Middle.svg"),
         TR("Creates point between two current."),
         ARGS {
             {Point::Type, TR("First point")},
