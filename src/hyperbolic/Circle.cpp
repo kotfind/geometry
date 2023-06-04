@@ -40,13 +40,11 @@ namespace hyperbolic::impl {
     }
 
     void Circle::transform(const AbstractTransformation* t) {
-        // FIXME
-        // auto p = o + Point(r, 0);
-
-        // o.transform(t);
-        // p.transform(t);
-
-        // r = dist(o, p);
+        auto [p1, p2, p3] = getThreePoints();
+        p1.transform(t);
+        p2.transform(t);
+        p3.transform(t);
+        fromThreePoints(p1, p2, p3);
     }
 
     AbstractPoint* Circle::calcNearestPoint(const AbstractPoint* pt) const {
@@ -93,6 +91,17 @@ namespace hyperbolic::impl {
         };
     }
 
+    void Circle::fromThreePoints(const Point& p1, const Point& p2, const Point& p3) {
+        auto ans = cramer({
+            {p1.x, p1.y, 1, sqrt(1 - sq(p1.x) - sq(p1.y))},
+            {p2.x, p2.y, 1, sqrt(1 - sq(p2.x) - sq(p2.y))},
+            {p3.x, p3.y, 1, sqrt(1 - sq(p3.x) - sq(p3.y))},
+        });
+        assert(!ans.isEmpty());
+
+        fromABC(ans[0], ans[1], ans[2]);
+    }
+
     std::tuple<double, double, double> Circle::getABC() const {
         auto [p1, p2, p3] = getThreePoints();
         auto ans = cramer({
@@ -108,6 +117,37 @@ namespace hyperbolic::impl {
             ans[1],
             ans[2]
         };
+    }
+
+    void Circle::fromABC(double a, double b, double c) {
+        // Find two points that are both on the circle
+        // and on the radius that goes through the center
+
+        // Vector (a, b) goes through center of circle
+
+        auto v = Point(a, b) / hypot(a, b);
+
+        // Find r knowing that
+        //     (v * r) \in (sqrt(1 - x^2 - y^2) = ax + by + c)
+
+        int n;
+        double r1;
+        double r2;
+        solveSqEq(
+            sq(a) + sq(b) + 1,
+            2 * c * sqrt(sq(a) + sq(b)),
+            sq(c) - 1,
+            n,
+            r1,
+            r2
+        );
+        assert(n == 2);
+
+        auto A = v * r1;
+        auto B = v * r2;
+
+        o = midpoint(A, B);
+        r = dist(A, o);
     }
 
     void intersect(

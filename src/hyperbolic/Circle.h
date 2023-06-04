@@ -34,9 +34,16 @@ namespace hyperbolic::impl {
 
             std::tuple<Point, Point, Point> getThreePoints() const;
 
+            // FIXME:
+            // Works correctly only if such a circle exists,
+            // otherwise the behaviour is undefined.
+            void fromThreePoints(const Point& p1, const Point& p2, const Point& p3);
+
             // Return a, b, c as in equation
             //     sqrt(1 - x*x - y*y) = a*x + b*y + c
             std::tuple<double, double, double> getABC() const;
+
+            void fromABC(double a, double b, double c);
 
             Point o;
             double r;
