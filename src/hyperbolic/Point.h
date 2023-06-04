@@ -20,9 +20,9 @@ namespace hyperbolic::impl {
 
             Object* clone() const override;
 
-            void paint(QPainter* painter, const QColor& color) const override;
-            QRectF boundingRect() const override;
-            QPainterPath shape() const override;
+            void paint(QPainter* painter, double scale, const QColor& color) const override;
+            QRectF boundingRect(double scale) const override;
+            QPainterPath shape(double scale) const override;
 
             QJsonObject toJson() const override;
             void fromJson(const QJsonObject& json) override;

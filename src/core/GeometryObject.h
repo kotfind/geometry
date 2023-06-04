@@ -17,9 +17,9 @@ class GeometryObject : public Object {
 
         virtual bool isPoint() const { return false; }
 
-        virtual void paint(QPainter* painter, const QColor& color) const = 0;
-        virtual QRectF boundingRect() const = 0;
-        virtual QPainterPath shape() const = 0;
+        virtual void paint(QPainter* painter, double scale, const QColor& color) const = 0;
+        virtual QRectF boundingRect(double scale) const = 0;
+        virtual QPainterPath shape(double scale) const = 0;
 
         virtual void transform(const AbstractTransformation*) = 0;
 

@@ -32,6 +32,8 @@ class GeometryItem : public QGraphicsItem {
     private:
         void updateBoundingRect();
 
+        double getScale() const;
+
         GeometryGenerator* gen;
 
         // Transformed object

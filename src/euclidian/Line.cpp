@@ -1,6 +1,7 @@
 #include "Line.h"
 
 #include "Point.h"
+#include "config.h"
 
 #include "core/AbstractTransformation.h"
 
@@ -27,9 +28,9 @@ namespace euclidian::impl {
         return new Line(*this);
     }
 
-    void Line::paint(QPainter* qp, const QColor& color) const {
+    void Line::paint(QPainter* qp, double scale, const QColor& color) const {
         auto pen = qp->pen();
-        pen.setWidthF(paintWidth);
+        pen.setWidthF(scale * paintWidth);
         pen.setColor(color);
         qp->setPen(pen);
 
@@ -37,13 +38,13 @@ namespace euclidian::impl {
         qp->drawLine(p1.getPos(), p2.getPos());
     }
 
-    QRectF Line::boundingRect() const {
+    QRectF Line::boundingRect(double scale) const {
         auto [p1, p2] = getTwoBoundingPoints();
         return QRectF(p1.getPos(), p2.getPos()).normalized();
     }
 
-    QPainterPath Line::shape() const {
-        auto d = norm(*this) * paintWidth;
+    QPainterPath Line::shape(double scale) const {
+        auto d = norm(*this) * scale * paintWidth;
         auto [p1, p2] = getTwoBoundingPoints();
 
         QPainterPath path;

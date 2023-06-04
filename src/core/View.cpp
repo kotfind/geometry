@@ -9,4 +9,5 @@ void View::resizeEvent(QResizeEvent*) {
         scene()->sceneRect(),
         Qt::KeepAspectRatio
     );
+    scene()->update();
 }

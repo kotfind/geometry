@@ -1,5 +1,7 @@
 #include "Circle.h"
 
+#include "config.h"
+
 #include "core/AbstractTransformation.h"
 
 #include "util/math.h"
@@ -26,9 +28,9 @@ namespace euclidian::impl {
         return new Circle(*this);
     }
 
-    void Circle::paint(QPainter* qp, const QColor& color) const {
+    void Circle::paint(QPainter* qp, double scale, const QColor& color) const {
         auto pen = qp->pen();
-        pen.setWidthF(paintWidth);
+        pen.setWidthF(scale * paintWidth);
         pen.setStyle(Qt::SolidLine);
         pen.setColor(color);
         qp->setPen(pen);
@@ -36,14 +38,14 @@ namespace euclidian::impl {
         qp->drawEllipse(getCircleRect(o.getPos(), r));
     }
 
-    QRectF Circle::boundingRect() const {
-        return getCircleRect(o.getPos(), r + paintWidth);
+    QRectF Circle::boundingRect(double scale) const {
+        return getCircleRect(o.getPos(), r + scale * paintWidth);
     }
 
-    QPainterPath Circle::shape() const {
+    QPainterPath Circle::shape(double scale) const {
         QPainterPath path;
-        path.addEllipse(getCircleRect(o.getPos(), r + paintWidth));
-        path.addEllipse(getCircleRect(o.getPos(), r - paintWidth));
+        path.addEllipse(getCircleRect(o.getPos(), r + scale * paintWidth));
+        path.addEllipse(getCircleRect(o.getPos(), r - scale * paintWidth));
         return path;
     }
 

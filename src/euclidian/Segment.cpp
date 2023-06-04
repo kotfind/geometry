@@ -2,6 +2,7 @@
 
 #include "Point.h"
 #include "Line.h"
+#include "config.h"
 
 #include "core/AbstractTransformation.h"
 
@@ -27,21 +28,21 @@ namespace euclidian::impl {
         return new Segment(*this);
     }
 
-    void Segment::paint(QPainter* qp, const QColor& color) const {
+    void Segment::paint(QPainter* qp, double scale, const QColor& color) const {
         auto pen = qp->pen();
-        pen.setWidthF(paintWidth);
+        pen.setWidthF(scale * paintWidth);
         pen.setColor(color);
         qp->setPen(pen);
 
         qp->drawLine(p1.getPos(), p2.getPos());
     }
 
-    QRectF Segment::boundingRect() const {
+    QRectF Segment::boundingRect(double scale) const {
         return QRectF(p1.getPos(), p2.getPos()).normalized();
     }
 
-    QPainterPath Segment::shape() const {
-        auto d = norm(*this) * paintWidth;
+    QPainterPath Segment::shape(double scale) const {
+        auto d = norm(*this) * scale * paintWidth;
 
         QPainterPath path;
         path.moveTo((p1 - d).getPos());

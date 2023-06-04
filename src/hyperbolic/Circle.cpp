@@ -27,16 +27,16 @@ namespace hyperbolic::impl {
         return new Circle(*this);
     }
 
-    void Circle::paint(QPainter* qp, const QColor& color) const {
-        toPoincare().paint(qp, color);
+    void Circle::paint(QPainter* qp, double scale, const QColor& color) const {
+        toPoincare().paint(qp, scale, color);
     }
 
-    QRectF Circle::boundingRect() const {
-        return toPoincare().boundingRect();
+    QRectF Circle::boundingRect(double scale) const {
+        return toPoincare().boundingRect(scale);
     }
 
-    QPainterPath Circle::shape() const {
-        return toPoincare().shape();
+    QPainterPath Circle::shape(double scale) const {
+        return toPoincare().shape(scale);
     }
 
     void Circle::transform(const AbstractTransformation* t) {

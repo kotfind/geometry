@@ -1,5 +1,7 @@
 #include "Point.h"
 
+#include "config.h"
+
 #include "core/AbstractTransformation.h"
 
 #include "util/math.h"
@@ -29,7 +31,7 @@ namespace euclidian::impl {
         return new Point(*this);
     }
 
-    void Point::paint(QPainter* qp, const QColor& color) const {
+    void Point::paint(QPainter* qp, double scale, const QColor& color) const {
         auto pen = qp->pen();
         pen.setWidth(0);
         pen.setColor(color);
@@ -40,21 +42,22 @@ namespace euclidian::impl {
         brush.setStyle(Qt::SolidPattern);
         qp->setBrush(brush);
 
-        qp->drawEllipse(boundingRect());
+        qp->drawEllipse(boundingRect(scale));
     }
 
-    QRectF Point::boundingRect() const {
+    QRectF Point::boundingRect(double scale) const {
+        auto r = pointPaintRadius * scale;
         return QRectF(
-            x - paintRadius,
-            y - paintRadius,
-            paintRadius * 2,
-            paintRadius * 2
+            x - r,
+            y - r,
+            r * 2,
+            r * 2
         );
     }
 
-    QPainterPath Point::shape() const {
+    QPainterPath Point::shape(double scale) const {
         QPainterPath path;
-        path.addEllipse(boundingRect());
+        path.addEllipse(boundingRect(scale));
         return path;
     }
 

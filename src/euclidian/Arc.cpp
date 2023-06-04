@@ -2,6 +2,7 @@
 
 #include "Point.h"
 #include "Line.h"
+#include "config.h"
 
 #include "core/AbstractTransformation.h"
 
@@ -29,22 +30,22 @@ namespace euclidian::impl {
         return new Arc(*this);
     }
 
-    void Arc::paint(QPainter* qp, const QColor& color) const {
+    void Arc::paint(QPainter* qp, double scale, const QColor& color) const {
         auto pen = qp->pen();
-        pen.setWidthF(paintWidth);
+        pen.setWidthF(scale * paintWidth);
         pen.setColor(color);
         qp->setPen(pen);
 
         qp->drawPath(getPainterPath());
     }
 
-    QRectF Arc::boundingRect() const {
+    QRectF Arc::boundingRect(double scale) const {
         return getPainterPath().boundingRect();
     }
 
-    QPainterPath Arc::shape() const {
+    QPainterPath Arc::shape(double scale) const {
         QPainterPathStroker stroker;
-        stroker.setWidth(paintWidth);
+        stroker.setWidth(scale * paintWidth);
         return stroker.createStroke(getPainterPath());
     }
 

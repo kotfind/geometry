@@ -29,16 +29,16 @@ namespace hyperbolic::impl {
         return new Line(*this);
     }
 
-    void Line::paint(QPainter* qp, const QColor& color) const {
-        toPoincare().paint(qp, color);
+    void Line::paint(QPainter* qp, double scale, const QColor& color) const {
+        toPoincare().paint(qp, scale, color);
     }
 
-    QRectF Line::boundingRect() const {
-        return toPoincare().boundingRect();
+    QRectF Line::boundingRect(double scale) const {
+        return toPoincare().boundingRect(scale);
     }
 
-    QPainterPath Line::shape() const {
-        return toPoincare().shape();
+    QPainterPath Line::shape(double scale) const {
+        return toPoincare().shape(scale);
     }
 
     void Line::transform(const AbstractTransformation* t) {

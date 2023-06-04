@@ -40,16 +40,16 @@ namespace hyperbolic::impl {
         return new Point(*this);
     }
 
-    void Point::paint(QPainter* qp, const QColor& color) const {
-        toPoincare().paint(qp, color);
+    void Point::paint(QPainter* qp, double scale, const QColor& color) const {
+        toPoincare().paint(qp, scale, color);
     }
 
-    QRectF Point::boundingRect() const {
-        return toPoincare().boundingRect();
+    QRectF Point::boundingRect(double scale) const {
+        return toPoincare().boundingRect(scale);
     }
 
-    QPainterPath Point::shape() const {
-        return toPoincare().shape();
+    QPainterPath Point::shape(double scale) const {
+        return toPoincare().shape(scale);
     }
 
     QJsonObject Point::toJson() const {

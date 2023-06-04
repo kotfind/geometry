@@ -6,6 +6,7 @@
 #include "EditMode.h"
 
 #include <QGraphicsScene>
+#include <QGraphicsView>
 
 GeometryItem::GeometryItem(GeometryGenerator* gen)
 : QGraphicsItem(),
@@ -15,16 +16,20 @@ GeometryItem::GeometryItem(GeometryGenerator* gen)
 void GeometryItem::paint(QPainter* qp, const QStyleOptionGraphicsItem*, QWidget*) {
     bool showHidden = gen->getEngine()->getEditMode()->getType() == EditMode::Type::HIDE;
     if (obj && (!hidden || showHidden)) {
-        obj->paint(qp, QColor(0, 0, 0, hidden ? 127 : 255));
+        obj->paint(
+            qp,
+            getScale(),
+            QColor(0, 0, 0, hidden ? 127 : 255)
+        );
     }
 }
 
 QRectF GeometryItem::boundingRect() const {
-    return obj ? obj->boundingRect() : QRectF();
+    return obj ? obj->boundingRect(getScale()) : QRectF();
 }
 
 QPainterPath GeometryItem::shape() const {
-    return obj ? obj->shape() : QPainterPath();
+    return obj ? obj->shape(getScale()) : QPainterPath();
 }
 
 void GeometryItem::remove() {
@@ -70,4 +75,8 @@ void GeometryItem::toggleHidden() {
     if (auto engine = gen->getEngine()) {
         engine->setChanged();
     }
+}
+
+double GeometryItem::getScale() const {
+    return 1 / scene()->views()[0]->transform().m11();
 }
