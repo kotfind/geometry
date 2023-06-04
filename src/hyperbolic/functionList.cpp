@@ -124,18 +124,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             const auto& p1 = *static_cast<const Point*>(objs[0]);
             const auto& p2 = *static_cast<const Point*>(objs[1]);
 
-            auto x1 = p1.x;
-            auto y1 = p1.y;
-            auto x2 = p2.x;
-            auto y2 = p2.y;
-
-            double t1 = sqrt(1 - sq(x1) - sq(y1));
-            double t2 = sqrt(1 - sq(x2) - sq(y2));
-
-            return { new Point(
-                (x1 * t2 + x2 * t1) / (t1 + t2),
-                (y1 * t2 + y2 * t1) / (t1 + t2)
-            ) };
+            return { new Point(midpoint(p1, p2)) };
         }
     );
 

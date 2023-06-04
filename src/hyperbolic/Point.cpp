@@ -154,4 +154,19 @@ namespace hyperbolic::impl {
             (dist(ea1, ep1) * dist(ep2, ea2))
         );
     }
+
+    Point midpoint(const Point& p1, const Point& p2) {
+        auto x1 = p1.x;
+        auto y1 = p1.y;
+        auto x2 = p2.x;
+        auto y2 = p2.y;
+
+        double t1 = sqrt(1 - sq(x1) - sq(y1));
+        double t2 = sqrt(1 - sq(x2) - sq(y2));
+
+        return Point(
+            (x1 * t2 + x2 * t1) / (t1 + t2),
+            (y1 * t2 + y2 * t1) / (t1 + t2)
+        );
+    }
 }
