@@ -213,6 +213,7 @@ void MainWindow::onNewActionTriggered() {
     auto* action = static_cast<QAction*>(sender());
     auto* geom = action->data().value<const AbstractGeometry*>();
 
+    engine->clear();
     setActiveGeometry(geom);
     engine->setChanged(false);
     openedFileName = "";
@@ -284,6 +285,7 @@ void MainWindow::onOpenActionTriggered() {
     if (fileName.isEmpty()) return;
 
     try {
+        engine->clear();
         engine->load(fileName);
         setActiveGeometry(engine->getActiveGeometry()); // Geometry may have changed on load
         engine->populateScene(scene);

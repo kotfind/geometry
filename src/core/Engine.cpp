@@ -394,7 +394,6 @@ void Engine::setActiveGeometry(const QString& name) {
 void Engine::setActiveGeometry(const AbstractGeometry* g) {
     auto i = geoms.indexOf(g);
     assert(i != -1);
-    clear();
     geom = geoms[i];
 }
 
