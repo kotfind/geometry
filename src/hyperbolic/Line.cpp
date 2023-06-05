@@ -67,13 +67,9 @@ namespace hyperbolic::impl {
         auto ep1 = EPoint(p1.getPos());
         auto ep2 = EPoint(p2.getPos());
 
-        auto [A, B, C] = getABC();
-        auto [p1_, p2_] = getIntersectionsWithAbsolute(A, B, C);
+        auto [p1_, p2_] = getIntersectionsWithAbsolute(*this);
         auto ea = EPoint(p1_.getPos());
         auto eb = EPoint(p2_.getPos());
-        if (euclidian::impl::dist(ea, ep1) > euclidian::impl::dist(ea, ep2)) {
-            std::swap(ea, eb);
-        }
 
         auto a = euclidian::impl::dist(ea, ep1);
         auto b = euclidian::impl::dist(eb, ep1);
@@ -87,8 +83,7 @@ namespace hyperbolic::impl {
     }
 
     EArc Line::toPoincare() const {
-        auto [a, b, c] = getABC();
-        auto [p1_, p2_] = getIntersectionsWithAbsolute(a, b, c);
+        auto [p1_, p2_] = getIntersectionsWithAbsolute(*this);
 
         auto ansP1 = EPoint(p1_.getPos());
         auto ansP2 = EPoint(p2_.getPos());
@@ -129,7 +124,7 @@ namespace hyperbolic::impl {
         return {a, b, c};
     }
 
-    std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c) {
+    static std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c) {
         Point H1, H2;
 
         if (eq(b, 0)) {
@@ -153,6 +148,20 @@ namespace hyperbolic::impl {
         }
 
         return {H1, H2};
+    }
+
+    std::pair<Point, Point> getIntersectionsWithAbsolute(const Line& l) {
+        auto [a, b, c] = l.getABC();
+        auto [p1, p2] = getIntersectionsWithAbsolute(a, b, c);
+
+        auto ep1 = EPoint(p1.getPos());
+        auto elp1 = EPoint(l.p1.getPos());
+        auto elp2 = EPoint(l.p2.getPos());
+        if (euclidian::impl::dist(ep1, elp1) > euclidian::impl::dist(ep1, elp2)) {
+            std::swap(p1, p2);
+        }
+
+        return {p1, p2};
     }
 
     std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c) {

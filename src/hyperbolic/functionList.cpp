@@ -182,9 +182,8 @@ SectionMaster* Geometry::makeSectionMaster() const {
 
             auto x = p.x;
             auto y = p.y;
-            auto [a, b, c] = l.getABC();
 
-            auto [p1, p2] = getIntersectionsWithAbsolute(a, b, c);
+            auto [p1, p2] = getIntersectionsWithAbsolute(l);
 
             auto a1 = (p1 + p) / 2;
             auto a2 = (p2 + p) / 2;

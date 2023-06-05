@@ -143,16 +143,15 @@ namespace hyperbolic::impl {
     }
 
     double dist(const Point& p1, const Point& p2) {
-        auto [a, b, c] = Line(p1, p2).getABC();
-        auto [a1, a2] = getIntersectionsWithAbsolute(a, b, c);
+        auto [a1, a2] = getIntersectionsWithAbsolute(Line(p1, p2));
         auto ep1 = EPoint(p1.getPos());
         auto ep2 = EPoint(p2.getPos());
         auto ea1 = EPoint(a1.getPos());
         auto ea2 = EPoint(a2.getPos());
-        return abs(0.5 * log(
+        return 0.5 * log(
             (dist(ea1, ep2) * dist(ep1, ea2)) /
             (dist(ea1, ep1) * dist(ep2, ea2))
-        ));
+        );
     }
 
     Point midpoint(const Point& p1, const Point& p2) {

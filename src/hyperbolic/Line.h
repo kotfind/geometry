@@ -53,7 +53,7 @@ namespace hyperbolic::impl {
             EArc toPoincare() const;
     };
 
-    std::pair<Point, Point> getIntersectionsWithAbsolute(double a, double b, double c);
+    std::pair<Point, Point> getIntersectionsWithAbsolute(const Line& l);
     std::pair<Point, Point> getTwoPointsOnLine(double a, double b, double c);
 
     Line perp(const Line& l, const Point& p);
