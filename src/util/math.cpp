@@ -73,3 +73,7 @@ void solveSqEq(
     x1 = (-b - sqD) / (2 * a);
     x2 = (-b + sqD) / (2 * a);
 }
+
+double sgn(double x) {
+    return (x > 0) - (x < 0);
+}

@@ -46,19 +46,44 @@ namespace hyperbolic::impl {
         p2.transform(t);
     }
 
-    AbstractPoint* Line::calcNearestPoint(const AbstractPoint* pos) const {
-        // FIXME
-        return new Point();
+    AbstractPoint* Line::calcNearestPoint(const AbstractPoint* pt) const {
+        auto p = *static_cast<const Point*>(pt);
+        auto ans = intersect(*this, perp(*this, p));
+        assert(ans.has_value());
+        return new Point(*ans);
     }
 
-    double Line::pointToPosValue(const AbstractPoint* pos) const {
-        // FIXME
-        return 0;
+    double Line::pointToPosValue(const AbstractPoint* pt) const {
+        auto p = *static_cast<const Point*>(pt);
+
+        auto ep1 = EPoint(p1.getPos());
+        auto ep2 = EPoint(p2.getPos());
+        auto ep = EPoint(p.getPos());
+
+        return sgn(dot(ep2 - ep1, ep - ep1)) * dist(p1, p) / dist(p1, p2);
     }
 
     AbstractPoint* Line::posValueToPoint(double val) const {
-        // FIXME
-        return new Point();
+        auto ep1 = EPoint(p1.getPos());
+        auto ep2 = EPoint(p2.getPos());
+
+        auto [A, B, C] = getABC();
+        auto [p1_, p2_] = getIntersectionsWithAbsolute(A, B, C);
+        auto ea = EPoint(p1_.getPos());
+        auto eb = EPoint(p2_.getPos());
+        if (euclidian::impl::dist(ea, ep1) > euclidian::impl::dist(ea, ep2)) {
+            std::swap(ea, eb);
+        }
+
+        auto a = euclidian::impl::dist(ea, ep1);
+        auto b = euclidian::impl::dist(eb, ep1);
+        auto r = val * dist(p1, p2);
+        auto m = exp(2 * r);
+        auto x = (m - 1) * a * b / (m * a + b);
+
+        auto ans = ep1 + euclidian::impl::norm(ep2 - ep1) * x;
+
+        return new Point(ans.getPos());
     }
 
     EArc Line::toPoincare() const {

@@ -32,3 +32,5 @@ void solveSqEq(
     double& x1,
     double& x2
 );
+
+double sgn(double x);
