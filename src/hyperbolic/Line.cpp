@@ -91,15 +91,20 @@ namespace hyperbolic::impl {
         auto ep1 = p1.toPoincare();
         auto ep2 = p2.toPoincare();
 
-        auto p = ep1.x + 1i * ep1.y;
-        auto q = ep2.x + 1i * ep2.y;
+        EPoint o;
+        if (collinear(ep1, ep2, EPoint(0, 0))) {
+            o = EPoint(INFINITY, INFINITY);
+        } else {
+            auto p = ep1.x + 1i * ep1.y;
+            auto q = ep2.x + 1i * ep2.y;
 
-        auto o_ = 
-            (p * (q * std::conj(q) + 1.) - q * (p * std::conj(p) + 1.)) /
-        // ---------------------------------------------------------------
-                    (p * std::conj(q) - q * std::conj(p));
+            auto o_ = 
+                (p * (q * std::conj(q) + 1.) - q * (p * std::conj(p) + 1.)) /
+            // ---------------------------------------------------------------
+                        (p * std::conj(q) - q * std::conj(p));
 
-        auto o = EPoint(std::real(o_), std::imag(o_));
+            o = EPoint(std::real(o_), std::imag(o_));
+        }
 
         return EArc(o, ansP1, ansP2);
     }

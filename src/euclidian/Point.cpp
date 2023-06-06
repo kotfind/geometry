@@ -173,7 +173,7 @@ namespace euclidian::impl {
         return {-v.y, v.x};
     }
 
-    bool collinear(const Point& a, const Point& b, const Point& c, double epsilon) {
-        return abs((b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x)) < epsilon;
+    bool collinear(const Point& a, const Point& b, const Point& c) {
+        return eq((b.y - a.y) * (c.x - b.x) - (c.y - b.y) * (b.x - a.x), 0);
     }
 }

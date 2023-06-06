@@ -62,7 +62,6 @@ namespace euclidian::impl {
     bool collinear(
         const Point& a,
         const Point& b,
-        const Point& c,
-        double epsilon = eps
+        const Point& c
     );
 }

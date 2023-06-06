@@ -70,6 +70,17 @@ namespace euclidian::impl {
     }
 
     QPainterPath Arc::getPainterPath() const {
+        if (isinf(o.x) || isinf(o.y)) {
+            QPainterPath path;
+            path.moveTo(
+                p1.getPos()
+            );
+            path.lineTo(
+                p2.getPos()
+            );
+            return path;
+        }
+
         auto op1 = p1 - o;
         auto op2 = p2 - o;
 
