@@ -48,18 +48,34 @@ namespace hyperbolic::impl {
     }
 
     AbstractPoint* Circle::calcNearestPoint(const AbstractPoint* pt) const {
-        // FIXME
-        return new Point(0, 0);
+        auto p = *static_cast<const Point*>(pt);
+        auto l = Line(o, p);
+
+        int n;
+        Point p1, p2;
+        intersect(*this, l, n, p1, p2);
+
+        assert(n == 2);
+
+        return dist(p, p1) < dist(p, p2)
+            ? new Point(p1)
+            : new Point(p2);
     }
 
     double Circle::pointToPosValue(const AbstractPoint* pt) const {
-        // FIXME
-        return 0;
+        auto p = *static_cast<const Point*>(pt);
+        auto p_ = p.toPoincare();
+        return toPoincare().pointToPosValue(&p_);
     }
 
     AbstractPoint* Circle::posValueToPoint(double val) const {
-        // FIXME
-        return new Point(0, 0);
+        return new Point(
+            *std::unique_ptr<EPoint>(
+                static_cast<EPoint*>(
+                    toPoincare().posValueToPoint(val)
+                )
+            )
+        );
     }
 
     ECircle Circle::toPoincare() const {
