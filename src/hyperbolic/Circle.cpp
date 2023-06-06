@@ -81,7 +81,9 @@ namespace hyperbolic::impl {
     ECircle Circle::toPoincare() const {
         auto C = EPoint(o.getPos());
         auto c = len(C);
-        auto dir = norm(C);
+        auto dir = eq(c, 0)
+            ? EPoint(1, 0)
+            : norm(C);
 
         auto m = ((1 + c) / (1 - c)) * exp(-2 * r);
         auto a = (m - 1) / (m + 1);
