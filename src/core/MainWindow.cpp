@@ -91,8 +91,9 @@ void MainWindow::createFileMenu() {
         connect(
             newAction,
             &QAction::triggered,
-            this,
-            &MainWindow::onNewActionTriggered
+            [this, geom] () {
+                new_(geom);
+            }
         );
         menu->addAction(newAction);
     }
@@ -103,7 +104,7 @@ void MainWindow::createFileMenu() {
         saveAction,
         &QAction::triggered,
         this,
-        &MainWindow::onSaveActionTriggered
+        &MainWindow::save
     );
     menu->addAction(saveAction);
 
@@ -113,7 +114,7 @@ void MainWindow::createFileMenu() {
         saveAsAction,
         &QAction::triggered,
         this,
-        &MainWindow::onSaveAsActionTriggered
+        &MainWindow::saveAs
     );
     menu->addAction(saveAsAction);
 
@@ -123,7 +124,7 @@ void MainWindow::createFileMenu() {
         openAction,
         &QAction::triggered,
         this,
-        &MainWindow::onOpenActionTriggered
+        &MainWindow::open
     );
     menu->addAction(openAction);
 }
@@ -184,62 +185,61 @@ void MainWindow::onModeActionTriggered() {
     toolInfoWidget->setMode(mode);
 }
 
-QMessageBox::StandardButton MainWindow::askForSave(bool addCancelButton) {
+bool MainWindow::askForSave() {
+    if (!engine->isChanged()) return true;
+
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("Save changes?"));
     msgBox.setText(tr(
         "You have unsaved changes."
         "Would you like to save them?"
     ));
-    auto buttons = QMessageBox::Save | QMessageBox::Discard;
-    if (addCancelButton) {
-        buttons |= QMessageBox::Cancel;
-    }
-    msgBox.setStandardButtons(buttons);
+    msgBox.setStandardButtons(
+        QMessageBox::Save |
+        QMessageBox::Discard |
+        QMessageBox::Cancel
+    );
     msgBox.setIcon(QMessageBox::Question);
 
-    return static_cast<QMessageBox::StandardButton>(msgBox.exec());
+    switch (msgBox.exec()) {
+        case QMessageBox::Save:
+            return save();
+
+        case QMessageBox::Discard:
+            return true;
+
+        case QMessageBox::Cancel:
+            return false;
+    }
 }
 
 QString MainWindow::getFileNameFilter() const {
     return tr("Geometry file (*%1)").arg(fileExtension);
 }
 
-void MainWindow::onNewActionTriggered() {
-    if (engine->isChanged() && askForSave(false) == QMessageBox::Save) {
-        onSaveActionTriggered();
-    }
-
-    auto* action = static_cast<QAction*>(sender());
-    auto* geom = action->data().value<const AbstractGeometry*>();
-
-    engine->clear();
-    setActiveGeometry(geom);
-    engine->setChanged(false);
-    openedFileName = "";
-    updateTitle();
-}
-
-void MainWindow::onSaveActionTriggered() {
+bool MainWindow::save() {
     if (openedFileName.isEmpty()) {
-        onSaveAsActionTriggered();
-        return;
+        return saveAs();
     }
 
     try {
         engine->save(openedFileName);
         updateTitle();
         engine->setChanged(false);
+
+        return true;
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
             tr("Input/ Output error"),
             err.what()
         );
+
+        return false;
     }
 }
 
-void MainWindow::onSaveAsActionTriggered() {
+bool MainWindow::saveAs() {
     auto fileName = QFileDialog::getSaveFileName(
         this,
         tr("Save file"),
@@ -247,7 +247,7 @@ void MainWindow::onSaveAsActionTriggered() {
         getFileNameFilter()
     );
 
-    if (fileName.isEmpty()) return;
+    if (fileName.isEmpty()) return false;
 
     if (!fileName.endsWith(fileExtension)) {
         fileName += fileExtension;
@@ -258,22 +258,21 @@ void MainWindow::onSaveAsActionTriggered() {
         openedFileName = fileName;
         updateTitle();
         engine->setChanged(false);
+
+        return true;
     } catch (const IOError& err) {
         QMessageBox::critical(
             this,
             tr("Input/ Output error"),
             err.what()
         );
+
+        return false;
     }
 }
 
-void MainWindow::onOpenActionTriggered() {
-    if (engine->isChanged() && askForSave(false) == QMessageBox::Save) {
-        onSaveActionTriggered();
-    }
-
-    scene->detachAll();
-    engine->clear();
+bool MainWindow::open() {
+    if (!askForSave()) return false;
 
     auto fileName = QFileDialog::getOpenFileName(
         this,
@@ -282,16 +281,21 @@ void MainWindow::onOpenActionTriggered() {
         getFileNameFilter()
     );
 
-    if (fileName.isEmpty()) return;
+    if (fileName.isEmpty()) return false;
 
+    scene->detachAll();
+    engine->clear();
+
+    // FIXME: don't close file if load failed
     try {
-        engine->clear();
         engine->load(fileName);
         setActiveGeometry(engine->getActiveGeometry()); // Geometry may have changed on load
         engine->populateScene(scene);
         openedFileName = fileName;
         engine->setChanged(false);
         updateTitle();
+
+        return true;
     } catch (const IOError& err) {
         openedFileName = "";
         QMessageBox::critical(
@@ -299,7 +303,22 @@ void MainWindow::onOpenActionTriggered() {
             tr("Input/ Output error"),
             err.what()
         );
+
+        return false;
     }
+}
+
+bool MainWindow::new_(const AbstractGeometry* geom) {
+    if (!askForSave()) return false;
+
+    scene->detachAll();
+    engine->clear();
+    setActiveGeometry(geom);
+    engine->setChanged(false);
+    openedFileName = "";
+    updateTitle();
+
+    return true;
 }
 
 void MainWindow::updateTitle() {
@@ -310,27 +329,14 @@ void MainWindow::updateTitle() {
 }
 
 void MainWindow::closeEvent(QCloseEvent* e) {
-    if (!engine->isChanged()) {
-        scene->detachAll();
-        engine->clear();
-        e->accept();
+    if (!askForSave()) {
+        e->ignore();
         return;
     }
 
-    switch (askForSave(true)) {
-        case QMessageBox::Save:
-            onSaveActionTriggered();
-
-        case QMessageBox::Discard:
-            scene->detachAll();
-            engine->clear();
-            e->accept();
-            break;
-
-        case QMessageBox::Cancel:
-            e->ignore();
-            break;
-    }
+    scene->detachAll();
+    engine->clear();
+    e->accept();
 }
 
 void MainWindow::setActiveGeometry(const AbstractGeometry* geom) {

@@ -50,7 +50,7 @@ class MainWindow : public QMainWindow {
             const QHash<const Function*, QAction*>& funcToAction
         );
 
-        QMessageBox::StandardButton askForSave(bool addCancelButton);
+        bool askForSave();
 
         QString getFileNameFilter() const;
 
@@ -81,8 +81,8 @@ class MainWindow : public QMainWindow {
         void onFunctionActionTriggered();
         void onModeActionTriggered();
 
-        void onNewActionTriggered();
-        void onSaveActionTriggered();
-        void onSaveAsActionTriggered();
-        void onOpenActionTriggered();
+        bool save();
+        bool saveAs();
+        bool open();
+        bool new_(const AbstractGeometry* geom);
 };
