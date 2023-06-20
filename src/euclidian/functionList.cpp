@@ -554,5 +554,74 @@ SectionMaster* Geometry::makeSectionMaster() const {
         }
     );
 
+    measurementSection->makeFunction(
+        "Length",
+        QIcon(":measurement/Length.svg"),
+        TR("Calculates length of segment or circle."),
+        ARGS {
+            {Segment::Type | Circle::Type, TR("Object.")},
+        },
+        1,
+        true,
+        DO {
+            double v;
+            if (objs[0]->is(Segment::Type)) {
+                const auto& s = *static_cast<const Segment*>(objs[0]);
+                v = dist(s.p1, s.p2);
+            } else {
+                const auto& w = *static_cast<const Circle*>(objs[0]);
+                v = 2 * M_PI * w.r;
+            }
+            return { new Real(v) };
+        }
+    );
+
+    measurementSection->makeFunction(
+        "Radius",
+        QIcon(":measurement/Radius.svg"),
+        TR("Calculates radius or circle."),
+        ARGS {
+            {Circle::Type, TR("Circle.")},
+        },
+        1,
+        true,
+        DO {
+            const auto& w = *static_cast<const Circle*>(objs[0]);
+            return { new Real(w.r) };
+        }
+    );
+
+    measurementSection->makeFunction(
+        "Angle",
+        QIcon(":measurement/Angle.svg"),
+        TR("Calculates angle by three points."),
+        ARGS {
+            {Point::Type, TR("First point.")},
+            {Point::Type, TR("Vertex point.")},
+            {Point::Type, TR("Second point.")},
+        },
+        1,
+        true,
+        DO {
+            const auto& p1 = *static_cast<const Point*>(objs[0]);
+            const auto& o = *static_cast<const Point*>(objs[1]);
+            const auto& p2 = *static_cast<const Point*>(objs[2]);
+
+            auto a1 = atan2(p1.y - o.y, p1.x - o.x);
+            auto a2 = atan2(p2.y - o.y, p2.x - o.x);
+            auto a = a1 - a2;
+            while (le(a, 0)) {
+                a += 2 * M_PI;
+            }
+            while (geq(a, 2 * M_PI)) {
+                a -= 2 * M_PI;
+            }
+            if (a > M_PI) {
+                a = 2 * M_PI - a;
+            }
+            return { new Real(a * 180 / M_PI) };
+        }
+    );
+
     return master;
 }
