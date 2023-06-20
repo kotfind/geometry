@@ -49,6 +49,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type | Circle::Type, TR("Second object")},
         },
         2,
+        false,
         DO {
             if (objs[0]->is(Line::Type) && objs[1]->is(Line::Type)) {
                 const auto& l1 = *static_cast<const Line*>(objs[0]);
@@ -120,6 +121,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Second point")},
         },
         1,
+        false,
         DO {
             const auto& p1 = *static_cast<const Point*>(objs[0]);
             const auto& p2 = *static_cast<const Point*>(objs[1]);
@@ -139,6 +141,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Second point")},
         },
         1,
+        false,
         DO {
             const auto& p1 = *static_cast<const Point*>(objs[0]);
             const auto& p2 = *static_cast<const Point*>(objs[1]);
@@ -159,6 +162,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type, TR("Line")},
         },
         1,
+        false,
         DO {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& l = *static_cast<const Line*>(objs[1]);
@@ -176,6 +180,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type, TR("Line")},
         },
         2,
+        false,
         DO {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& l = *static_cast<const Line*>(objs[1]);
@@ -204,6 +209,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type, TR("Line")},
         },
         1,
+        false,
         DO {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& l = *static_cast<const Line*>(objs[1]);
@@ -240,6 +246,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Point on circle")},
         },
         1,
+        false,
         DO {
             const auto& o = *static_cast<const Point*>(objs[0]);
             const auto& p = *static_cast<const Point*>(objs[1]);
@@ -262,6 +269,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Real::Type, TR("Radius")},
         },
         1,
+        false,
         DO {
             const auto& o = *static_cast<const Point*>(objs[0]);
             auto r = static_cast<const Real*>(objs[1])->value;

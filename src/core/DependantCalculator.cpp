@@ -37,6 +37,7 @@ Object* DependantCalculator::calc() const {
             delete res[i];
         }
     }
+
     return funcResNum < res.size()
         ? res[funcResNum]
         : nullptr;

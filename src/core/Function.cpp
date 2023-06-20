@@ -12,6 +12,7 @@ Function::Function(
     const QString& description,
     const QList<ArgumentInfo>& argsInfo,
     int maxReturnSize,
+    bool returnsReal,
     const std::function<QList<Object*>(const QList<const Object*>&)>& func
 ) : parent(parent),
     name(name),
@@ -19,6 +20,7 @@ Function::Function(
     description(description),
     argInfo(argsInfo),
     maxReturnSize(maxReturnSize),
+    returnsReal_(returnsReal),
     func(func)
 {}
 
@@ -61,5 +63,9 @@ const ArgumentInfo& Function::getArgInfo(int i) const {
 
 int Function::getMaxReturnSize() const {
     return maxReturnSize;
+}
+
+bool Function::returnsReal() const {
+    return returnsReal_;
 }
 

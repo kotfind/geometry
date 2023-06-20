@@ -22,6 +22,7 @@ class Function {
         int countArgs() const;
         const ArgumentInfo& getArgInfo(int i) const;
         int getMaxReturnSize() const;
+        bool returnsReal() const;
 
     private:
         Function(
@@ -31,6 +32,7 @@ class Function {
             const QString& description,
             const QList<ArgumentInfo>& argsInfo,
             int maxReturnSize,
+            bool returnsReal,
             const std::function<QList<Object*>(const QList<const Object*>&)>& func
         );
 
@@ -40,6 +42,7 @@ class Function {
         const QString description;
         const QList<ArgumentInfo> argInfo;
         const int maxReturnSize;
+        const bool returnsReal_;
         const std::function<QList<Object*>(const QList<const Object*>&)> func;
 
     friend Section;
