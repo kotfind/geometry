@@ -307,7 +307,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
         QIcon(":measurement/Radius.svg"),
         TR("Calculates radius or circle."),
         ARGS {
-            {Circle::Type, TR("Circle.")},
+            {Circle::Type, TR("Circle")},
         },
         1,
         true,

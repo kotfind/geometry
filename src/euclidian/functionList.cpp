@@ -559,7 +559,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
         QIcon(":measurement/Length.svg"),
         TR("Calculates length of segment or circle."),
         ARGS {
-            {Segment::Type | Circle::Type, TR("Object.")},
+            {Segment::Type | Circle::Type, TR("Object")},
         },
         1,
         true,
@@ -581,7 +581,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
         QIcon(":measurement/Radius.svg"),
         TR("Calculates radius or circle."),
         ARGS {
-            {Circle::Type, TR("Circle.")},
+            {Circle::Type, TR("Circle")},
         },
         1,
         true,
@@ -596,9 +596,9 @@ SectionMaster* Geometry::makeSectionMaster() const {
         QIcon(":measurement/Angle.svg"),
         TR("Calculates angle by three points."),
         ARGS {
-            {Point::Type, TR("First point.")},
-            {Point::Type, TR("Vertex point.")},
-            {Point::Type, TR("Second point.")},
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Vertex point")},
+            {Point::Type, TR("Second point")},
         },
         1,
         true,
