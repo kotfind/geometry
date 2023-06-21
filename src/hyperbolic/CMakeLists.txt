@@ -42,4 +42,7 @@ qt_add_resources(hyperbolic "hyperbolicImgs"
 
         "img/circle/ByCenterAndPoint.svg"
         "img/circle/ByCenterAndRadius.svg"
+
+        "img/measurement/Distance.svg"
+        "img/measurement/Radius.svg"
 )
