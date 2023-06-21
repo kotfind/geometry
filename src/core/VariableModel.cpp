@@ -4,6 +4,8 @@
 #include "Engine.h"
 #include "Real.h"
 
+#include <QBrush>
+
 VariableModel::VariableModel(Engine* engine, QObject* parent)
   : QAbstractTableModel(parent),
     engine(engine),
@@ -47,9 +49,16 @@ int VariableModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant VariableModel::data(const QModelIndex& index, int role) const {
-    if (!index.isValid() || role != Qt::DisplayRole) return QVariant();
+    if (!index.isValid()) return QVariant();
 
     auto* gen = gens[index.row()];
+
+    if (role == Qt::BackgroundRole && gen->isDependant() && index.column() == 1) {
+        return QBrush(Qt::lightGray);
+    }
+
+    if (role != Qt::DisplayRole) return QVariant();
+
     switch (index.column()) {
         case 0: return gen->getName();
         case 1: return gen->getValue();
@@ -129,7 +138,13 @@ bool VariableModel::setData(const QModelIndex& index, const QVariant& data, int 
 }
 
 Qt::ItemFlags VariableModel::flags(const QModelIndex& index) const {
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    auto flgs = QAbstractItemModel::flags(index);
+
+    if (!gens[index.row()]->isDependant() || index.column() == 0) {
+        flgs |= Qt::ItemIsEditable;
+    }
+
+    return flgs;
 }
 
 bool VariableModel::insertRows(int row, int count, const QModelIndex& parent) {

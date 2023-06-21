@@ -48,4 +48,9 @@ qt_add_resources(euclidian "euclidianImgs"
         "img/circle/ByCenterAndRadius.svg"
         "img/circle/ByThreePoints.svg"
         "img/circle/Incircle.svg"
+
+        "img/measurement/Distance.svg"
+        "img/measurement/Radius.svg"
+        "img/measurement/Length.svg"
+        "img/measurement/Angle.svg"
 )

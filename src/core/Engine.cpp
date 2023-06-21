@@ -341,14 +341,24 @@ void Engine::checkSelectedFuncArgs(QGraphicsScene* scene) {
 void Engine::createGeneratorFromSelectedFuncArgs(QGraphicsScene* scene) {
     auto* func = getActiveFunction();
     for (int funcResNum = 0; funcResNum < func->getMaxReturnSize(); ++funcResNum) {
-        auto* gen = makeGeometryGenerator(
-            getActiveGeometry(),
-            func,
-            selectedFuncArgs,
-            funcResNum
-        );
-        auto* item = gen->getGeometryItem();
-        scene->addItem(item);
+        if (func->returnsReal()) {
+            auto* gen = makeRealGenerator(
+                tr("new"),
+                getActiveGeometry(),
+                func,
+                selectedFuncArgs,
+                funcResNum
+            );
+        } else {
+            auto* gen = makeGeometryGenerator(
+                getActiveGeometry(),
+                func,
+                selectedFuncArgs,
+                funcResNum
+            );
+            auto* item = gen->getGeometryItem();
+            scene->addItem(item);
+        }
     }
 
     clearFuncArgs(scene);

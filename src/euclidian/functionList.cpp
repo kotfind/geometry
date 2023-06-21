@@ -32,6 +32,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
     auto* pointSection = master->makeSection(TR("Point"));
     auto* lineSection = master->makeSection(TR("Line"));
     auto* circleSection = master->makeSection(TR("Circle"));
+    auto* measurementSection = master->makeSection(TR("Measurement"));
 
     // -------------------- Special Section --------------------
 
@@ -52,6 +53,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type | Segment::Type | Circle::Type, TR("Second object")},
         },
         2,
+        false,
         DO {
             if (objs[0]->is(Line::Type) && objs[1]->is(Line::Type)) {
                 auto l1 = *static_cast<const Line*>(objs[0]);
@@ -186,6 +188,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Second point")},
         },
         1,
+        false,
         DO {
             const auto& p1 = *static_cast<const Point*>(objs[0]);
             const auto& p2 = *static_cast<const Point*>(objs[1]);
@@ -205,6 +208,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Second point")},
         },
         1,
+        false,
         DO {
             const auto& p1 = *static_cast<const Point*>(objs[0]);
             const auto& p2 = *static_cast<const Point*>(objs[1]);
@@ -225,6 +229,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Second point")},
         },
         1,
+        false,
         DO {
             const auto& p1 = *static_cast<const Point*>(objs[0]);
             const auto& p2 = *static_cast<const Point*>(objs[1]);
@@ -245,6 +250,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type | Segment::Type, TR("Line")},
         },
         1,
+        false,
         DO {
             auto a = *static_cast<const Point*>(objs[0]);
             auto l = objs[1]->is(Segment::Type)
@@ -264,6 +270,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Line::Type | Segment::Type, TR("Line")},
         },
         1,
+        false,
         DO {
             auto a = *static_cast<const Point*>(objs[0]);
             auto l = objs[1]->is(Segment::Type)
@@ -284,6 +291,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Second point")},
         },
         1,
+        false,
         DO {
             const auto& a = *static_cast<const Point*>(objs[0]);
             const auto& o = *static_cast<const Point*>(objs[1]);
@@ -313,6 +321,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Circle::Type, TR("Circle")},
         },
         2,
+        false,
         DO {
             const auto& p = *static_cast<const Point*>(objs[0]);
             const auto& w = *static_cast<const Circle*>(objs[1]);
@@ -350,6 +359,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Circle::Type, TR("Second circle")},
         },
         2,
+        false,
         DO {
             auto w1 = *static_cast<const Circle*>(objs[0]);
             auto w2 = *static_cast<const Circle*>(objs[1]);
@@ -417,6 +427,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Point on circle")},
         },
         1,
+        false,
         DO {
             const auto& o = *static_cast<const Point*>(objs[0]);
             const auto& p = *static_cast<const Point*>(objs[1]);
@@ -439,6 +450,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Real::Type, TR("Radius")},
         },
         1,
+        false,
         DO {
             const auto& o = *static_cast<const Point*>(objs[0]);
             auto r = static_cast<const Real*>(objs[1])->value;
@@ -460,6 +472,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Third point")},
         },
         1,
+        false,
         DO {
             const auto& [x1, y1] = *static_cast<const Point*>(objs[0]);
             const auto& [x2, y2] = *static_cast<const Point*>(objs[1]);
@@ -499,6 +512,7 @@ SectionMaster* Geometry::makeSectionMaster() const {
             {Point::Type, TR("Third point")},
         },
         1,
+        false,
         DO {
             const auto& A = *static_cast<const Point*>(objs[0]);
             const auto& B = *static_cast<const Point*>(objs[1]);
@@ -517,6 +531,95 @@ SectionMaster* Geometry::makeSectionMaster() const {
             auto r = S / p;
 
             return { new Circle(O, r) };
+        }
+    );
+
+    // -------------------- Measurement Section --------------------
+
+    measurementSection->makeFunction(
+        "Distance",
+        QIcon(":measurement/Distance.svg"),
+        TR("Calculates distance between two points."),
+        ARGS {
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Second point")},
+        },
+        1,
+        true,
+        DO {
+            const auto& a = *static_cast<const Point*>(objs[0]);
+            const auto& b = *static_cast<const Point*>(objs[1]);
+
+            return { new Real(dist(a, b)) };
+        }
+    );
+
+    measurementSection->makeFunction(
+        "Length",
+        QIcon(":measurement/Length.svg"),
+        TR("Calculates length of segment or circle."),
+        ARGS {
+            {Segment::Type | Circle::Type, TR("Object")},
+        },
+        1,
+        true,
+        DO {
+            double v;
+            if (objs[0]->is(Segment::Type)) {
+                const auto& s = *static_cast<const Segment*>(objs[0]);
+                v = dist(s.p1, s.p2);
+            } else {
+                const auto& w = *static_cast<const Circle*>(objs[0]);
+                v = 2 * M_PI * w.r;
+            }
+            return { new Real(v) };
+        }
+    );
+
+    measurementSection->makeFunction(
+        "Radius",
+        QIcon(":measurement/Radius.svg"),
+        TR("Calculates radius or circle."),
+        ARGS {
+            {Circle::Type, TR("Circle")},
+        },
+        1,
+        true,
+        DO {
+            const auto& w = *static_cast<const Circle*>(objs[0]);
+            return { new Real(w.r) };
+        }
+    );
+
+    measurementSection->makeFunction(
+        "Angle",
+        QIcon(":measurement/Angle.svg"),
+        TR("Calculates angle by three points."),
+        ARGS {
+            {Point::Type, TR("First point")},
+            {Point::Type, TR("Vertex point")},
+            {Point::Type, TR("Second point")},
+        },
+        1,
+        true,
+        DO {
+            const auto& p1 = *static_cast<const Point*>(objs[0]);
+            const auto& o = *static_cast<const Point*>(objs[1]);
+            const auto& p2 = *static_cast<const Point*>(objs[2]);
+
+            auto a1 = atan2(p1.y - o.y, p1.x - o.x);
+            auto a2 = atan2(p2.y - o.y, p2.x - o.x);
+            auto a = a1 - a2;
+            while (le(a, 0)) {
+                a += 2 * M_PI;
+            }
+            while (geq(a, 2 * M_PI)) {
+                a -= 2 * M_PI;
+            }
+            if (a > M_PI) {
+                a = 2 * M_PI - a;
+            }
+            return { new Real(a * 180 / M_PI) };
         }
     );
 
