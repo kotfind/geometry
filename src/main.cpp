@@ -1,5 +1,6 @@
 #include "core/MainWindow.h"
 #include "core/Engine.h"
+#include "core/EditMode.h"
 
 #include "euclidian/Geometry.h"
 #include "hyperbolic/Geometry.h"
@@ -14,6 +15,8 @@ int main(int argc, char** argv) {
     QCoreApplication::setOrganizationName("kotfindApps");
     QCoreApplication::setApplicationName("Geometry");
 
+    EditMode::init();
+
     euclidian::Geometry eGeom;
     hyperbolic::Geometry hGeom;
 
@@ -22,5 +25,7 @@ int main(int argc, char** argv) {
     MainWindow master(&engine);
     master.show();
 
-    return app.exec();
+    int code = app.exec();
+
+    EditMode::cleanup();
 }

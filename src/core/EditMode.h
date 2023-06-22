@@ -31,6 +31,9 @@ class EditMode {
 
         static EditMode* get(Type);
 
+        static void init();
+        static void cleanup();
+
     private:
         const QString name;
         const QIcon icon;

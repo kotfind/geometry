@@ -37,42 +37,48 @@ EditMode* EditMode::get(Type t) {
     return modes[static_cast<int>(t)];
 }
 
-// -------------------- Modes Declaration --------------------
+void EditMode::init() {
+    new EditMode(
+        EditMode::Type::MOVE,
+        TR("Move"),
+        QIcon(QIcon(":move.svg")),
+        TR(
+            "Drag any free object with mouse to move it. "
+            "Use middle mouse button to move around scene."
+        )
+    );
 
-EditMode moveMode(
-    EditMode::Type::MOVE,
-    TR("Move"),
-    QIcon(QIcon(":move.svg")),
-    TR(
-        "Drag any free object with mouse to move it. "
-        "Use middle mouse button to move around scene."
-    )
-);
+    new EditMode(
+        EditMode::Type::CREATE_POINT,
+        TR("Create"),
+        QIcon(QIcon(":create_point.svg")),
+        TR("Click on the canvas to create a point.")
+    );
 
-EditMode createPointMode(
-    EditMode::Type::CREATE_POINT,
-    TR("Create"),
-    QIcon(QIcon(":create_point.svg")),
-    TR("Click on the canvas to create a point.")
-);
+    new EditMode(
+        EditMode::Type::REMOVE,
+        TR("Remove"),
+        QIcon(QIcon(":remove.svg")),
+        TR("Click on any object to delete it.")
+    );
 
-EditMode removeMode(
-    EditMode::Type::REMOVE,
-    TR("Remove"),
-    QIcon(QIcon(":remove.svg")),
-    TR("Click on any object to delete it.")
-);
+    new EditMode(
+        EditMode::Type::FUNCTION,
+        "",
+        QIcon(),
+        ""
+    );
 
-EditMode functionEditMode(
-    EditMode::Type::FUNCTION,
-    "",
-    QIcon(),
-    ""
-);
+    new EditMode(
+        EditMode::Type::HIDE,
+        TR("Hide/Show"),
+        QIcon(QIcon(":hide.svg")),
+        TR("Click on any object to toggle it's visibility.")
+    );
+}
 
-EditMode hideMode(
-    EditMode::Type::HIDE,
-    TR("Hide/Show"),
-    QIcon(QIcon(":hide.svg")),
-    TR("Click on any object to toggle it's visibility.")
-);
+void EditMode::cleanup() {
+    for (int i = 0; i < static_cast<int>(Type::count); ++i) {
+        delete modes[i];
+    }
+}
