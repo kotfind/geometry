@@ -5,8 +5,6 @@ target_sources(core
     PUBLIC FILE_SET HEADERS
     BASE_DIRS ${PROJECT_SOURCE_DIR}
     FILES
-        run.h
-
         Object.h
         GeometryObject.h
 
@@ -16,7 +14,6 @@ target_sources(core
         AbstractPoint.h
 
     PRIVATE
-        run.cpp
         MainWindow.cpp
         Engine.cpp
         AbstractGeometry.cpp
